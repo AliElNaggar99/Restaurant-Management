@@ -6,7 +6,7 @@ using namespace std;
 #include "Restaurant.h"
 #include "..\Events\ArrivalEvent.h"
 
-
+// added comment here
 Restaurant::Restaurant() 
 {
 	pGUI = NULL;
