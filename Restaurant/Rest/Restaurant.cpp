@@ -1,6 +1,10 @@
 #include <cstdlib>
 #include <time.h>
 #include <iostream>
+#include<fstream>
+#include<vector>
+#include<regex>
+
 using namespace std;
 
 #include "Restaurant.h"
@@ -29,6 +33,84 @@ void Restaurant::RunSimulation()
 		Just_A_Demo();
 
 	};
+
+}
+
+void Restaurant::ReadFromFile(){
+
+
+this->pGUI->PrintMessage("Enter the name of the file to be read : ");
+std::string FileName = pGUI->GetString();
+
+fstream toBeReadFile ;
+
+toBeReadFile.open(FileName,ios::in);
+
+if(! toBeReadFile.is_open()){
+
+	// We could make the function a bool and close the program if file name is wrong or put this in a while loop that exits when you etner -1
+
+	pGUI->PrintMessage("File doesn't exist or can't be opened")
+	return
+
+}
+
+
+std::vector<std::string> Lines(5);
+int Counter = 0 ;
+while (getline(toBeReadFile,Lines[Counter]) && Counter++ != 5);
+
+// L1 no of cooks from each type
+
+regex MoreThanTwoSpace("\\s{2,}");
+const std::string oneWhiteSpace = " ";
+std::vector<std::string> Container;
+
+
+// makes string only have 1 consecutive whitespace
+Lines[0] = regex_replace(Lines[0],MoreThanTwoSpace,oneWhiteSpace);
+
+
+
+//L2 cook speed for ea
+Lines[1] = regex_replace(Lines[1],MoreThanTwoSpace,oneWhiteSpace);
+
+
+//L3 (BreakAfter n orders) BreakDuration
+Lines[2] = regex_replace(Lines[2],MoreThanTwoSpace,oneWhiteSpace);
+
+
+
+
+//L4 Promotion Variable
+PromotionVariable = std::stoi(Lines[3]);
+
+//L5 No of events in file
+int numEvents = std::stoi(Lines[4]);
+
+
+//Resizing vector
+
+Lines.resize(5+numEvents);
+Counter = 0 ;
+while (getline(toBeReadFile,Lines[Counter]) && Counter++ != 5+numEvents) regex_replace(Lines[Counter],MoreThanTwoSpace,oneWhiteSpace);
+
+//use strtok to split strings
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
 
@@ -194,5 +276,6 @@ void Restaurant::AddtoDemoQueue(Order *pOrd)
 
 /// ==> end of DEMO-related function
 //////////////////////////////////////////////////////////////////////////////////////////////
+
 
 

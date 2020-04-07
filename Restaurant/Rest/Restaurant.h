@@ -23,11 +23,7 @@ private:
 	Queue<Order*> DEMO_Queue;	//Important: This is just for demo
 	/// ==>
 	
-	
-	
-	//
-	// TODO: Add More Data Members As Needed
-	//
+	int PromotionVariable;
 
 public:
 	
@@ -45,7 +41,7 @@ public:
 	//
 	// TODO: Add More Member Functions As Needed
 	//
-
+	void ReadFromFile(); //Hosny
 
 /// ===================    DEMO-related functions. Should be removed in phases 1&2   ================= 
 
