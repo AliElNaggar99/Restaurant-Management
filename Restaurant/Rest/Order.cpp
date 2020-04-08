@@ -43,4 +43,12 @@ ORD_STATUS Order::getStatus() const
 {
 	return status;
 }
+void Order::SetNumberOfDishes(int x)
+{
+	NumberOfDishes = x;
+}
 
+int Order::GetNumberOfDishes()
+{
+	return NumberOfDishes;
+}

@@ -33,4 +33,13 @@ void Cook::setType(ORD_TYPE t)
 	type = t;
 }
 
+void Cook::SetSpeed(int x)
+{
+	speed = x;
 
+}
+int Cook::GetSpeed()
+{
+	return speed;
+
+}
