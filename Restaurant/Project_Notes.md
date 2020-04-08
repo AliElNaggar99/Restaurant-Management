@@ -1,6 +1,6 @@
 # Data Structures to be used
 
-* 6 Linked Lists for Cooks , Vegan - VIP- Normal / Free - Busy
+* 4 Linked Lists for Cooks , Vegan - VIP- Normal / Free - Busy
 
 * There will be output for every time stamp , if there's more than one order finished at the same timestep , they will be sent to a priority queue 
 and be printed by ascending order based on ST (They all have the same FT) and then get started
