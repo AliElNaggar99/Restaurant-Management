@@ -7,7 +7,9 @@
 #include "..\Rest\Order.h"
 
 #include "..\Rest\Cook.h"
-
+#include"../VeganCook.h"
+#include"../NormalCook.h"
+#include"../VipCook.h"
 
 #include "..\Generic_DS\Queue.h"
 
