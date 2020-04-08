@@ -7,6 +7,7 @@ using namespace std;
 #include "..\Events\ArrivalEvent.h"
 
 
+
 Restaurant::Restaurant() 
 {
 	pGUI = NULL;
@@ -101,14 +102,18 @@ void Restaurant::Just_A_Demo()
 	//Just for sake of demo, generate some cooks and add them to the drawing list
 	//In next phases, Cooks info should be loaded from input file
 	int C_count = 12;	
-	Cook *pC = new Cook[C_count];
+
+	Cook **arrayOfCookPointers = new Cook*[C_count];
+
+	Cook **pC = new Cook*[C_count];
+
 	int cID = 1;
 
 	for(int i=0; i<C_count; i++)
 	{
 		cID+= (rand()%15+1);	
-		pC[i].setID(cID);
-		pC[i].setType((ORD_TYPE)(rand()%TYPE_CNT));
+		arrayOfCookPointers[i]->setID(cID);
+		arrayOfCookPointers[i]->setType((ORD_TYPE)(rand()%TYPE_CNT));
 	}	
 
 		
@@ -158,7 +163,7 @@ void Restaurant::Just_A_Demo()
 		
 		//Let's add ALL randomly generated Cooks to GUI::DrawingList
 		for(int i=0; i<C_count; i++)
-			pGUI->AddToDrawingList(&pC[i]);
+			pGUI->AddToDrawingList(arrayOfCookPointers[i]);
 		
 		//Let's add ALL randomly generated Ordes to GUI::DrawingList
 		int size = 0;
@@ -177,7 +182,7 @@ void Restaurant::Just_A_Demo()
 		pGUI->ResetDrawingList();
 	}
 
-	delete []pC;
+	delete []arrayOfCookPointers;
 
 
 	pGUI->PrintMessage("generation done, click to END program");
