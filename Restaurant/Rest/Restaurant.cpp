@@ -102,7 +102,11 @@ void Restaurant::Just_A_Demo()
 	//Just for sake of demo, generate some cooks and add them to the drawing list
 	//In next phases, Cooks info should be loaded from input file
 	int C_count = 12;	
+
 	Cook **arrayOfCookPointers = new Cook*[C_count];
+
+	Cook **pC = new Cook*[C_count];
+
 	int cID = 1;
 
 	for(int i=0; i<C_count; i++)
