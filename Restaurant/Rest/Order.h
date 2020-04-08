@@ -37,6 +37,14 @@ public:
 	ORD_STATUS getStatus() const;
 	void SetNumberOfDishes(int x);
 	int GetNumberOfDishes();
+	int GetTotalMoney();
+	int GetArrivalTime();
+	int GetServingTime();
+	int GetFinishTime();
+	void SetTotalMoney(int x);
+	void SetArrivalTime(int x);
+	void SetServingTime(int x);
+	void SetFinishTime(int x);
 	//
 	// TODO: Add More Member Functions As Needed
 	//

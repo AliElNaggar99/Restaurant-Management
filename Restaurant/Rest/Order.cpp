@@ -52,3 +52,43 @@ int Order::GetNumberOfDishes()
 {
 	return NumberOfDishes;
 }
+void Order::SetTotalMoney(int x)
+{
+	totalMoney = x;
+}
+void Order::SetArrivalTime(int x)
+{
+	ArrTime = x;
+
+}
+void Order::SetServingTime(int x)
+{
+	ServTime = x;
+
+}
+void Order::SetFinishTime(int x)
+{
+	FinishTime = x;
+
+}
+int Order::GetTotalMoney( )
+{
+	return totalMoney;
+
+}
+int  Order::GetArrivalTime( )
+{
+	return ArrTime;
+
+}
+int Order::GetFinishTime( )
+{
+	return FinishTime;
+
+}
+int Order::GetServingTime( )
+{
+	return ServTime;
+	
+
+}
