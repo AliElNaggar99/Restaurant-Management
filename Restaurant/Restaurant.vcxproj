@@ -108,8 +108,6 @@
     <ClInclude Include="Rest\Cook.h" />
     <ClInclude Include="Rest\Order.h" />
     <ClInclude Include="Rest\Restaurant.h" />
-    <ClInclude Include="VeganCook.h" />
-    <ClInclude Include="VipCook.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CMUgraphicsLib\CMUgraphics.cpp" />
@@ -151,12 +149,9 @@
     <ClCompile Include="Events\Event.cpp" />
     <ClCompile Include="Events\ArrivalEvent.cpp" />
     <ClCompile Include="GUI\GUI.cpp" />
-    <ClCompile Include="NormalCook.cpp" />
     <ClCompile Include="Rest\Cook.cpp" />
     <ClCompile Include="Rest\Order.cpp" />
     <ClCompile Include="Rest\Restaurant.cpp" />
-    <ClCompile Include="VeganCook.cpp" />
-    <ClCompile Include="VipCook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMUgraphicsLib\Manual.txt" />

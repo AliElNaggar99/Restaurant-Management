@@ -107,14 +107,8 @@
     <ClInclude Include="Rest\Cook.h">
       <Filter>Restaurant</Filter>
     </ClInclude>
-    <ClInclude Include="VipCook.h">
-      <Filter>Restaurant</Filter>
-    </ClInclude>
-    <ClInclude Include="NormalCook.h">
-      <Filter>Restaurant</Filter>
-    </ClInclude>
-    <ClInclude Include="VeganCook.h">
-      <Filter>Restaurant</Filter>
+    <ClInclude Include="PriorityQueue.h">
+      <Filter>Generic_DS</Filter>
     </ClInclude>
     <ClInclude Include="Defs.h">
       <Filter>Restaurant</Filter>
@@ -254,9 +248,6 @@
     <ClCompile Include="Rest\Cook.cpp">
       <Filter>Restaurant</Filter>
     </ClCompile>
-    <ClCompile Include="VipCook.cpp" />
-    <ClCompile Include="NormalCook.cpp" />
-    <ClCompile Include="VeganCook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMUgraphicsLib\Manual.txt">
