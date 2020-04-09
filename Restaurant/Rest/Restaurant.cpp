@@ -13,6 +13,7 @@ Restaurant::Restaurant()
 	pGUI = NULL;
 }
 
+
 void Restaurant::RunSimulation()
 {
 	pGUI = new GUI;
@@ -191,7 +192,93 @@ void Restaurant::Just_A_Demo()
 	
 }
 ////////////////
+int* Restaurant::CalculatingNumberofCooks(Cook** ArrayOfcook, int totalcooks)
+{
+	int numberofvipcooks = 0;
+	int numberofvegancooks = 0;
+	int numberofnormalcooks = 0;
+	for(int i=0;i<totalcooks;i++)
+	{
+		if (dynamic_cast <VipCook*> (ArrayOfcook[i]))
+		{
+			numberofvipcooks++;
+		}
+		if (dynamic_cast <NormalCook*> (ArrayOfcook[i]))
+		{
 
+			numberofnormalcooks++;
+		}
+		if (dynamic_cast <VeganCook*> (ArrayOfcook[i]))
+		{
+
+			numberofvegancooks++;
+		}
+	
+	
+	
+	
+	
+	}
+	int* Arrayofnumber = new int[4];
+		Arrayofnumber[0] = totalcooks;
+		Arrayofnumber[1] = numberofnormalcooks;
+		Arrayofnumber[2] = numberofvegancooks;
+		Arrayofnumber[3] = numberofvipcooks;
+		return Arrayofnumber;
+
+
+
+
+
+}
+void Restaurant::SaveFile(Order** ArrayofOrders, int NumberOfOrders,Cook**arrayofCooks,int NumberofCooks)
+{
+	ofstream OutputFile;
+	OutputFile.open("OutPut", ios::out);
+	OutputFile << "FT" << "     " << "ID" << "     " << "AT" << "     " << "WT" << "    " << "ST" << endl;
+	int numberofveganorders =0;
+	int numberofnormalorders =0;
+	int numberofviporders = 0;
+	int totalwaitingtime = 0;
+	int totalservingtime = 0;
+	for (int i = 0; i < NumberOfOrders; i++)
+	{   
+		int ft= ArrayofOrders[i]->GetFinishTime();
+		int id= ArrayofOrders[i]->GetID();
+		int at = ArrayofOrders[i]->GetArrivalTime();
+		int st =  ArrayofOrders[i]->GetFinishTime();
+		int wt=ft-at-st;
+		totalwaitingtime += wt;
+		totalservingtime += st;
+
+		OutputFile << ft << "     " << id << "     " << id << "     " << at << "     " << wt << "     " << st << endl;
+
+
+	}
+	for (int i = 0; i < NumberOfOrders ; i++)
+	{
+		if (ArrayofOrders[i]->GetType() == TYPE_VIP)
+		{
+			numberofviporders++;
+		}
+		if (ArrayofOrders[i]->GetType() == TYPE_VEGAN)
+		{
+			numberofveganorders++;
+		}
+		if (ArrayofOrders[i]->GetType() == TYPE_NORMAL)
+		{
+			numberofnormalorders++;
+		}
+		
+	}
+	int* arrofnumbers = CalculatingNumberofCooks(arrayofCooks, NumberofCooks);
+	OutputFile << "Orders: [Norm" << numberofnormalorders << ", Veg:" << numberofveganorders << ", VIP;" << numberofviporders <<"]" <<endl;
+	OutputFile << "Cooks:" << arrofnumbers[0] << "    [" << arrofnumbers[1] << arrofnumbers[2] << arrofnumbers[3] << "]" << endl;
+	OutputFile << "Avg Wait = " << totalwaitingtime / NumberOfOrders << "Avg Serv " << totalwaitingtime / NumberOfOrders << "" << endl;
+
+
+
+}
 void Restaurant::AddtoDemoQueue(Order *pOrd)
 {
 	DEMO_Queue.enqueue(pOrd);
