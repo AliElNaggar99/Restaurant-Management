@@ -54,7 +54,7 @@ void Node<T>::setNext(Node<T>* nextNodePtr)
 template < typename T>
 void Node<T> ::setPriority(const int num)
 {
-	return pri = num;
+	pri = num;
 }
 template < typename T>
 T Node<T>::getItem() const
