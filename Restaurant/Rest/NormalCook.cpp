@@ -1,6 +1,7 @@
 #include "NormalCook.h"
 
 int NormalCook::BreakTime = 0;
+int NormalCook::CookSpeed = 0;
 NormalCook::NormalCook()
 {
 }
@@ -31,33 +32,22 @@ void NormalCook::setType(ORD_TYPE t)
 }
 void NormalCook::SetBreakTime(int x)
 {
+	
 	BreakTime = x;
-
-
 
 }
 int NormalCook::GetBreakTime()
 {
 	return BreakTime;
 }
-void NormalCook::SetStatusOfCook(Cook_Status x)
-{
-	CurrentStatus = x;
 
-
-}
-Cook_Status NormalCook::GetCookStatus()
-{
-	return CurrentStatus;
-
-}
 int NormalCook::GetSpeed()
 {
-	return speed;
+	return NormalCook::CookSpeed;
 
 }
 void NormalCook::SetSpeed(int x)
 {
-	speed = x;
+	NormalCook::CookSpeed = x;
 
 }

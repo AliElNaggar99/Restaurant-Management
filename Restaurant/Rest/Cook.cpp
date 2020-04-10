@@ -33,13 +33,16 @@ void Cook::setType(ORD_TYPE t)
 	type = t;
 }
 
-void Cook::SetSpeed(int x)
-{
-	speed = x;
+
+
+
+void Cook::setBreakAfterN(int n) { BreakAfterN = n; }
+
+void Cook::SetStausOfCook(Cook_Status stat) {
+
+	CurrentStatus = stat; 
 
 }
-int Cook::GetSpeed()
-{
-	return speed;
 
-}
+Cook_Status Cook::GetCookStatus() { return CurrentStatus; }
+

@@ -7,8 +7,8 @@ class Cook
 {  protected:
 	int ID;
 	ORD_TYPE type;	//for each order type there is a corresponding type (VIP, Normal, Vegan)
-	int speed;		//dishes it can prepare in one clock tick (in one timestep)
 	Cook_Status CurrentStatus;
+	static int BreakAfterN;
 public:
 	Cook();
 	virtual ~Cook();
@@ -17,12 +17,11 @@ public:
 	virtual ORD_TYPE GetType() const;
 	virtual void setID(int);
 	virtual void setType(ORD_TYPE) ;
-	virtual void SetStausOfCook() = 0;
-    virtual Cook_Status GetCookStatus()=0;
-	virtual  void SetSpeed(int x);
-	virtual int GetSpeed();
+	void SetStausOfCook(Cook_Status);
+    Cook_Status GetCookStatus();
 	virtual int GetBreakTime()=0;
-	virtual void SetBreakTime()=0;
+	static void setBreakAfterN(int n); // somebody should add a getter for this 
+	
 
 
 

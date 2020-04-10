@@ -5,6 +5,10 @@
 
 class CancellationEvent : public Event {
 
+
+
+public:
+
 	CancellationEvent(int EventTime, int OrderID);
 
 

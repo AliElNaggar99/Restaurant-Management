@@ -5,6 +5,7 @@
 #include "..\CMUgraphicsLib\CMUgraphics.h"
 #include "..\GUI\GUI.h"
 #include "..\Generic_DS\Queue.h"
+#include "..\Generic_DS\LinkedList.h"
 #include "..\Events\Event.h"
 
 #include<fstream>
@@ -18,7 +19,10 @@ class Restaurant
 private:
 	GUI *pGUI;
 	Queue<Event*> EventsQueue;	//Queue of all events that will be loaded from file
-	
+	LinkedList<VeganCook*> VegCookList;
+	LinkedList<NormalCook*> NormCookList;
+	LinkedList<VipCook*> VipCookList;
+	LinkedList<Cook*> Busy_Break_Cooks;
 
 	
 	/// ==> 

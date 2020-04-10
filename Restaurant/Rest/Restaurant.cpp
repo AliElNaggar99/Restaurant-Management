@@ -7,6 +7,12 @@ using namespace std;
 
 #include "Restaurant.h"
 #include"../Events/ArrivalEvent.h"
+#include"../Events/CancellationEvent.h"
+#include"../Events/PromotionEvent.h"
+#include"NormalCook.h"
+#include"VeganCook.h"
+#include"VipCook.h"
+
 
 
 
@@ -81,17 +87,55 @@ std::vector<std::string> Container;
 
 // makes string only have 1 consecutive whitespace
 Lines[0] = regex_replace(Lines[0],MoreThanTwoSpace,oneWhiteSpace);
+Container = split_line(Lines[0],oneWhiteSpace);
+//Remeber to delete Cooks in destructor of Restaurant
+
+for (int i = 0; i < TYPE_CNT; i++) {
+	for (int j = 0; j < std::stoi(Container[i]); j++) {
+
+		switch (i)
+		{
+		case TYPE_NORMAL :
+			NormalCook* TEMP = new NormalCook;
+			NormCookList.InsertBeg(TEMP);
+			break;
+		case TYPE_VEGAN:
+			VeganCook* TEM = new VeganCook;
+			VegCookList.InsertBeg(TEM);
+			break;
+		case TYPE_VIP:
+			VipCook* TMP = new VipCook;
+			VipCookList.InsertBeg(TMP);
+			break;
+		default:
+			break;
+		}
+
+
+	}
+}
 
 
 
 //L2 cook speed for ea
 Lines[1] = regex_replace(Lines[1],MoreThanTwoSpace,oneWhiteSpace);
+Container = split_line(Lines[1],oneWhiteSpace);
+NormalCook::SetSpeed(std::stoi(Container[0]));
+VeganCook::SetSpeed(std::stoi(Container[1]));
+VipCook::SetSpeed(std::stoi(Container[2]));
+
+
 
 
 //L3 (BreakAfter n orders) BreakDuration
 Lines[2] = regex_replace(Lines[2],MoreThanTwoSpace,oneWhiteSpace);
 
+Container = split_line(Lines[2],oneWhiteSpace);
 
+Cook::setBreakAfterN(std::stoi(Container[0]));
+VipCook::SetBreakTime(std::stoi(Container[3]));
+NormalCook::SetBreakTime(std::stoi(Container[1]));
+VeganCook::SetBreakTime(std::stoi(Container[2]));
 
 
 //L4 Promotion Variable
@@ -105,32 +149,45 @@ int numEvents = std::stoi(Lines[4]);
 Lines.clear();
 Lines.resize(5+numEvents);
 Counter = 0 ;
+// test that this reads from the begining not from the line you stopped at
 while (getline(toBeReadFile,Lines[Counter]) && Counter++ != 5+numEvents) regex_replace(Lines[Counter],MoreThanTwoSpace,oneWhiteSpace);
 
 for(int i = 5; i < (5+numEvents);i++){
 	std::vector<std::string> SplitString = split_line(Lines[i]," ");
-	char FirstLetter = *std::begin(SplitString[0]);
+	char FirstLetter = *std::begin(SplitString[0]); // test that conversion works
 
 	switch (FirstLetter)
 	{
 	case 'R':  //Arrival Event
 		char SecondLetter = *std::begin(SplitString[1]);
-		int arrTime = std::stoi(SplitString[2]), oID = std::stoi(SplitString[3]), numDishes = std::stoi(SplitString[4]);
-		double totMoney = std::stod(SplitString[5]);
+		ORD_TYPE oType;
+		switch (SecondLetter)
+		{
+		case 'N':
+			oType = TYPE_NORMAL;
+			break;
+		case 'V':
+			oType = TYPE_VIP;
+			break;
+		case 'G':
+			oType = TYPE_VEGAN;
+			break;
+		default:
+			break;
+		}
+
+		ArrivalEvent(std::stoi(SplitString[2]), std::stoi(SplitString[3]),oType, std::stoi(SplitString[4]), std::stod(SplitString[5]));
 		
 		break;
 	case 'X':   //Cancellation event
-		
+		CancellationEvent(std::stoi(SplitString[1]),std::stoi(SplitString[2]));
 		break;
 	case 'P':	// Promotion Event
-		
+		PromotionEvent(std::stoi(SplitString[1]), std::stoi(SplitString[2]),std::stoi(SplitString[3]));
 		break;
-	
-
 	default:
 		break;
 	}
-	SplitString.clear();
 
 
 

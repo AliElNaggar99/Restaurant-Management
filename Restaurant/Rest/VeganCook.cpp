@@ -1,5 +1,6 @@
 #include "VeganCook.h"
 int VeganCook::Breaktime = 0;
+int VeganCook::CookSpeed = 0;
 int VeganCook::GetID() const
 {
 	return ID;
@@ -46,11 +47,11 @@ void VeganCook::SetStatusOfCook(Cook_Status t)
 }
 int VeganCook::GetSpeed()
 {
-	return speed;
+	return VeganCook::CookSpeed;
 
 }
 void VeganCook::SetSpeed(int x)
 {
-	speed = x;
+	VeganCook::CookSpeed = x;
 
 }
