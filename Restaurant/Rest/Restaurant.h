@@ -7,15 +7,17 @@
 #include "..\Generic_DS\Queue.h"
 #include "..\Events\Event.h"
 
-
+#include<fstream>
 #include "Order.h"
-
+//
+//what i am doing
 // it is the maestro of the project
 class Restaurant  
 {	
 private:
 	GUI *pGUI;
 	Queue<Event*> EventsQueue;	//Queue of all events that will be loaded from file
+	
 
 	
 	/// ==> 
@@ -27,12 +29,13 @@ private:
 
 public:
 	
+	void SaveFile(Order** Array, int Numberoftotalorders, Cook** Arrayoofcooks,int NumberOfcooks);
 	Restaurant();
 	~Restaurant();
-	
+	int* CalculatingNumberofCooks(Cook** ArrayOfcook, int totalcooks);
 	void ExecuteEvents(int TimeStep);	//executes all events at current timestep
 	void RunSimulation();
-
+	
 	
 
 

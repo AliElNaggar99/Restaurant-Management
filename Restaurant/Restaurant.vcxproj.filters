@@ -26,7 +26,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Defs.h" />
     <ClInclude Include="CMUgraphicsLib\jpeg\jconfig.h">
       <Filter>CMUGraphicsLib\JPEG</Filter>
     </ClInclude>
@@ -110,6 +109,18 @@
     </ClInclude>
     <ClInclude Include="PriorityQueue.h">
       <Filter>Generic_DS</Filter>
+    </ClInclude>
+    <ClInclude Include="Defs.h">
+      <Filter>Restaurant</Filter>
+    </ClInclude>
+    <ClInclude Include="PriorityQueue.h">
+      <Filter>Restaurant</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>Restaurant</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkedList.h">
+      <Filter>Restaurant</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -31,6 +31,14 @@ enum PROG_MODE	//mode of the program interface
 	MODE_DEMO,	//Demo mode (for introductory phase only, should be removed in phases 1&2)
 	MODE_CNT	//number of possible modes
 };
+enum Cook_Status
+{
+	Availabe,
+	Busy,
+	Working
+
+
+};
 
 
 #define MaxPossibleOrdCnt 999	//max possible order count (arbitrary value)
