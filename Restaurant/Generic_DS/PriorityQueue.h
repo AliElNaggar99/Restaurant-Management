@@ -49,7 +49,7 @@ bool PriorityQueue<T>::isEmpty() const
 
 
 template <typename T>
-bool PriorityQueue<T>::enqueue(const T& newEntry, int pri = 0) // rakam lee value w priority bta3o 
+bool PriorityQueue<T>::enqueue(const T& newEntry, int pri) // rakam lee value w priority bta3o 
 //byhot awel rakam fl list el 3ndo priority a2al
 {
 	Node<T>*P1 = new Node<T>(newEntry); // A pointer and a value for a new node 
