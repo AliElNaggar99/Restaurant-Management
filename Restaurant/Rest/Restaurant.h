@@ -9,6 +9,7 @@
 
 #include<fstream>
 #include "Order.h"
+#include<vector>
 //
 //what i am doing
 // it is the maestro of the project
@@ -49,7 +50,7 @@ public:
 
 /// ===================    DEMO-related functions. Should be removed in phases 1&2   ================= 
 
-	void Just_A_Demo();	//just to show a demo and should be removed in phase1 1 & 2
+	//void Just_A_Demo();	//just to show a demo and should be removed in phase1 1 & 2
 	void AddtoDemoQueue(Order* po);	//adds an order to the demo queue
 
 /// ================================================================================================== 

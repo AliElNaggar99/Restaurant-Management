@@ -8,7 +8,6 @@ PromotionEvent::PromotionEvent(int EventTime,int OrderTime,int ExtraMoney): Even
 }
 
 
-int PromotionEvent::getExtraMoney(){return ExtraMoney;}
 
 void PromotionEvent::Execute(Restaurant * pRest){
 

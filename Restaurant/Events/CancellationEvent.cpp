@@ -1,6 +1,8 @@
 #include"CancellationEvent.h"
 
-CancellationEvent::CancellationEvent(int EventTime , int OrderID):Event(EventTime,OrderID){}
+CancellationEvent::CancellationEvent(int EventTime , int OrderID):Event(EventTime,OrderID){
+
+}
 
 
 void CancellationEvent::Execute(Restaurant * pRest){

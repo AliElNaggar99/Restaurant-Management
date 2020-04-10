@@ -3,15 +3,15 @@
 
 #include"Event.h"
 
-class CancellationEvent : public Event{
+class CancellationEvent : public Event {
 
-PromotionEvent(int EventTime,int OrderID);
-
-
-virtual void Execute(Restaurant* pRest);
+	CancellationEvent(int EventTime, int OrderID);
 
 
-}
+	virtual void Execute(Restaurant* pRest);
+
+
+};
 
 
 

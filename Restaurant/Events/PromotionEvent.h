@@ -3,20 +3,19 @@
 
 #include"Event.h"
 
-class PromotionEvent:public Event{
+class PromotionEvent :public Event {
 
 private:
 
-int ExtraMoney;
+	int ExtraMoney;
 
 public:
 
-PromotionEvent(int EventTime,int OrderID,int ExtraMoney);
-int getExtraMoney();
+	PromotionEvent(int EventTime, int OrderID, int ExtraMoney);
 
-virtual void Execute(Restaurant* pRest);
+	virtual void Execute(Restaurant* pRest);
 
-}
+};
 
 
 
