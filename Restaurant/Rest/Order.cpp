@@ -52,7 +52,7 @@ int Order::GetNumberOfDishes()
 {
 	return NumberOfDishes;
 }
-void Order::SetTotalMoney(int x)
+void Order::SetTotalMoney(double x)
 {
 	totalMoney = x;
 }
@@ -71,7 +71,7 @@ void Order::SetFinishTime(int x)
 	FinishTime = x;
 
 }
-int Order::GetTotalMoney( )
+double Order::GetTotalMoney( )
 {
 	return totalMoney;
 

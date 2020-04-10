@@ -45,6 +45,7 @@ public:
 	// TODO: Add More Member Functions As Needed
 	//
 	void ReadFromFile(); //Hosny
+	std::vector<std::string> split_line(const std::string & line , std::string delimeter); //Honsy
 
 /// ===================    DEMO-related functions. Should be removed in phases 1&2   ================= 
 

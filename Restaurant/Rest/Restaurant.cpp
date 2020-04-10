@@ -1,14 +1,13 @@
 #include <cstdlib>
 #include <time.h>
 #include <iostream>
-#include<fstream>
 #include<vector>
 #include<regex>
 
 using namespace std;
 
 #include "Restaurant.h"
-#include "..\Events\ArrivalEvent.h"
+#include"../Events/ArrivalEvent.h"
 
 
 
@@ -37,6 +36,18 @@ void Restaurant::RunSimulation()
 	};
 
 }
+
+std::vector<std::string> Restaurant::split_line(const std::string & line,std::string delimeter) {
+  std::vector<std::string> StringVector;
+  std::size_t start = 0, end = 0;
+  while ((end = line.find(delimeter, start)) != std::string::npos) {
+    StringVector.push_back(line.substr(start, end - start));
+    start = end + 1;
+  }
+  StringVector.push_back(line.substr(start));
+  return StringVector;
+}
+
 
 void Restaurant::ReadFromFile(){
 
@@ -92,12 +103,40 @@ int numEvents = std::stoi(Lines[4]);
 
 
 //Resizing vector
-
+Lines.clear();
 Lines.resize(5+numEvents);
 Counter = 0 ;
 while (getline(toBeReadFile,Lines[Counter]) && Counter++ != 5+numEvents) regex_replace(Lines[Counter],MoreThanTwoSpace,oneWhiteSpace);
 
-//use strtok to split strings
+for(int i = 5; i < (5+numEvents);i++){
+	std::string SplitString = split_line(Lines[i]);
+	char FirstLetter = SplitString[0];
+
+	switch (FirstLetter)
+	{
+	case 'R':  //Arrival Event
+		
+		
+
+		break;
+	case 'X':   //Cancellation event
+		
+		break;
+	case 'P':	// Promotion Event
+		
+		break;
+	
+
+	default:
+		break;
+	}
+	SplitString.clear();
+
+
+
+}
+
+
 
 
 

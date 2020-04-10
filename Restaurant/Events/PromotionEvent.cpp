@@ -18,7 +18,7 @@ void PromotionEvent::Execute(Restaurant * pRest){
 
     // Moves it to VIP
 
-    // Order it is moved in and key depend on the way the priority queue is made
+    // Order(as in position not order itself) it is moved in and key depend on the way the priority queue is made
     
 
     return;
