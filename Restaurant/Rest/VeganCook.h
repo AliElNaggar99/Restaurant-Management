@@ -1,26 +1,30 @@
 #pragma once
-#include "../Restaurant/Rest/Cook.h"
+#include "Cook.h"
 
-class VipCook :
+class VeganCook :
 	public Cook
+{ private:
+	
 
-{
-private:
 	
 public:
-	static int BreakTime;
-	VipCook();
+	static int Breaktime;
+	VeganCook();
+	
 	int GetID() const;
 	ORD_TYPE GetType() const;
 	void setID(int);
 	void setType(ORD_TYPE);
 	virtual void SetBreakTime(int x);
 	virtual int GetBreakTime();
-	void SetStatusofCook(Cook_Status x);
-	Cook_Status GetStatus();
+	void SetStatusOfCook(Cook_Status x);
+	Cook_Status GetCookStatus();
 	virtual  void SetSpeed(int x);
 	virtual int GetSpeed();
 
+
+
 };
+
 
 

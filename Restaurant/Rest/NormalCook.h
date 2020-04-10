@@ -1,5 +1,5 @@
 #pragma once
-#include "../Restaurant/Rest/Cook.h"
+#include "Cook.h"
 
 class NormalCook :
 	public Cook

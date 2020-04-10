@@ -32,9 +32,10 @@ enum PROG_MODE	//mode of the program interface
 	MODE_CNT	//number of possible modes
 };
 enum Cook_Status
-{Availabe,
-Busy,
-Working
+{
+	Availabe,
+	Busy,
+	Working
 
 
 };
