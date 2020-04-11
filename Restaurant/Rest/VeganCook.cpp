@@ -1,9 +1,11 @@
 #include "VeganCook.h"
 int VeganCook::Breaktime = 0;
 int VeganCook::CookSpeed = 0;
-
+//adjust Constructor for VeganCook
 VeganCook::VeganCook()
 {
+	type = TYPE_VEGAN;
+	CurrentStatus = Availabe;
 }
 
 

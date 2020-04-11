@@ -6,6 +6,8 @@ class LinkedList
 {
 private:
 	Node<T>* Head;
+	//Count for the List
+	int count = 0;
 public:
 	// hena functions Delete be koll ashkalo w Insert be koll ashkalo 
 
@@ -36,7 +38,7 @@ public:
 			P1 = P1->getNext();
 		}
 		P1->setNext(pnew);
-
+		count++;
 
 
 	}
@@ -47,8 +49,48 @@ public:
 		Node<T>* R = new Node<T>(data);
 		R->setNext(Head);
 		Head = R;
+		count++;
 
 	}
+
+	//to return first member in List
+	bool ReturnFirst(T& data)
+	{
+		if (Head)
+		{
+			data = Head->getItem();
+			return this->DeleteFirst();
+		}
+		else
+			return false;
+		
+	 }
+
+	//to find an element in the List
+
+	bool findPos(T &data,int i)
+	{
+		Node<T>* temp = Head;
+		int inital = 0;
+		
+		if (i > count)
+			return false;
+
+		while (inital != i)
+		{
+			inital++;
+			temp = temp->getNext();
+
+		}
+		data = temp->getItem();
+		return true;
+
+	}
+
+
+
+
+
 
 	void insertPos(T data, int Pos)
 	{
@@ -66,15 +108,18 @@ public:
 		P1->setNext(P2->getNext());
 		P2->setNext(P1);
 	}
-
-	void DeleteFirst()
+	//Adjusting the DeleteFirst to return Delete Node
+	bool DeleteFirst()
 	{
 		if (Head)
 		{
 			Node<T>* temp = Head;
 			Head = Head->getNext();
 			delete temp;
+			return true;
 		}
+		else
+			return false;
 
 	}
 

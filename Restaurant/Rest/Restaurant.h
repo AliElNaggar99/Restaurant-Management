@@ -23,12 +23,16 @@ private:
 	LinkedList<NormalCook*> NormCookList;
 	LinkedList<VipCook*> VipCookList;
 	LinkedList<Cook*> Busy_Break_Cooks;
+	LinkedList<Cook*> Free_Cook;
 
 	
 	/// ==> 
 	//	DEMO-related members. Should be removed in phases 1&2
 	Queue<Order*> DEMO_Queue;	//Important: This is just for demo
 	/// ==>
+
+	//Our Orders to Queue
+	Queue <Order*> OrdersAll;
 	
 	int PromotionVariable;
 
@@ -62,7 +66,8 @@ public:
 
 /// ================================================================================================== 
 
-
+	//Queuing in the Restaurant
+	void AddtoOrderQueue(Order* pOrd);
 
 };
 

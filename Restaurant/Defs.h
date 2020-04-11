@@ -35,7 +35,8 @@ enum Cook_Status
 {
 	Availabe,
 	Busy,
-	Working
+	//Break not working
+	Break
 
 
 };

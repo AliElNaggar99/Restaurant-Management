@@ -58,6 +58,10 @@ std::vector<std::string> Restaurant::split_line(const std::string & line,std::st
 void Restaurant::ReadFromFile(){
 
 
+//making Cooks ID
+
+	int cID = 1;
+
 this->pGUI->PrintMessage("Enter the name of the file to be read : ");
 std::string FileName = pGUI->GetString();
 
@@ -96,15 +100,33 @@ for (int i = 0; i < TYPE_CNT; i++) {
 
 		if (i == TYPE_NORMAL) {
 			NormalCook* TEMP = new NormalCook;
-			NormCookList.InsertBeg(TEMP);
+			//Creating ID for Cooks
+			cID += (rand() % 15 + 1);
+			TEMP->setID(cID);
+			NormCookList.InsertEnd(TEMP);
+			//Creating a pointer to the Cook to add in Cook list
+			Cook* CookPointer = TEMP;
+			Free_Cook.InsertEnd(TEMP);
 		}
 		else if (i == TYPE_VEGAN) {
 			VeganCook* TEMP = new VeganCook;
-			VegCookList.InsertBeg(TEMP);
+			//Creating ID for Cooks
+			cID += (rand() % 15 + 1);
+			TEMP->setID(cID);
+			VegCookList.InsertEnd(TEMP);
+			//Creating a pointer to the Cook to add in Cook list
+			Cook* CookPointer = TEMP;
+			Free_Cook.InsertEnd(TEMP);
 		}
 		else{
 			VipCook* TEMP = new VipCook;
-			VipCookList.InsertBeg(TEMP);
+			//Creating ID for Cooks
+			cID += (rand() % 15 + 1);
+			TEMP->setID(cID);
+			VipCookList.InsertEnd(TEMP);
+			//Creating a pointer to the Cook to add in Cook list
+			Cook* CookPointer = TEMP;
+			Free_Cook.InsertEnd(TEMP);
 			
 		}
 
@@ -238,6 +260,16 @@ void Restaurant::FillDrawingList()
 	//To add orders it should call function  void GUI::AddToDrawingList(Order* pOrd);
 	//To add Cooks it should call function  void GUI::AddToDrawingList(Cook* pCc);
 
+	//filling cook list
+	int i = 0;
+	//temp storage for cook
+	Cook* Pc;
+	while (Free_Cook.findPos(Pc, i))
+	{
+		pGUI->AddToDrawingList(Pc);	
+		i++;
+	}
+
 }
 
 
@@ -256,15 +288,11 @@ void Restaurant::Test()
 	
 
 	Event* A1 = nullptr;
-	while (EventsQueue.dequeue(A1))
-	{
-		int ID = A1->getOrderID();
-
-		pGUI->PrintMessage("Order ID is " + to_string(ID));
-
-
-		pGUI->waitForClick();
-	}
+	
+	FillDrawingList();
+	pGUI->UpdateInterface();
+	pGUI->waitForClick();
+	int CurrentTimeStep = 1;
   
 	
 
@@ -393,6 +421,9 @@ void Restaurant::Test()
 //	
 //}
 ////////////////
+
+
+
 int* Restaurant::CalculatingNumberofCooks(Cook** ArrayOfcook, int totalcooks)
 {
 	int numberofvipcooks = 0;
@@ -475,6 +506,12 @@ void Restaurant::SaveFile(Order** ArrayofOrders, int NumberOfOrders,Cook**arrayo
 void Restaurant::AddtoDemoQueue(Order *pOrd)
 {
 	DEMO_Queue.enqueue(pOrd);
+}
+
+
+void Restaurant::AddtoOrderQueue(Order* pOrd)
+{
+	OrdersAll.enqueue(pOrd);
 }
 
 /// ==> end of DEMO-related function

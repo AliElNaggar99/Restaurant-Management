@@ -2,8 +2,11 @@
 
 int NormalCook::BreakTime = 0;
 int NormalCook::CookSpeed = 0;
+//adjusting Default construtor 
 NormalCook::NormalCook()
 {
+	type = TYPE_NORMAL;
+	CurrentStatus = Availabe;
 }
 
 

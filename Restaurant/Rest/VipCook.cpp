@@ -5,6 +5,8 @@ int VipCook::CookSpeed = 0;
 
 VipCook::VipCook()
 {
+	type = TYPE_VIP;
+	CurrentStatus = Availabe;
 }
 
 
