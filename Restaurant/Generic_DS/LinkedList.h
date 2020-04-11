@@ -50,25 +50,6 @@ public:
 
 	}
 
-	void InsertEnd(const T& data)
-	{
-
-		Node<T>* p = new Node<T>();
-		p = Head;
-		Node<T>* pnew = new Node<T>(data);
-		if (Head == nullptr)
-		{
-			Head = pnew;
-			return;
-		}
-		while (p->getNext())
-		{
-			p = p->getNext();
-		}
-		p->setNext(pnew);
-
-	}
-
 	void insertPos(T data, int Pos)
 	{
 		Node<T>* P1 = new Node <T>;

@@ -123,6 +123,7 @@ VipCook::SetSpeed(std::stoi(Container[2]));
 
 
 
+
 //L3 (BreakAfter n orders) BreakDuration
 Lines[2] = regex_replace(Lines[2],MoreThanTwoSpace,oneWhiteSpace);
 
@@ -384,11 +385,6 @@ int* Restaurant::CalculatingNumberofCooks(Cook** ArrayOfcook, int totalcooks)
 
 			numberofvegancooks++;
 		}
-	
-	
-	
-	
-	
 	}
 	int* Arrayofnumber = new int[4];
 		Arrayofnumber[0] = totalcooks;
@@ -396,12 +392,10 @@ int* Restaurant::CalculatingNumberofCooks(Cook** ArrayOfcook, int totalcooks)
 		Arrayofnumber[2] = numberofvegancooks;
 		Arrayofnumber[3] = numberofvipcooks;
 		return Arrayofnumber;
-
-
-
-
-
 }
+
+
+
 void Restaurant::SaveFile(Order** ArrayofOrders, int NumberOfOrders,Cook**arrayofCooks,int NumberofCooks)
 {
 	ofstream OutputFile;
@@ -446,10 +440,9 @@ void Restaurant::SaveFile(Order** ArrayofOrders, int NumberOfOrders,Cook**arrayo
 	OutputFile << "Orders: [Norm" << numberofnormalorders << ", Veg:" << numberofveganorders << ", VIP;" << numberofviporders <<"]" <<endl;
 	OutputFile << "Cooks:" << arrofnumbers[0] << "    [" << arrofnumbers[1] << arrofnumbers[2] << arrofnumbers[3] << "]" << endl;
 	OutputFile << "Avg Wait = " << totalwaitingtime / NumberOfOrders << "Avg Serv " << totalwaitingtime / NumberOfOrders << "" << endl;
-
-
-
 }
+
+
 void Restaurant::AddtoDemoQueue(Order *pOrd)
 {
 	DEMO_Queue.enqueue(pOrd);
