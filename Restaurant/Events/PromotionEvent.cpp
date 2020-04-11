@@ -1,8 +1,8 @@
 #include"PromotionEvent.h"
 
 
-
-PromotionEvent::PromotionEvent(int EventTime,int OrderTime,int ExtraMoney): Event(EventTime,OrderID)
+// adjusting constructor to save elements
+PromotionEvent::PromotionEvent(int EventTime, int OrderID, int ExtraMoney): Event(EventTime,OrderID)
 {
     this->ExtraMoney = ExtraMoney;
 }

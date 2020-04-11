@@ -37,6 +37,7 @@ void Restaurant::RunSimulation()
 		break;
 	case MODE_DEMO:
 		//Just_A_Demo();
+		Test();
 		break;
 	};
 
@@ -170,25 +171,35 @@ for(int i = 5; i < (5+numEvents);i++){
 		default:
 			break;
 		}
+		// making a pointer of Event to add it to Queue dynamically so it doesn't remvoe after deqeueing
+		//swaped between Splitstring 3 and 2 as 2 is ID not 3
+		Event* A = new ArrivalEvent(std::stoi(SplitString[3]), std::stoi(SplitString[2]), oType, std::stoi(SplitString[4]), std::stod(SplitString[5]));
 
-		ArrivalEvent(std::stoi(SplitString[2]), std::stoi(SplitString[3]), oType, std::stoi(SplitString[4]), std::stod(SplitString[5]));
+		// enqueue the event
+		EventsQueue.enqueue(A);
 
 	}
 	else if (FirstLetter == 'X') {
 		//Cancellation event
-		CancellationEvent(std::stoi(SplitString[1]), std::stoi(SplitString[2]));
+		// making a pointer of Event to add it to Queue dynamically so it doesn't remvoe after deqeueing
+		//swaped between Splitstring 1 and 2 as 1 is ID not 2
+		Event* C = new CancellationEvent(std::stoi(SplitString[2]), std::stoi(SplitString[1]));
+	
+		// enqueue the event
+		EventsQueue.enqueue(C);
+
 	}
 	else{
-		PromotionEvent(std::stoi(SplitString[1]), std::stoi(SplitString[2]),std::stoi(SplitString[3]));
+		// making a pointer of Event to add it to Queue dynamically so it doesn't remvoe after deqeueing
+		Event* P = new PromotionEvent(std::stoi(SplitString[2]), std::stoi(SplitString[1]),std::stoi(SplitString[3]));
+		// enqueue the event
+		EventsQueue.enqueue(P);
 		
 	}
 
 
 
 }
-
-
-
 
 }
 
@@ -228,6 +239,38 @@ void Restaurant::FillDrawingList()
 	//To add Cooks it should call function  void GUI::AddToDrawingList(Cook* pCc);
 
 }
+
+
+
+// Simple Stimulation for Phase I to test Ali:
+void Restaurant::Test()
+{
+	//reading File from user
+
+	ReadFromFile();
+
+	//all listed is being filled by cocks and events
+	pGUI->PrintMessage("Hello, u sexyyy");
+	pGUI->waitForClick();
+	//Check Event list 
+	
+
+	Event* A1 = nullptr;
+	while (EventsQueue.dequeue(A1))
+	{
+		int ID = A1->getOrderID();
+
+		pGUI->PrintMessage("Order ID is " + to_string(ID));
+
+
+		pGUI->waitForClick();
+	}
+  
+	
+
+}
+
+
 
 
 
