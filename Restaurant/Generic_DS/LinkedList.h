@@ -80,7 +80,6 @@ public:
 
 	bool DeleteNode(const T& value)
 	{
-		{
 			int c = -1;
 			Node<T>* temp = Head;
 			while (temp->getNext())
@@ -99,8 +98,6 @@ public:
 			}
 			if (c == 1)
 				return true;
-		}
-
 	}
 
 	void DeleteAll()

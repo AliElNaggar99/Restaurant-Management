@@ -52,23 +52,16 @@ template <typename T>
 bool PriorityQueue<T>::enqueue(const T& newEntry, int pri) // rakam lee value w priority bta3o 
 //byhot awel rakam fl list el 3ndo priority a2al
 {
-	Node<T>*P1 = new Node<T>(newEntry); // A pointer and a value for a new node 
-	P1->setPriority(pri);
-	if (frontPtr == nullptr || pri < frontPtr->getPriority()) // de lw el linked fadya aw el condition el tany b2a 
-	{
-		P1->setNext(frontPtr); frontPtr = P1;
-	}
-	else {
-		Node<T>* P2 = frontPtr; // 
-		while (P2->getNext() != nullptr && P2->getNext()->getPriority() <= pri)
-		{
-			P2 = P2->getNext();
-		}
-		P1->setNext(P2->getNext());
-		P2->setNext(P1);
-
-	}
+	Node<T>* newNodePtr = new Node<T>(newEntry);
+	newNodePtr->setPriority(pri);
+	// Insert the new node
+	if (isEmpty())
+		frontPtr = newNodePtr; // The queue is empty
+	else
+		backPtr->setNext(newNodePtr); // The queue was not empty
+	backPtr = newNodePtr; // New node is at back
 	return true;
+
 } // end enqueue
 
 
@@ -89,15 +82,37 @@ bool PriorityQueue<T>::dequeue(T& frntEntry)
 		return false;
 
 	Node<T>* nodeToDeletePtr = frontPtr;
-	frntEntry = frontPtr->getItem();
-	frontPtr = frontPtr->getNext();
-	// Queue is not empty; remove front
-	if (nodeToDeletePtr == backPtr)	 // Special case: one node in queue
-		backPtr = frontPtr = nullptr;
+	Node<T>* temp = frontPtr;
+	//Search for node with highest Priority 
+	while (temp)
+	{
+		if (nodeToDeletePtr->getPriority() < temp->getPriority())
+		{
+			nodeToDeletePtr = temp;
+		}
+		temp = temp->getNext();
+	}
+	//if nodetoDeletePtr is FrontPtr
+	if (nodeToDeletePtr == frontPtr)
+	{
+		frontPtr = frontPtr->getNext();
+		frntEntry = nodeToDeletePtr->getItem();
+		delete nodeToDeletePtr;
+		return true;
+	}
 
-	// Free memory reserved by the dequeued node
+	// Here you have the node to DeletePtr
+	// you reset the pointer
+	//Search for  node before this node 
+	temp = frontPtr;
+	while (temp->getNext() != nodeToDeletePtr)
+	{
+		temp = temp->getNext();
+	}
+	temp->setNext(nodeToDeletePtr->getNext());
+
+	frntEntry = nodeToDeletePtr->getItem();
 	delete nodeToDeletePtr;
-
 
 	return true;
 
@@ -164,3 +179,4 @@ T* PriorityQueue<T>::toArray(int& count)
 	}
 	return Arr;
 }
+
