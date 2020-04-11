@@ -1,6 +1,14 @@
 #include "VipCook.h"
 int VipCook::BreakTime = 0;
 int VipCook::CookSpeed = 0;
+
+
+VipCook::VipCook()
+{
+}
+
+
+
 int VipCook::GetID() const
 {
 	return ID;

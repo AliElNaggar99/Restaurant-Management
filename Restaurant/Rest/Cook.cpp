@@ -1,5 +1,6 @@
 #include "Cook.h"
 
+int Cook::BreakAfterN = 0;
 
 Cook::Cook()
 {
