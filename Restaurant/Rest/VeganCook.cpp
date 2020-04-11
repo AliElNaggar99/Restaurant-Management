@@ -35,16 +35,6 @@ int VeganCook::GetBreakTime()
 	return Breaktime;
 }
 
-Cook_Status VeganCook::GetCookStatus()
-{
-	return CurrentStatus;
-
-}
-void VeganCook::SetStatusOfCook(Cook_Status t)
-{
-	CurrentStatus = t;
-
-}
 int VeganCook::GetSpeed()
 {
 	return VeganCook::CookSpeed;

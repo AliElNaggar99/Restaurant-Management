@@ -76,7 +76,7 @@ if(! toBeReadFile.is_open()){
 
 std::vector<std::string> Lines(5);
 int Counter = 0 ;
-while (getline(toBeReadFile,Lines[Counter]) && Counter++ != 5);
+while (getline(toBeReadFile,Lines[Counter]) && Counter++ != 4);
 
 // L1 no of cooks from each type
 
@@ -93,22 +93,18 @@ Container = split_line(Lines[0],oneWhiteSpace);
 for (int i = 0; i < TYPE_CNT; i++) {
 	for (int j = 0; j < std::stoi(Container[i]); j++) {
 
-		switch (i)
-		{
-		case TYPE_NORMAL :
+		if (i == TYPE_NORMAL) {
 			NormalCook* TEMP = new NormalCook;
 			NormCookList.InsertBeg(TEMP);
-			break;
-		case TYPE_VEGAN:
-			VeganCook* TEM = new VeganCook;
-			VegCookList.InsertBeg(TEM);
-			break;
-		case TYPE_VIP:
-			VipCook* TMP = new VipCook;
-			VipCookList.InsertBeg(TMP);
-			break;
-		default:
-			break;
+		}
+		else if (i == TYPE_VEGAN) {
+			VeganCook* TEMP = new VeganCook;
+			VegCookList.InsertBeg(TEMP);
+		}
+		else{
+			VipCook* TEMP = new VipCook;
+			VipCookList.InsertBeg(TEMP);
+			
 		}
 
 
@@ -146,19 +142,17 @@ int numEvents = std::stoi(Lines[4]);
 
 
 //Resizing vector
-Lines.clear();
 Lines.resize(5+numEvents);
-Counter = 0 ;
 // test that this reads from the begining not from the line you stopped at
-while (getline(toBeReadFile,Lines[Counter]) && Counter++ != 5+numEvents) regex_replace(Lines[Counter],MoreThanTwoSpace,oneWhiteSpace);
+while (getline(toBeReadFile,Lines[Counter]) && Counter++ != 4+numEvents) ;
 
 for(int i = 5; i < (5+numEvents);i++){
+	Lines[i] = regex_replace(Lines[i], MoreThanTwoSpace, oneWhiteSpace);
 	std::vector<std::string> SplitString = split_line(Lines[i]," ");
 	char FirstLetter = *std::begin(SplitString[0]); // test that conversion works
 
-	switch (FirstLetter)
-	{
-	case 'R':  //Arrival Event
+	if (FirstLetter == 'R') {
+		//Arrival Event
 		char SecondLetter = *std::begin(SplitString[1]);
 		ORD_TYPE oType;
 		switch (SecondLetter)
@@ -176,17 +170,16 @@ for(int i = 5; i < (5+numEvents);i++){
 			break;
 		}
 
-		ArrivalEvent(std::stoi(SplitString[2]), std::stoi(SplitString[3]),oType, std::stoi(SplitString[4]), std::stod(SplitString[5]));
-		
-		break;
-	case 'X':   //Cancellation event
-		CancellationEvent(std::stoi(SplitString[1]),std::stoi(SplitString[2]));
-		break;
-	case 'P':	// Promotion Event
+		ArrivalEvent(std::stoi(SplitString[2]), std::stoi(SplitString[3]), oType, std::stoi(SplitString[4]), std::stod(SplitString[5]));
+
+	}
+	else if (FirstLetter == 'X') {
+		//Cancellation event
+		CancellationEvent(std::stoi(SplitString[1]), std::stoi(SplitString[2]));
+	}
+	else{
 		PromotionEvent(std::stoi(SplitString[1]), std::stoi(SplitString[2]),std::stoi(SplitString[3]));
-		break;
-	default:
-		break;
+		
 	}
 
 
