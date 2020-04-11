@@ -1,10 +1,13 @@
 #include "Order.h"
 
-Order::Order(int id, ORD_TYPE r_Type)
+Order::Order(int id, ORD_TYPE r_Type, int ArrivalTime, int numDishes, double totMoney)
 {
 	ID = (id>0&&id<1000)?id:0;	//1<ID<999
 	type = r_Type;
 	status = WAIT;
+	this->ArrTime = ArrivalTime;
+	this->NumberOfDishes = numDishes;
+	this->totalMoney = totMoney; 
 }
 
 Order::~Order()
@@ -52,7 +55,7 @@ int Order::GetNumberOfDishes()
 {
 	return NumberOfDishes;
 }
-void Order::SetTotalMoney(int x)
+void Order::SetTotalMoney(double x)
 {
 	totalMoney = x;
 }
@@ -71,7 +74,7 @@ void Order::SetFinishTime(int x)
 	FinishTime = x;
 
 }
-int Order::GetTotalMoney( )
+double Order::GetTotalMoney( )
 {
 	return totalMoney;
 

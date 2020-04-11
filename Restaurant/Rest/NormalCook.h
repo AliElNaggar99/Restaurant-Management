@@ -5,21 +5,21 @@ class NormalCook :
 	public Cook
 {
 
+	static int BreakTime;
+	static int CookSpeed;
 	
 public:
-	static int BreakTime;
+	
 	NormalCook();
 	
 	int GetID() const;
 	ORD_TYPE GetType() const;
 	virtual void setID(int x);
 	virtual void setType(ORD_TYPE);
-	virtual void SetBreakTime(int x);
-	 int GetBreakTime();
-	 void SetStatusOfCook(Cook_Status x);
-	Cook_Status GetCookStatus();
-	virtual  void SetSpeed(int x);
-	virtual int GetSpeed();
+	static void SetBreakTime(int x);
+	int GetBreakTime();
+	static  void SetSpeed(int x);
+	int GetSpeed();
 
 };
 

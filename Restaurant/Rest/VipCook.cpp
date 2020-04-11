@@ -1,5 +1,6 @@
 #include "VipCook.h"
 int VipCook::BreakTime = 0;
+int VipCook::CookSpeed = 0;
 int VipCook::GetID() const
 {
 	return ID;
@@ -29,28 +30,18 @@ void VipCook::SetBreakTime(int x)
 
 
 }
-void VipCook::SetStatusofCook(Cook_Status t )
-{
-	CurrentStatus = t;
 
-
-}
 int VipCook::GetBreakTime()
 {
 	return BreakTime;
 }
-Cook_Status VipCook::GetStatus()
-{
-	return CurrentStatus;
-
-}
 int VipCook::GetSpeed()
 {
-	return speed;
+	return VipCook::CookSpeed;
 
 }
 void VipCook::SetSpeed(int x)
 {
-	speed = x;
+	VipCook::CookSpeed = x;
 
 }
