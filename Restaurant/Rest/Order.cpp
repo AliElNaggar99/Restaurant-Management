@@ -25,6 +25,11 @@ ORD_TYPE Order::GetType() const
 	return type;
 }
 
+void Order::setType(ORD_TYPE y)
+{
+	type = y;
+}
+
 
 void Order::SetDistance(int d)
 {

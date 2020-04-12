@@ -21,6 +21,8 @@ void PromotionEvent::Execute(Restaurant * pRest){
     // Order(as in position not order itself) it is moved in and key depend on the way the priority queue is made
     
 
+    pRest->PromOrder(OrderID , ExtraMoney);
+
     return;
     
 }

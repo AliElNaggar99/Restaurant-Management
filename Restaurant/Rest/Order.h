@@ -30,6 +30,8 @@ public:
 	void SetDistance(int d);
 	int GetDistance() const;
 
+	void setType(ORD_TYPE s) ;
+
 	void setStatus(ORD_STATUS s);
 	ORD_STATUS getStatus() const;
 	void SetNumberOfDishes(int x);

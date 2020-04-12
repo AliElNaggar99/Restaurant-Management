@@ -73,6 +73,9 @@ public:
 	// Cancel an order if it is waiting
 	void CancelOrder(int CID);
 
+	//promo the order 
+	void PromOrder(int CID , int ExtraMoney);
+
 };
 
 #endif

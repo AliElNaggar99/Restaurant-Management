@@ -55,7 +55,8 @@ std::vector<std::string> Restaurant::split_line(const std::string & line,std::st
 }
 
 
-void Restaurant::ReadFromFile(){
+void Restaurant::ReadFromFile()
+{
 
 
 //making Cooks ID
@@ -329,9 +330,6 @@ void Restaurant::Test()
 
 
 
-
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ///// ==> 
 /////  DEMO-related functions. Should be removed in phases 1&2
@@ -544,15 +542,15 @@ void Restaurant::AddtoOrderQueue(Order* pOrd)
 }
 
 
-//Cancel Function
+//Cancel Function using the Queue
 void Restaurant::CancelOrder(int CID)
 {
 	//taking a pointers to the queue
 	int size = 0;
 	Order* pOrd= nullptr;
 	Order** Orders_Array = OrdersAll.toArray(size);
-
-	//int count = 0;
+	//index of order that we want to delete
+	int index = 0;
 
 	for (int i = 0; i < size; i++)
 	{
@@ -560,19 +558,56 @@ void Restaurant::CancelOrder(int CID)
 		if (CID == Orders_Array[i]->GetID() && Orders_Array[i]->GetType() == TYPE_NORMAL && Orders_Array[i]->getStatus() == WAIT)
 		{
 			pOrd = Orders_Array[i];
-			//count++;
+			index++;
 		}
 	}
 	if (pOrd == nullptr)
 		return;
-	
+	//temp for dequeuing
+	Order* pOrdTemp = nullptr;
+	//Deqeueing the whole arrays and it is saved in Orders_array
+	while (OrdersAll.dequeue(pOrdTemp))
+	{}
+
+	//filling the queue again but without that order
+	for (int i = 0; i < size; i++)
+	{
+		if (i != index)
+		{
+			OrdersAll.enqueue(Orders_Array[i]);
+		}
+	}
+ 	delete pOrd;
+	return;
+
+}
 
 
 
-	//move to Done for now
-	pOrd->setStatus(DONE);
-	//cancel the event
- 	//delete pOrd;
+//Promotion Function (I think it is finished)
+void Restaurant::PromOrder(int CID , int ExtraMoney)
+{
+	//taking a pointers to the queue
+	int size = 0;
+	Order* pOrd = nullptr;
+	Order** Orders_Array = OrdersAll.toArray(size);
+
+
+	for (int i = 0; i < size; i++)
+	{
+		//searching for order in the queue where same id and it is normal and it is waitting
+		if (CID == Orders_Array[i]->GetID() && Orders_Array[i]->GetType() == TYPE_NORMAL && Orders_Array[i]->getStatus() == WAIT)
+		{
+			pOrd = Orders_Array[i];
+		}
+	}
+	if (pOrd == nullptr)
+		return;
+	//Changing type to vip and adding extra Money
+	pOrd->setType(TYPE_VIP);
+	pOrd->SetTotalMoney(pOrd->GetTotalMoney() + ExtraMoney);
+
+
 	return;
 
 }
