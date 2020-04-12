@@ -105,6 +105,7 @@
     <ClInclude Include="Generic_DS\PriorityQueue.h" />
     <ClInclude Include="Generic_DS\Queue.h" />
     <ClInclude Include="GUI\GUI.h" />
+    <ClInclude Include="List.h" />
     <ClInclude Include="Rest\Cook.h" />
     <ClInclude Include="Rest\NormalCook.h" />
     <ClInclude Include="Rest\Order.h" />
