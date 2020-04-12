@@ -108,6 +108,8 @@ public:
 		P1->setNext(P2->getNext());
 		P2->setNext(P1);
 	}
+
+
 	//Adjusting the DeleteFirst to return Delete Node
 	bool DeleteFirst()
 	{

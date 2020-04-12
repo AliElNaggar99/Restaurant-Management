@@ -7,6 +7,7 @@
 #include "..\Generic_DS\Queue.h"
 #include "..\Generic_DS\LinkedList.h"
 #include "..\Events\Event.h"
+#include "..\Generic_DS\PriorityQueue.h"
 
 #include<fstream>
 #include "Order.h"
@@ -31,8 +32,22 @@ private:
 	Queue<Order*> DEMO_Queue;	//Important: This is just for demo
 	/// ==>
 
-	//Our Orders to Queue
+
+	//Queues of orders
+	Queue<Order*> NormalOrder;
+	Queue<Order*> VeganOrder;
+	PriorityQueue<Order*> Vip_Order;
+
+
+
+
+
+	//Our Orders waiting
 	Queue <Order*> OrdersAll;
+	//Our Orders that are in Servicing
+	Queue <Order*> OrdersServing;
+	//OurOrdersDone
+	Queue <Order*> OrdersAllDone;
 	
 	int PromotionVariable;
 

@@ -271,7 +271,7 @@ void Restaurant::FillDrawingList()
 		i++;
 	}
 
-	//filling the Orders list
+	/*filling the Orders list
 	int size = 0;
 	Order* pOrd;
 	Order** Orders_Array = OrdersAll.toArray(size);
@@ -280,8 +280,39 @@ void Restaurant::FillDrawingList()
 	  {
 		  pOrd = Orders_Array[i];
 		  pGUI->AddToDrawingList(pOrd);
+	  }*/
+
+	  //filling the waiting - Orders
+	  int size = 0;
+	  Order* pOrd;
+	  Order** Orders_Array = OrdersAll.toArray(size);
+
+	  for (int i = 0; i < size; i++)
+	  {
+		  pOrd = Orders_Array[i];
+		  //if it is not waiting don't print
+		  if(pOrd->getStatus() == WAIT)
+		     pGUI->AddToDrawingList(pOrd);
 	  }
 
+	  //filling the In - Serve Orders
+	   size = 0;
+	  Orders_Array = OrdersServing.toArray(size);
+
+	  for (int i = 0; i < size; i++)
+	  {
+		  pOrd = Orders_Array[i];
+		  pGUI->AddToDrawingList(pOrd);
+	  }
+	  //filling the DoneOrders
+	   size = 0;
+	  Orders_Array = OrdersAllDone.toArray(size);
+
+	  for (int i = 0; i < size; i++)
+	  {
+		  pOrd = Orders_Array[i];
+		  pGUI->AddToDrawingList(pOrd);
+	  }
 
 }
 
@@ -300,8 +331,7 @@ void Restaurant::Test()
 	pGUI->PrintMessage("Hello, u sexyyy");
 	pGUI->waitForClick();
 	//Check Event list 
-	int CurrentTimeStep = 1;
-	pGUI->waitForClick();
+	int CurrentTimeStep = 0;
 
 	while (!EventsQueue.isEmpty() || !OrdersAll.isEmpty())
 		{
@@ -313,15 +343,46 @@ void Restaurant::Test()
 	
 	     	//The next line may add new orders to the Queue
 			ExecuteEvents(CurrentTimeStep);	//execute all events at current time step
+
+			//Moving Orders form Waiting to Serves
+			Order* pOrd;
+			if (Vip_Order.dequeue(pOrd))
+			{
+				pOrd->setStatus(SRV);
+				OrdersServing.enqueue(pOrd);
+		    }
+			if (VeganOrder.dequeue(pOrd))
+			{
+				pOrd->setStatus(SRV);
+				OrdersServing.enqueue(pOrd);
+			}
+			if (NormalOrder.dequeue(pOrd))
+			{
+				pOrd->setStatus(SRV);
+				OrdersServing.enqueue(pOrd);
+			}
+
+			//moving from in Srv to done
+			if (CurrentTimeStep % 5 == 0)
+			{
+				for (int i = 0; i < 3; i++)
+				{
+					if (OrdersServing.dequeue(pOrd))
+					{
+						pOrd->setStatus(DONE);
+						OrdersAllDone.enqueue(pOrd);
+						pOrd->SetServingTime(CurrentTimeStep);
+				   }
+				}
+			}
 			
-	
         //////////////////////////////////////////////////////////////////////////////////////////
 			FillDrawingList();
   
 		///////////////////////////////////////////////////////////////////////////////////////////
-	
+	   // interactive Mode
 			pGUI->UpdateInterface();
-	       	Sleep(1000);
+			pGUI->waitForClick();
 			CurrentTimeStep++;	//advance timestep
 			pGUI->ResetDrawingList();
 		}
@@ -535,10 +596,29 @@ void Restaurant::AddtoDemoQueue(Order *pOrd)
 	DEMO_Queue.enqueue(pOrd);
 }
 
-// add order to the Queue
+// add order to the right Queue
 void Restaurant::AddtoOrderQueue(Order* pOrd)
 {
+	ORD_TYPE type =	pOrd->GetType();
+
+	switch (type)
+	{
+	case TYPE_NORMAL:
+		NormalOrder.enqueue(pOrd);
+		break;
+	case TYPE_VIP:
+		Vip_Order.enqueue(pOrd);
+		break;
+	case TYPE_VEGAN:
+		VeganOrder.enqueue(pOrd);
+		break;
+	default:
+		break;
+	}
+
 	OrdersAll.enqueue(pOrd);
+
+
 }
 
 
