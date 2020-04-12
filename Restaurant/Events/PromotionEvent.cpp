@@ -1,4 +1,5 @@
 #include"PromotionEvent.h"
+#include "..\Rest\Restaurant.h"
 
 
 // adjusting constructor to save elements

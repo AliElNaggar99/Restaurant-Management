@@ -270,6 +270,18 @@ void Restaurant::FillDrawingList()
 		i++;
 	}
 
+	//filling the Orders list
+	int size = 0;
+	Order* pOrd;
+	Order** Orders_Array = OrdersAll.toArray(size);
+		
+	  for(int i=0; i<size; i++)
+	  {
+		  pOrd = Orders_Array[i];
+		  pGUI->AddToDrawingList(pOrd);
+	  }
+
+
 }
 
 
@@ -281,20 +293,37 @@ void Restaurant::Test()
 
 	ReadFromFile();
 
-	//all listed is being filled by cocks and events
+	//all lists are filled by cocks and events
+
+
 	pGUI->PrintMessage("Hello, u sexyyy");
 	pGUI->waitForClick();
 	//Check Event list 
-	
-
-	Event* A1 = nullptr;
-	
-	FillDrawingList();
-	pGUI->UpdateInterface();
-	pGUI->waitForClick();
 	int CurrentTimeStep = 1;
-  
+	pGUI->waitForClick();
+
+	while (!EventsQueue.isEmpty() || !OrdersAll.isEmpty())
+		{
+			//print current timestep
+			//char timestep[10];
+			//itoa(CurrentTimeStep,timestep,10);	
+			pGUI->PrintMessage("TS: " + to_string(CurrentTimeStep));
 	
+	
+	     	//The next line may add new orders to the Queue
+			ExecuteEvents(CurrentTimeStep);	//execute all events at current time step
+			
+	
+        //////////////////////////////////////////////////////////////////////////////////////////
+			FillDrawingList();
+  
+		///////////////////////////////////////////////////////////////////////////////////////////
+	
+			pGUI->UpdateInterface();
+	       	Sleep(1000);
+			CurrentTimeStep++;	//advance timestep
+			pGUI->ResetDrawingList();
+		}
 
 }
 
@@ -508,11 +537,46 @@ void Restaurant::AddtoDemoQueue(Order *pOrd)
 	DEMO_Queue.enqueue(pOrd);
 }
 
-
+// add order to the Queue
 void Restaurant::AddtoOrderQueue(Order* pOrd)
 {
 	OrdersAll.enqueue(pOrd);
 }
+
+
+//Cancel Function
+void Restaurant::CancelOrder(int CID)
+{
+	//taking a pointers to the queue
+	int size = 0;
+	Order* pOrd= nullptr;
+	Order** Orders_Array = OrdersAll.toArray(size);
+
+	//int count = 0;
+
+	for (int i = 0; i < size; i++)
+	{
+		//searching for order in the queue where same id and it is normal and it is waitting
+		if (CID == Orders_Array[i]->GetID() && Orders_Array[i]->GetType() == TYPE_NORMAL && Orders_Array[i]->getStatus() == WAIT)
+		{
+			pOrd = Orders_Array[i];
+			//count++;
+		}
+	}
+	if (pOrd == nullptr)
+		return;
+	
+
+
+
+	//move to Done for now
+	pOrd->setStatus(DONE);
+	//cancel the event
+ 	//delete pOrd;
+	return;
+
+}
+
 
 /// ==> end of DEMO-related function
 //////////////////////////////////////////////////////////////////////////////////////////////

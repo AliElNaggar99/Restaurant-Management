@@ -69,6 +69,10 @@ public:
 	//Queuing in the Restaurant
 	void AddtoOrderQueue(Order* pOrd);
 
+
+	// Cancel an order if it is waiting
+	void CancelOrder(int CID);
+
 };
 
 #endif
