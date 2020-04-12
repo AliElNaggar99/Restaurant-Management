@@ -126,6 +126,8 @@ public:
 
 	PROG_MODE getGUIMode() const;			//returns the mode of the program
 
+	void PrintMessageML(string *msg , int lines) const; // prints Multi message in the status bar
+
 };
 
 #endif

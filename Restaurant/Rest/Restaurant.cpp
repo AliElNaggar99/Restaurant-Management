@@ -269,22 +269,13 @@ void Restaurant::FillDrawingList()
 	Cook* Pc;
 	while (Free_Cook.findPos(Pc, i))
 	{
-		pGUI->AddToDrawingList(Pc);	
+		//add Only the Availabe cook to the Drawing list
+		if (Pc->GetCookStatus() == AVA)
+		{
+			pGUI->AddToDrawingList(Pc);
+		}
 		i++;
 	}
-
-	/*filling the Orders list
-	int size = 0;
-	Order* pOrd;
-	Order** Orders_Array = OrdersAll.toArray(size);
-		
-	  for(int i=0; i<size; i++)
-	  {
-		  pOrd = Orders_Array[i];
-		  pGUI->AddToDrawingList(pOrd);
-	  }*/
-
-	  //filling the waiting - Orders
 	  int size = 0;
 	  Order* pOrd;
 	  Order** Orders_Array = OrdersAll.toArray(size);
@@ -348,6 +339,7 @@ void Restaurant::Test()
 
 			//Moving Orders form Waiting to Serves
 			Order* pOrd;
+			//Checking of Free Cocks from each type
 			if (Vip_Order.dequeue(pOrd))
 			{
 				pOrd->setStatus(SRV);
@@ -406,10 +398,22 @@ void Restaurant::TestPHII()
 
 	pGUI->PrintMessage("Hello, u sexyyy");
 	pGUI->waitForClick();
+
+	//testing Print function
+	string* S = new string[5];
+	S[0] = "Number is " + to_string(5);
+	S[1] = "hello is " + to_string(5);
+	S[2] = "my mine is " + to_string(55555);
+	S[3] = "baby do you love me " + to_string(5);
+	S[4] = "WHO ARE YOU " + to_string(5);
+	pGUI->PrintMessageML(S,5);
+
+
+	pGUI->waitForClick();
 	//Check Event list 
 	int CurrentTimeStep = 0;
-
-	while (!EventsQueue.isEmpty() || !OrdersAll.isEmpty())
+	//condition of Events and Waiting and Serving
+	while (!EventsQueue.isEmpty() || !Vip_Order.isEmpty() || !NormalOrder.isEmpty() || !VeganOrder.isEmpty() || !OrdersServing.isEmpty())
 	{
 		//print current timestep
 		//char timestep[10];
@@ -420,48 +424,30 @@ void Restaurant::TestPHII()
 		//The next line may add new orders to the Queue waiting
 		ExecuteEvents(CurrentTimeStep);	//execute all events at current time step
 
-		//Moving Orders form Waiting to Serves
+		//Creating an Order and cook Pointer to use them in stimulation
 		Order* pOrd;
-		if (Vip_Order.dequeue(pOrd))
+		VipCook* Co;
+		//checking if there is an order in Vip arrived
+		while(Vip_Order.dequeue(pOrd) && VipCookList.DeleteFirst(Co))
 		{
+			Co->setMakingOrder(pOrd);
 			pOrd->setStatus(SRV);
 			OrdersServing.enqueue(pOrd);
 		}
-		if (VeganOrder.dequeue(pOrd))
-		{
-			pOrd->setStatus(SRV);
-			OrdersServing.enqueue(pOrd);
-		}
-		if (NormalOrder.dequeue(pOrd))
-		{
-			pOrd->setStatus(SRV);
-			OrdersServing.enqueue(pOrd);
-		}
-
-		//moving from in Srv to done
-		if (CurrentTimeStep % 5 == 0)
-		{
-			for (int i = 0; i < 3; i++)
-			{
-				if (OrdersServing.dequeue(pOrd))
-				{
-					pOrd->setStatus(DONE);
-					OrdersAllDone.enqueue(pOrd);
-					pOrd->SetServingTime(CurrentTimeStep);
-				}
-			}
-		}
+		
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 		FillDrawingList();
 
-		///////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////
 	   // interactive Mode
 		pGUI->UpdateInterface();
 		pGUI->waitForClick();
 		CurrentTimeStep++;	//advance timestep
 		pGUI->ResetDrawingList();
 	}
+	pGUI->PrintMessage("Stimulation is Done");
+	pGUI->waitForClick();
 }
 
 

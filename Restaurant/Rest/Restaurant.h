@@ -25,6 +25,7 @@ private:
 	LinkedList<VipCook*> VipCookList;
 	LinkedList<Cook*> Busy_Break_Cooks;
 	LinkedList<Cook*> Free_Cook;
+	LinkedList<Cook*> Working_Cook;
 
 	
 	/// ==> 

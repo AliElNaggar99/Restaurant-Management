@@ -111,11 +111,12 @@ public:
 
 
 	//Adjusting the DeleteFirst to return Delete Node
-	bool DeleteFirst()
+	bool DeleteFirst(T &data)
 	{
 		if (Head)
 		{
 			Node<T>* temp = Head;
+			data = Head->getItem();
 			Head = Head->getNext();
 			delete temp;
 			return true;
@@ -159,7 +160,14 @@ public:
 	}
 
 
-
+	//Making isEMpty function 
+	bool isEmpty()
+	{
+		if (count == 0)
+			return true;
+		else
+			return false;
+	}
 
 };
 

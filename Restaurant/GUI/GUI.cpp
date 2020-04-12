@@ -67,6 +67,31 @@ void GUI::PrintMessage(string msg) const	//Prints a message on status bar
 	pWind->DrawString(10, WindHeight - (int) (StatusBarHeight/1.5), msg); // You may need to change these coordinates later 
 	                                                                      // to be able to write multi-line
 }
+
+
+
+
+
+
+
+
+//Function for Printing MultipleLines Ali
+//it takes an array of strings and number of lines such that it print a string on each line Max 5 (i think)
+void GUI::PrintMessageML(string *msg , int Lines) const	//Prints a message on status bar
+{
+	ClearStatusBar();
+    pWind->SetPen(DARKRED);
+	pWind->SetFont(18, BOLD, BY_NAME, "Arial");
+	for (int i = 0; i < Lines; i++)
+	{
+	
+		pWind->DrawString(10, WindHeight - (int)((Lines-i-0.5)*StatusBarHeight / (5)), msg[i]); // You may need to change these coordinates later 
+																		  // to be able to write multi-line
+	}
+}
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////////
 void GUI::DrawString(const int iX, const int iY, const string Text)
 {

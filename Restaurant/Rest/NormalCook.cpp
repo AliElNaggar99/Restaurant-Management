@@ -6,7 +6,7 @@ int NormalCook::CookSpeed = 0;
 NormalCook::NormalCook()
 {
 	type = TYPE_NORMAL;
-	CurrentStatus = Availabe;
+	CurrentStatus = AVA;
 }
 
 

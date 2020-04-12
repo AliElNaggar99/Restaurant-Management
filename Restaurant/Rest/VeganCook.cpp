@@ -5,7 +5,7 @@ int VeganCook::CookSpeed = 0;
 VeganCook::VeganCook()
 {
 	type = TYPE_VEGAN;
-	CurrentStatus = Availabe;
+	CurrentStatus = AVA;
 }
 
 
