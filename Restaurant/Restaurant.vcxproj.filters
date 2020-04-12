@@ -141,7 +141,7 @@
     <ClInclude Include="Rest\VipCook.h">
       <Filter>Restaurant</Filter>
     </ClInclude>
-    <ClInclude Include="List.h">
+    <ClInclude Include="Generic_DS\List.h">
       <Filter>Generic_DS</Filter>
     </ClInclude>
   </ItemGroup>
