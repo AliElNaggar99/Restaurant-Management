@@ -8,6 +8,7 @@
 #include "..\Generic_DS\LinkedList.h"
 #include "..\Events\Event.h"
 #include "..\Generic_DS\PriorityQueue.h"
+#include"../Generic_DS/List.h"
 
 #include<fstream>
 #include "Order.h"
@@ -25,7 +26,7 @@ private:
 	LinkedList<VipCook*> VipCookList;
 	LinkedList<Cook*> Busy_Break_Cooks;
 	LinkedList<Cook*> Free_Cook;
-	LinkedList<Cook*> Working_Cook;
+	LinkedList<Cook*> Working_Cook;	//Aren't The working cooks the same as busy cooks ? plus we need to loop over both might as well make them ine list
 
 	
 	/// ==> 
@@ -35,8 +36,8 @@ private:
 
 
 	//Queues of orders
-	Queue<Order*> NormalOrder;
-	Queue<Order*> VeganOrder;
+	List<Order*> NormalOrder;
+	List<Order*> VeganOrder;
 	PriorityQueue<Order*> Vip_Order;
 
 

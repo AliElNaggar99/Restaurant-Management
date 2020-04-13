@@ -321,7 +321,6 @@ void Restaurant::Test()
 	//all lists are filled by cocks and events
 
 
-	pGUI->PrintMessage("Hello, u sexyyy");
 	pGUI->waitForClick();
 	//Check Event list 
 	int CurrentTimeStep = 0;
@@ -380,7 +379,7 @@ void Restaurant::Test()
 			CurrentTimeStep++;	//advance timestep
 			pGUI->ResetDrawingList();
 		}
-	pGUI->PrintMessage("Stimulation is Done");
+	pGUI->PrintMessage("Simulation is Done");
 	pGUI->waitForClick();
 
 }
@@ -446,7 +445,7 @@ void Restaurant::TestPHII()
 		CurrentTimeStep++;	//advance timestep
 		pGUI->ResetDrawingList();
 	}
-	pGUI->PrintMessage("Stimulation is Done");
+	pGUI->PrintMessage("Simulation is Done");
 	pGUI->waitForClick();
 }
 
@@ -564,40 +563,10 @@ void Restaurant::AddtoOrderQueue(Order* pOrd)
 //Cancel Function using the Queue
 void Restaurant::CancelOrder(int CID)
 {
-	//taking a pointers to the queue
-	int size = 0;
-	Order* pOrd= nullptr;
-	Order** Orders_Array = OrdersAll.toArray(size);
-	//index of order that we want to delete
-	int index = 0;
-
-	for (int i = 0; i < size; i++)
-	{
-		//searching for order in the queue where same id and it is normal and it is waitting
-		if (CID == Orders_Array[i]->GetID() && Orders_Array[i]->GetType() == TYPE_NORMAL && Orders_Array[i]->getStatus() == WAIT)
-		{
-			pOrd = Orders_Array[i];
-			index++;
-		}
-	}
-	if (pOrd == nullptr)
-		return;
-	//temp for dequeuing
-	Order* pOrdTemp = nullptr;
-	//Deqeueing the whole arrays and it is saved in Orders_array
-	while (OrdersAll.dequeue(pOrdTemp))
-	{}
-
-	//filling the queue again but without that order
-	for (int i = 0; i < size; i++)
-	{
-		if (i != index)
-		{
-			OrdersAll.enqueue(Orders_Array[i]);
-		}
-	}
- 	delete pOrd;
-	return;
+	
+	Node<Order*>* Ord = NormalOrder.RemoveOrderFromList(CID);
+	if (Ord == nullptr) return;
+	delete Ord;
 
 }
 
@@ -606,28 +575,21 @@ void Restaurant::CancelOrder(int CID)
 //Promotion Function (I think it is finished)
 void Restaurant::PromOrder(int CID , int ExtraMoney)
 {
-	//taking a pointers to the queue
-	int size = 0;
-	Order* pOrd = nullptr;
-	Order** Orders_Array = OrdersAll.toArray(size);
+	//Not sure how will this be done
+	Node<Order*> * Ord = NormalOrder.RemoveOrderFromList(CID);
+	if (Ord == nullptr || Ord->getItem() == nullptr) return; //Check for errors
+	
+	Order* OrderToBePromoted = Ord->getItem(); delete Ord; //get Order from Node then deletes the node
 
 
-	for (int i = 0; i < size; i++)
-	{
-		//searching for order in the queue where same id and it is normal and it is waitting
-		if (CID == Orders_Array[i]->GetID() && Orders_Array[i]->GetType() == TYPE_NORMAL && Orders_Array[i]->getStatus() == WAIT)
-		{
-			pOrd = Orders_Array[i];
-		}
-	}
-	if (pOrd == nullptr)
-		return;
-	//Changing type to vip and adding extra Money
-	pOrd->setType(TYPE_VIP);
-	pOrd->SetTotalMoney(pOrd->GetTotalMoney() + ExtraMoney);
+
+	Ord->getItem()->SetTotalMoney(Ord->getItem()->GetTotalMoney() + ExtraMoney);
+	Ord->getItem()->setType(TYPE_VIP);
+
+	//Later On Priority for order will be set according to the equation
+	Vip_Order.enqueue(OrderToBePromoted);
 
 
-	return;
 
 }
 

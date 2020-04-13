@@ -1,144 +1,144 @@
-#pragma once
-#include"Generic_DS/Node.h"
+#ifndef __LIST_H_
+#define __LIST_H_
 
-#include"../Restaurant/Rest/Order.h"
+#include"Node.h"
+#include"../Rest/Order.h"
+
 template <typename T>
-class List
+class BaseList
 {
-private:
+protected:
 	Node<T>* First;
 	Node<T>* Last;
 public:
+	BaseList() {
+		First = nullptr;
+		Last = nullptr;
+	}
+
+	bool isEmpty() const {
+		if (First == nullptr) return true;
+		return false;
+	}
+	bool enqueue(const T& newEntry) {
+		Node<T>* newNodePtr = new Node<T>(newEntry);
+		if (isEmpty())
+			First = newNodePtr;
+		else
+			Last->setNext(newNodePtr);
+		Last = newNodePtr;
+		return true;
+	}
+	bool dequeue(T& frntEntry) {
+
+		if (isEmpty())
+			return false;
+
+		Node<T>* nodeToDeletePtr = First;
+		frntEntry = First->getItem();
+		First = First->getNext();
+
+		if (nodeToDeletePtr == Last)
+			Last = nullptr;
+
+		delete nodeToDeletePtr;
 
 
+		return true;
+	}
+	bool peekFront(T& frntEntry)  const {
+		if (isEmpty())
+			return false;
+
+		frntEntry = First->getItem();
+		return true;
+	}
 
 
-
-	List();
-	void Add(Node<T>*n);
-	void Remove();
-	void SearchandDelete(int x);
 
 };
-template<typename T>
-List<T>::List()
-{
-		First = nullptr;
-		Last = nullptr;
+
+template< class T >
+class List : public BaseList<T> {
+	//List that works for all Data type
+
+};
 
 
-
-}
-
-
-template<typename T>
-
-void List<T>::Add(Node<T>*InsertedNode)
-	
-{
-		if (First == Last == nullptr)
-		{
-			First = Last = InsertedNode;
-			First->setNext(nullptr);
-			Last->setNext(nullptr);
-
-		}
-		else
-		{
-			Node<T>* Temp = new Node<T>;
-			Temp = Last;
-			Temp->setNext(InsertedNode);
-			Last = InsertedNode;
-
-
-
-
-
-		}
-	
-	
-	
-	}
-template <typename T>
-void List<T>::Remove()
-{
-	if (!First)
-	{
-		return;
-	}
-	if (First == Last)
-	{
-		First = nullptr;
-		Last = nullptr;
-
-	}
-
-
-	else {
-		Node<T>* Temp = new Node<T>;
-		Temp = First;
-		while (Temp->getNext() != Last)
-		{
-			Temp = Temp->getNext();
-
-		}
-		Node<T>* Temp2 = new Node<T>;
-		Temp2 = Last;
-		Temp->setNext(nullptr);
-		Last = Temp;
-		delete Temp2;
-
-	}
-
-
-
-}
 template<>
-void List<Order*>::SearchandDelete(int x)
+class List<Order*> :public  BaseList<Order*> {
+	// List that is partially specialized for the order data type
+
+
+	Node<Order*>* SearchandReturnPrev(int OrderID);
+public:
+
+
+	Node<Order*>* SearchForOrder(int OrderID);
+	Node<Order*>* RemoveOrderFromList(int OrderID);
+
+};
+
+
+
+inline Node<Order*>* List<Order*>::SearchandReturnPrev(int id)
 {
-	if (First == nullptr)
-	{
-		return;
+	// Doesnt work on 1st node so have to be done manually as 1st doesnt have previous
+	if (First == nullptr) return nullptr;
+	Node<Order*>* TravPtr = First;
+	while (TravPtr->getNext() != nullptr) {
 
-	}
-	else if (First==Last&&First->getItem()->GetID()==x)
-	{
-		Node<Order*>* Temp = new Node<Order*>;
-		First = Last = nullptr;
-		delete Temp;
-	}
-	else if (First->getItem()->GetID()==x)
-	{
-		Node<Order*>* Temp = new Node<Order*>;
-		Temp = First;
-		First = First->getNext();
-		delete Temp;
-	}
-	else if (Last->getItem()->GetID() == x)
-	{
-		Remove();
-	}
-	else
-	{
-		Node<Order*>* Temp = new Node<Order*>;
-		while (Temp->getNext() && Temp->getNext()->getItem()->GetID()==x)
-		{
-			Temp = Temp->getNext();
+		if (TravPtr->getNext()->getItem()->GetID() == id) return TravPtr;
 
-		}
-		Node<Order*>* Temp2 = new Node<Order*>;
-		Temp2 = Temp->getNext();
-		Temp->setNext(Temp2->getNext());
-		delete Temp2;
-
-
-
-
+		TravPtr = TravPtr->getNext();
 
 	}
 
 
 }
+
+
+inline Node<Order*>* List<Order*>::SearchForOrder(int id) {
+	if (First->getItem()->GetID() == id) return First;
+
+	Node<Order*>* Prev = SearchandReturnPrev(id);
+	return (Prev != nullptr) ? Prev->getNext() : nullptr;
+
+}
+
+
+
+inline Node<Order*>* List<Order*>::RemoveOrderFromList(int id) {
+	if (isEmpty()) return nullptr;
+	if (First->getItem()->GetID() == id) {
+
+		Node<Order*>* TEMP = First;
+		First = First->getNext();
+		if (TEMP == Last) Last = nullptr;
+		return TEMP;
+	}
+
+	Node<Order*>* Prev = SearchandReturnPrev(id);
+
+	if (Prev != nullptr) {
+
+		Node<Order*>* TEMP = Prev->getNext();
+		Prev->setNext(TEMP->getNext());
+		if (TEMP == Last && First == TEMP) Last = nullptr;
+		return TEMP;
+
+
+	}
+
+
+
+}
+
+
+
+
+#endif // !_LIST_H_
+
 
 
 
