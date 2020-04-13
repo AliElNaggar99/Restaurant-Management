@@ -8,8 +8,10 @@ private:
 
 	Node<T>* backPtr;
 	Node<T>* frontPtr;
+	int count = 0;
 public:
 	PriorityQueue();
+	int GetCount();
 	bool isEmpty() const;
 	bool enqueue(const T& newEntry, int Pri = 0);
 	bool dequeue(T& frntEntry);
@@ -60,6 +62,7 @@ bool PriorityQueue<T>::enqueue(const T& newEntry, int pri) // rakam lee value w 
 	else
 		backPtr->setNext(newNodePtr); // The queue was not empty
 	backPtr = newNodePtr; // New node is at back
+	count++;
 	return true;
 
 } // end enqueue
@@ -80,6 +83,8 @@ bool PriorityQueue<T>::dequeue(T& frntEntry)
 {
 	if (isEmpty())
 		return false;
+
+	count--;
 
 	Node<T>* nodeToDeletePtr = frontPtr;
 	Node<T>* temp = frontPtr;
@@ -178,5 +183,12 @@ T* PriorityQueue<T>::toArray(int& count)
 		p = p->getNext();
 	}
 	return Arr;
+}
+
+
+template <typename T>
+int PriorityQueue<T>::GetCount()
+{
+	return count;
 }
 

@@ -7,6 +7,7 @@ class LinkedList
 private:
 	Node<T>* Head;
 	//Count for the List
+	//this acts like index so first element is Zero
 	int count = 0;
 public:
 	// hena functions Delete be koll ashkalo w Insert be koll ashkalo 
@@ -39,6 +40,7 @@ public:
 		}
 		P1->setNext(pnew);
 		count++;
+		
 
 
 	}
@@ -75,7 +77,7 @@ public:
 		
 		if (i > count)
 			return false;
-
+		
 		while (inital != i)
 		{
 			inital++;
@@ -83,6 +85,7 @@ public:
 
 		}
 		data = temp->getItem();
+		
 		return true;
 
 	}
@@ -167,6 +170,12 @@ public:
 			return true;
 		else
 			return false;
+	}
+
+
+	int GetCount()
+	{
+		return count;
 	}
 
 };

@@ -10,6 +10,7 @@ class BaseList
 protected:
 	Node<T>* First;
 	Node<T>* Last;
+	int count = 0;
 public:
 	BaseList() {
 		First = nullptr;
@@ -27,6 +28,7 @@ public:
 		else
 			Last->setNext(newNodePtr);
 		Last = newNodePtr;
+		count++;
 		return true;
 	}
 	bool dequeue(T& frntEntry) {
@@ -43,7 +45,7 @@ public:
 
 		delete nodeToDeletePtr;
 
-
+		count--;
 		return true;
 	}
 	bool peekFront(T& frntEntry)  const {
@@ -79,7 +81,10 @@ public:
 		return Arr;
 	}
 
-
+	int GetCount()
+	{
+		return count;
+	}
 
 };
 
@@ -135,6 +140,7 @@ inline Node<Order*>* List<Order*>::SearchForOrder(int id) {
 
 inline Node<Order*>* List<Order*>::RemoveOrderFromList(int id) {
 	if (isEmpty()) return nullptr;
+	count = count - 1;
 	if (First->getItem()->GetID() == id) {
 
 		Node<Order*>* TEMP = First;
@@ -154,6 +160,8 @@ inline Node<Order*>* List<Order*>::RemoveOrderFromList(int id) {
 
 
 	}
+	
+	
 
 
 

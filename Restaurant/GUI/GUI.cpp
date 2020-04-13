@@ -85,7 +85,7 @@ void GUI::PrintMessageML(string *msg , int Lines) const	//Prints a message on st
 	for (int i = 0; i < Lines; i++)
 	{
 	
-		pWind->DrawString(10, WindHeight - (int)((Lines-i-0.5)*StatusBarHeight / (5)), msg[i]); // You may need to change these coordinates later 
+		pWind->DrawString(10, WindHeight - (int)((5-i-0.5)*StatusBarHeight / (5)), msg[i]); // You may need to change these coordinates later 
 																		  // to be able to write multi-line
 	}
 }

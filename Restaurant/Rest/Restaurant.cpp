@@ -328,14 +328,15 @@ void Restaurant::Test()
 	//pGUI->waitForClick(); -> this is not IMPORTANT 
 	//Check Event list 
 	int CurrentTimeStep = 0;
+	string* S = new string[3];
 	//condition of Events and Waiting and Serving
 	while (!EventsQueue.isEmpty() || !Vip_Order.isEmpty() || !NormalOrder.isEmpty() || !VeganOrder.isEmpty() ||!OrdersServing.isEmpty())
 		{
 			//print current timestep
 			//char timestep[10];
 			//itoa(CurrentTimeStep,timestep,10);	
-			pGUI->PrintMessage("TS: " + to_string(CurrentTimeStep));
-	
+			//pGUI->PrintMessage("TS: " + to_string(CurrentTimeStep));
+
 	
 	     	//The next line may add new orders to the Queue waiting
 			ExecuteEvents(CurrentTimeStep);	//execute all events at current time step
@@ -378,6 +379,12 @@ void Restaurant::Test()
   
 		///////////////////////////////////////////////////////////////////////////////////////////
 	   // interactive Mode
+			S[0] = "TS: " + to_string(CurrentTimeStep);
+			S[1] = "Number of Waiting Orders: Vip: " + to_string(Vip_Order.GetCount()) + " Vegan : " + to_string(VeganOrder.GetCount()) + " Normal : " + to_string(NormalOrder.GetCount());
+			//this acts like index so first element is Zero
+			S[2] = "Number of available cooks: Vip: " + to_string(VipCookList.GetCount() + 1) + " Vegan: " + to_string(VegCookList.GetCount() + 1) + " Normal: " + to_string(NormCookList.GetCount() + 1);
+			pGUI->PrintMessageML(S, 3);
+
 			pGUI->UpdateInterface();
 			pGUI->waitForClick();
 			CurrentTimeStep++;	//advance timestep
@@ -399,7 +406,7 @@ void Restaurant::TestPHII()
 	//all lists are filled by cocks and events
 
 
-	pGUI->PrintMessage("Hello, u sexyyy");
+	pGUI->PrintMessage("Hello, this is demo");
 	pGUI->waitForClick();
 
 	//testing Print function
@@ -587,7 +594,7 @@ void Restaurant::PromOrder(int CID , int ExtraMoney)
 	Node<Order*> * Ord = NormalOrder.RemoveOrderFromList(CID);
 	if (Ord == nullptr || Ord->getItem() == nullptr) return; //Check for errors
 	
-	Order* OrderToBePromoted = Ord->getItem(); delete Ord; //get Order from Node then deletes the node
+	Order* OrderToBePromoted = Ord->getItem();  //get Order from Node then deletes the node
 
 
 
@@ -596,6 +603,7 @@ void Restaurant::PromOrder(int CID , int ExtraMoney)
 
 	//Later On Priority for order will be set according to the equation
 	Vip_Order.enqueue(OrderToBePromoted);
+	delete Ord;
 
 
 
