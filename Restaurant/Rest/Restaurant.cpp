@@ -592,8 +592,8 @@ void Restaurant::PromOrder(int CID , int ExtraMoney)
 
 
 
-	Ord->getItem()->SetTotalMoney(Ord->getItem()->GetTotalMoney() + ExtraMoney);
-	Ord->getItem()->setType(TYPE_VIP);
+	OrderToBePromoted->SetTotalMoney(OrderToBePromoted->GetTotalMoney() + ExtraMoney);
+	OrderToBePromoted->setType(TYPE_VIP);
 
 	//Later On Priority for order will be set according to the equation
 	Vip_Order.enqueue(OrderToBePromoted);
