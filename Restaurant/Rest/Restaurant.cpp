@@ -202,8 +202,7 @@ for(int i = 5; i < (5+numEvents);i++){
 			break;
 		}
 		// making a pointer of Event to add it to Queue dynamically so it doesn't remvoe after deqeueing
-		//swaped between Splitstring 3 and 2 as 2 is ID not 3
-		Event* A = new ArrivalEvent(std::stoi(SplitString[3]), std::stoi(SplitString[2]), oType, std::stoi(SplitString[4]), std::stod(SplitString[5]));
+		Event* A = new ArrivalEvent(std::stoi(SplitString[2]), std::stoi(SplitString[3]), oType, std::stoi(SplitString[4]), std::stod(SplitString[5]));
 
 		// enqueue the event
 		EventsQueue.enqueue(A);
@@ -213,7 +212,7 @@ for(int i = 5; i < (5+numEvents);i++){
 		//Cancellation event
 		// making a pointer of Event to add it to Queue dynamically so it doesn't remvoe after deqeueing
 		//swaped between Splitstring 1 and 2 as 1 is ID not 2
-		Event* C = new CancellationEvent(std::stoi(SplitString[2]), std::stoi(SplitString[1]));
+		Event* C = new CancellationEvent(std::stoi(SplitString[1]), std::stoi(SplitString[2]));
 	
 		// enqueue the event
 		EventsQueue.enqueue(C);
@@ -221,7 +220,7 @@ for(int i = 5; i < (5+numEvents);i++){
 	}
 	else{
 		// making a pointer of Event to add it to Queue dynamically so it doesn't remvoe after deqeueing
-		Event* P = new PromotionEvent(std::stoi(SplitString[2]), std::stoi(SplitString[1]),std::stoi(SplitString[3]));
+		Event* P = new PromotionEvent(std::stoi(SplitString[1]), std::stoi(SplitString[2]),std::stoi(SplitString[3]));
 		// enqueue the event
 		EventsQueue.enqueue(P);
 		
