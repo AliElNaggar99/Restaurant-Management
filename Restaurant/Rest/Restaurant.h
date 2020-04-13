@@ -45,7 +45,7 @@ private:
 
 
 	//Our Orders waiting
-	Queue <Order*> OrdersAll;
+	List <Order*> OrdersAll;
 	//Our Orders that are in Servicing
 	Queue <Order*> OrdersServing;
 	//OurOrdersDone

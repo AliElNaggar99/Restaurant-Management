@@ -321,7 +321,7 @@ void Restaurant::Test()
 	//all lists are filled by cocks and events
 
 
-	pGUI->waitForClick();
+	//pGUI->waitForClick(); -> this is not IMPORTANT 
 	//Check Event list 
 	int CurrentTimeStep = 0;
 	//condition of Events and Waiting and Serving
@@ -563,8 +563,12 @@ void Restaurant::AddtoOrderQueue(Order* pOrd)
 //Cancel Function using the Queue
 void Restaurant::CancelOrder(int CID)
 {
-	
-	Node<Order*>* Ord = NormalOrder.RemoveOrderFromList(CID);
+	// Remove it from printing List 
+	Node<Order*>* Ord = OrdersAll.RemoveOrderFromList(CID);
+	if (Ord == nullptr) return;
+	delete Ord;
+	//Removing it From the Actual List
+     Ord = NormalOrder.RemoveOrderFromList(CID);
 	if (Ord == nullptr) return;
 	delete Ord;
 

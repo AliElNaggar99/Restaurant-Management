@@ -53,6 +53,31 @@ public:
 		frntEntry = First->getItem();
 		return true;
 	}
+	//taken from Queue.h
+	T* toArray(int& count)//returns array of T (array if items) So that we can Print the list
+	{
+		count = 0;
+
+		if (!First)
+			return nullptr;
+		//counting the no. of items in the Queue
+		Node<T>* p = First;
+		while (p)
+		{
+			count++;
+			p = p->getNext();
+		}
+
+
+		T* Arr = new T[count];
+		p = First;
+		for (int i = 0; i < count; i++)
+		{
+			Arr[i] = p->getItem();
+			p = p->getNext();
+		}
+		return Arr;
+	}
 
 
 
