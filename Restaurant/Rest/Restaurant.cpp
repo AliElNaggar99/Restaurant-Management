@@ -89,11 +89,13 @@ while (getline(toBeReadFile,Lines[Counter]) && Counter++ != 4);
 // L1 no of cooks from each type
 
 regex MoreThanTwoSpace("\\s{2,}");
+regex Tabs("\t");
 const std::string oneWhiteSpace = " ";
 std::vector<std::string> Container;
 
 
 // makes string only have 1 consecutive whitespace
+Lines[0] = regex_replace(Lines[0], Tabs, oneWhiteSpace);
 Lines[0] = regex_replace(Lines[0],MoreThanTwoSpace,oneWhiteSpace);
 Container = split_line(Lines[0],oneWhiteSpace);
 //Remeber to delete Cooks in destructor of Restaurant
@@ -140,6 +142,7 @@ for (int i = 0; i < TYPE_CNT; i++) {
 
 
 //L2 cook speed for ea
+Lines[1] = regex_replace(Lines[1], Tabs, oneWhiteSpace);
 Lines[1] = regex_replace(Lines[1],MoreThanTwoSpace,oneWhiteSpace);
 Container = split_line(Lines[1],oneWhiteSpace);
 NormalCook::SetSpeed(std::stoi(Container[0]));
@@ -151,6 +154,7 @@ VipCook::SetSpeed(std::stoi(Container[2]));
 
 
 //L3 (BreakAfter n orders) BreakDuration
+Lines[2] = regex_replace(Lines[2], Tabs, oneWhiteSpace);
 Lines[2] = regex_replace(Lines[2],MoreThanTwoSpace,oneWhiteSpace);
 
 Container = split_line(Lines[2],oneWhiteSpace);
@@ -174,6 +178,7 @@ Lines.resize(5+numEvents);
 while (getline(toBeReadFile,Lines[Counter]) && Counter++ != 4+numEvents) ;
 
 for(int i = 5; i < (5+numEvents);i++){
+	Lines[i] = regex_replace(Lines[i], Tabs, oneWhiteSpace);
 	Lines[i] = regex_replace(Lines[i], MoreThanTwoSpace, oneWhiteSpace);
 	std::vector<std::string> SplitString = split_line(Lines[i]," ");
 	char FirstLetter = *std::begin(SplitString[0]); // test that conversion works
