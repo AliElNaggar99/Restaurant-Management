@@ -112,6 +112,7 @@ const std::string oneWhiteSpace = " ";
 
 	BreakTimeCont = split_line(Lines[2], oneWhiteSpace);
 
+
 	//Remeber to delete Cooks in destructor of Restaurant
 
 	Cook::setBreakAfterN(std::stoi(BreakTimeCont[0]));
@@ -125,9 +126,7 @@ const std::string oneWhiteSpace = " ";
 				cID += (rand() % 15 + 1);
 				NormalCook* TEMP = new NormalCook(cID, std::stoi(CookSpdCont[0]), std::stoi(CookSpdCont[1]), std::stoi(BreakTimeCont[1]), std::stoi(BreakTimeCont[2]));
 				NormCookList.InsertEnd(TEMP);    //Inserting at the end O(n) InsertingBeg O(1) ???
-				
 
-				std::cout << "Normal\n";
 			}
 			else if (i == TYPE_VEGAN) {
 				VeganCook* TEMP = new VeganCook(cID, std::stoi(CookSpdCont[2]), std::stoi(CookSpdCont[3]), std::stoi(BreakTimeCont[3]), std::stoi(BreakTimeCont[4]));
@@ -136,7 +135,6 @@ const std::string oneWhiteSpace = " ";
 				TEMP->setID(cID);
 				VegCookList.InsertEnd(TEMP);
 
-				std::cout << "Vegan\n";
 			}
 			else {
 				VipCook* TEMP = new VipCook(cID, std::stoi(CookSpdCont[4]), std::stoi(CookSpdCont[5]), std::stoi(BreakTimeCont[5]), std::stoi(BreakTimeCont[6]));
@@ -145,7 +143,6 @@ const std::string oneWhiteSpace = " ";
 				TEMP->setID(cID);
 				VipCookList.InsertEnd(TEMP);
 
-				std::cout << "Vip\n";
 			}
 
 
@@ -161,13 +158,16 @@ const std::string oneWhiteSpace = " ";
 	Lines[3] = regex_replace(Lines[3], MoreThanTwoSpace, oneWhiteSpace);
 	Container = split_line(Lines[3], oneWhiteSpace);
 
+
 	InjuryProb = std::stoi(Container[0]);
 	Cook::setInjuryRest(std::stoi(Container[1]));
+
 
 	//L5 Promotion Variable
 	Lines[4] = regex_replace(Lines[4], Tabs, oneWhiteSpace);
 	Lines[4] = regex_replace(Lines[4], MoreThanTwoSpace, oneWhiteSpace);
 	Container = split_line(Lines[4], oneWhiteSpace);
+
 
 	PromotionVariable = std::stoi(Container[0]);
 	UrgentVariable = std::stoi(Container[1]); 
@@ -399,6 +399,7 @@ void Restaurant::Test()
 	pGUI->waitForClick();
 
 }
+
 
 //Simulation for Phase II
 

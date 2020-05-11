@@ -3,6 +3,7 @@
 #include<cstdlib>
 
 
+
 int Cook::BreakAfterN = 0;
 int Cook::InjuryRest = 0;
 
@@ -67,6 +68,7 @@ Order* Cook::getMakingOrder() const
 {
 	return MakingOrder;
 }
+
 
 int Cook::GetSpeed() const { return speed; }
 void Cook::SetSpeed(int min, int max) { speed = min + rand() % (max - min + 1); }

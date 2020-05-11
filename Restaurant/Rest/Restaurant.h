@@ -54,6 +54,7 @@ private:
 	
 	int PromotionVariable , UrgentVariable ,InjuryProb ;
 
+
 public:
 	
 	void SaveFile(Order** Array, int Numberoftotalorders, Cook** Arrayoofcooks,int NumberOfcooks);

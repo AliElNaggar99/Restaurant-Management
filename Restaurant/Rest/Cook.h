@@ -16,6 +16,7 @@ protected:
 	static int BreakAfterN , InjuryRest ;
 
 
+
 public:
 	Cook(int, int,int ,int,int);
 	virtual ~Cook()=0;
@@ -39,10 +40,9 @@ public:
 	static void setInjuryRest(int n);
 	static int getInjuryRest();
 
+
 	int GetSpeed() const;
 	void SetSpeed( int, int);
-
-	
 
 
 	virtual bool isAssigned()const;  //checking if making an order
