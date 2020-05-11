@@ -82,105 +82,111 @@ if(! toBeReadFile.is_open()){
 }
 
 
-std::vector<std::string> Lines(5);
+std::vector<std::string> Lines(7);
 int Counter = 0 ;
-while (getline(toBeReadFile,Lines[Counter]) && Counter++ != 4);
+while (getline(toBeReadFile,Lines[Counter]) && Counter++ != 6);
 
 // L1 no of cooks from each type
 
 regex MoreThanTwoSpace("\\s{2,}");
 regex Tabs("\t");
 const std::string oneWhiteSpace = " ";
-std::vector<std::string> Container;
+
+{
+	std::vector<std::string> Container, CookSpdCont, BreakTimeCont;
 
 
-// makes string only have 1 consecutive whitespace
-Lines[0] = regex_replace(Lines[0], Tabs, oneWhiteSpace);
-Lines[0] = regex_replace(Lines[0],MoreThanTwoSpace,oneWhiteSpace);
-Container = split_line(Lines[0],oneWhiteSpace);
-//Remeber to delete Cooks in destructor of Restaurant
+	// makes string only have 1 consecutive whitespace
+	Lines[0] = regex_replace(Lines[0], Tabs, oneWhiteSpace);
+	Lines[0] = regex_replace(Lines[0], MoreThanTwoSpace, oneWhiteSpace);
+	Container = split_line(Lines[0], oneWhiteSpace);
 
-for (int i = 0; i < TYPE_CNT; i++) {
-	for (int j = 0; j < std::stoi(Container[i]); j++) {
+	//L2 cook speed for ea
+	Lines[1] = regex_replace(Lines[1], Tabs, oneWhiteSpace);
+	Lines[1] = regex_replace(Lines[1], MoreThanTwoSpace, oneWhiteSpace);
+	CookSpdCont = split_line(Lines[1], oneWhiteSpace);
 
-		if (i == TYPE_NORMAL) {
-			NormalCook* TEMP = new NormalCook;
-			//Creating ID for Cooks
-			cID += (rand() % 15 + 1);
-			TEMP->setID(cID);
-			NormCookList.InsertEnd(TEMP);
-			//Creating a pointer to the Cook to add in Cook list
-			Cook* CookPointer = TEMP;
-			Free_Cook.InsertEnd(TEMP);
+	//L3 (BreakAfter n orders) BreakDuration
+	Lines[2] = regex_replace(Lines[2], Tabs, oneWhiteSpace);
+	Lines[2] = regex_replace(Lines[2], MoreThanTwoSpace, oneWhiteSpace);
+
+	BreakTimeCont = split_line(Lines[2], oneWhiteSpace);
+	//Remeber to delete Cooks in destructor of Restaurant
+
+	for (int i = 0; i < TYPE_CNT; i++) {
+		for (int j = 0; j < std::stoi(Container[i]); j++) {
+
+			if (i == TYPE_NORMAL) {
+
+				//Creating ID for Cooks
+				cID += (rand() % 15 + 1);
+				NormalCook* TEMP = new NormalCook(cID, std::stoi(CookSpdCont[0]), std::stoi(CookSpdCont[1]), std::stoi(BreakTimeCont[1]), std::stoi(BreakTimeCont[2]));
+				NormCookList.InsertEnd(TEMP);    //Inserting at the end O(n) InsertingBeg O(1) ???
+				//Creating a pointer to the Cook to add in Cook list
+				Cook* CookPointer = TEMP;
+				Free_Cook.InsertEnd(TEMP);
+			}
+			else if (i == TYPE_VEGAN) {
+				VeganCook* TEMP = new VeganCook(cID, std::stoi(CookSpdCont[2]), std::stoi(CookSpdCont[3]), std::stoi(BreakTimeCont[3]), std::stoi(BreakTimeCont[4]));
+				//Creating ID for Cooks
+				cID += (rand() % 15 + 1);
+				TEMP->setID(cID);
+				VegCookList.InsertEnd(TEMP);
+				//Creating a pointer to the Cook to add in Cook list
+				Cook* CookPointer = TEMP;
+				Free_Cook.InsertEnd(TEMP);
+			}
+			else {
+				VipCook* TEMP = new VipCook(cID, std::stoi(CookSpdCont[4]), std::stoi(CookSpdCont[5]), std::stoi(BreakTimeCont[5]), std::stoi(BreakTimeCont[6]));
+				//Creating ID for Cooks
+				cID += (rand() % 15 + 1);
+				TEMP->setID(cID);
+				VipCookList.InsertEnd(TEMP);
+				//Creating a pointer to the Cook to add in Cook list
+				Cook* CookPointer = TEMP;
+				Free_Cook.InsertEnd(TEMP);
+
+			}
+
+
 		}
-		else if (i == TYPE_VEGAN) {
-			VeganCook* TEMP = new VeganCook;
-			//Creating ID for Cooks
-			cID += (rand() % 15 + 1);
-			TEMP->setID(cID);
-			VegCookList.InsertEnd(TEMP);
-			//Creating a pointer to the Cook to add in Cook list
-			Cook* CookPointer = TEMP;
-			Free_Cook.InsertEnd(TEMP);
-		}
-		else{
-			VipCook* TEMP = new VipCook;
-			//Creating ID for Cooks
-			cID += (rand() % 15 + 1);
-			TEMP->setID(cID);
-			VipCookList.InsertEnd(TEMP);
-			//Creating a pointer to the Cook to add in Cook list
-			Cook* CookPointer = TEMP;
-			Free_Cook.InsertEnd(TEMP);
-			
-		}
-
-
 	}
+
+
+
+
+	//L4 Injury Chance Thingy
+	
+	Lines[3] = regex_replace(Lines[3], Tabs, oneWhiteSpace);
+	Lines[3] = regex_replace(Lines[3], MoreThanTwoSpace, oneWhiteSpace);
+	Container = split_line(Lines[3], oneWhiteSpace);
+
+	//where will this variable be stored in restaurant or in cooks ?
+
+
+	//L5 Promotion Variable
+	Lines[4] = regex_replace(Lines[4], Tabs, oneWhiteSpace);
+	Lines[4] = regex_replace(Lines[4], MoreThanTwoSpace, oneWhiteSpace);
+	Container = split_line(Lines[4], oneWhiteSpace);
+
+	PromotionVariable = std::stoi(Container[0]); //change later
+	UrgentVariable = std::stoi(Container[1]); //Change later
 }
 
 
-
-//L2 cook speed for ea
-Lines[1] = regex_replace(Lines[1], Tabs, oneWhiteSpace);
-Lines[1] = regex_replace(Lines[1],MoreThanTwoSpace,oneWhiteSpace);
-Container = split_line(Lines[1],oneWhiteSpace);
-//NormalCook::SetSpeed(std::stoi(Container[0]));
-//VeganCook::SetSpeed(std::stoi(Container[1])) ;  //get the new parameters 
-//VipCook::SetSpeed(std::stoi(Container[2]));	  //Set them between a range 
-
-
-
-
-//L3 (BreakAfter n orders) BreakDuration
-Lines[2] = regex_replace(Lines[2], Tabs, oneWhiteSpace);
-Lines[2] = regex_replace(Lines[2],MoreThanTwoSpace,oneWhiteSpace);
-
-Container = split_line(Lines[2],oneWhiteSpace);
-
-//Cook::setBreakAfterN(std::stoi(Container[0]));
-//VipCook::SetBreakTime(std::stoi(Container[3]));    //Get new input
-//NormalCook::SetBreakTime(std::stoi(Container[1]));
-//VeganCook::SetBreakTime(std::stoi(Container[2]));
-
-
-//L4 Promotion Variable
-PromotionVariable = std::stoi(Lines[3]);
-
-//L5 No of events in file
-int numEvents = std::stoi(Lines[4]);
+//L6 No of events in file
+int numEvents = std::stoi(Lines[5]);
 
 
 //Resizing vector
-Lines.resize(5+numEvents);
-// test that this reads from the begining not from the line you stopped at
-while (getline(toBeReadFile,Lines[Counter]) && Counter++ != 4+numEvents) ;
+Lines.resize(6+numEvents);
+while (getline(toBeReadFile,Lines[Counter]) && Counter++ != 5+numEvents) ;
 
-for(int i = 5; i < (5+numEvents);i++){
+for(int i = 6; i < (6+numEvents);i++){
 	Lines[i] = regex_replace(Lines[i], Tabs, oneWhiteSpace);
 	Lines[i] = regex_replace(Lines[i], MoreThanTwoSpace, oneWhiteSpace);
 	std::vector<std::string> SplitString = split_line(Lines[i]," ");
-	char FirstLetter = *std::begin(SplitString[0]); // test that conversion works
+	char FirstLetter = *std::begin(SplitString[0]);
 
 	if (FirstLetter == 'R') {
 		//Arrival Event

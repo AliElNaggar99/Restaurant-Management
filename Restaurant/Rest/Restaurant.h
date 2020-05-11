@@ -51,7 +51,7 @@ private:
 	//OurOrdersDone
 	Queue <Order*> OrdersAllDone;
 	
-	int PromotionVariable;
+	int PromotionVariable , UrgentVariable;
 
 public:
 	

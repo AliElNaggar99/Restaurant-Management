@@ -15,7 +15,7 @@ class Cook
 
 
 public:
-	Cook();
+	Cook(int, int,int ,int,int);
 	virtual ~Cook()=0;
 
 	virtual void setID(int);

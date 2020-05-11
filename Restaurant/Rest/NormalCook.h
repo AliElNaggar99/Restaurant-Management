@@ -8,7 +8,7 @@ class NormalCook :
 	
 public:
 	
-	NormalCook();
+	NormalCook(int, int, int, int, int);
 
 
 };

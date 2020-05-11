@@ -10,7 +10,7 @@ private:
 
 public:
 	
-	VipCook();
+	VipCook(int, int, int, int, int);
 
 
 };

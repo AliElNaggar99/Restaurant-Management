@@ -3,12 +3,16 @@
 #include<cstdlib>
 
 
-Cook::Cook()
+Cook::Cook(int ID,int minSpd,int maxSpd,int minBrk,int maxBrk)
 {
+	this->ID = ID;
+	srand(time(NULL));
+	SetSpeed(minSpd, maxSpd);
+	SetBreakTime(minBrk, maxBrk);
 	CurrentStatus =  AVAILABLE;
 	NoFinishOrd = 0;
 	MakingOrder = nullptr;
-	srand(time(NULL));
+	
 }
 
 void Cook::SetBreakTime(int min , int max) {

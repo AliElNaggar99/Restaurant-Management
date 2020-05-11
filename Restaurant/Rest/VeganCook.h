@@ -8,7 +8,7 @@ class VeganCook :
 
 public:
 	
-	VeganCook();
+	VeganCook(int, int, int, int, int);
 	
 
 
