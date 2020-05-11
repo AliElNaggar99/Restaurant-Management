@@ -145,10 +145,9 @@ for (int i = 0; i < TYPE_CNT; i++) {
 Lines[1] = regex_replace(Lines[1], Tabs, oneWhiteSpace);
 Lines[1] = regex_replace(Lines[1],MoreThanTwoSpace,oneWhiteSpace);
 Container = split_line(Lines[1],oneWhiteSpace);
-NormalCook::SetSpeed(std::stoi(Container[0]));
-VeganCook::SetSpeed(std::stoi(Container[1]));
-VipCook::SetSpeed(std::stoi(Container[2]));
-
+//NormalCook::SetSpeed(std::stoi(Container[0]));
+//VeganCook::SetSpeed(std::stoi(Container[1])) ;  //get the new parameters 
+//VipCook::SetSpeed(std::stoi(Container[2]));	  //Set them between a range 
 
 
 
@@ -159,10 +158,10 @@ Lines[2] = regex_replace(Lines[2],MoreThanTwoSpace,oneWhiteSpace);
 
 Container = split_line(Lines[2],oneWhiteSpace);
 
-Cook::setBreakAfterN(std::stoi(Container[0]));
-VipCook::SetBreakTime(std::stoi(Container[3]));
-NormalCook::SetBreakTime(std::stoi(Container[1]));
-VeganCook::SetBreakTime(std::stoi(Container[2]));
+//Cook::setBreakAfterN(std::stoi(Container[0]));
+//VipCook::SetBreakTime(std::stoi(Container[3]));    //Get new input
+//NormalCook::SetBreakTime(std::stoi(Container[1]));
+//VeganCook::SetBreakTime(std::stoi(Container[2]));
 
 
 //L4 Promotion Variable
@@ -274,7 +273,7 @@ void Restaurant::FillDrawingList()
 	while (Free_Cook.findPos(Pc, i))
 	{
 		//add Only the Availabe cook to the Drawing list
-		if (Pc->GetCookStatus() == AVA)
+		if (Pc->GetCookStatus() == AVAILABLE)
 		{
 			pGUI->AddToDrawingList(Pc);
 		}

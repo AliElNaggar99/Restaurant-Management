@@ -1,16 +1,29 @@
 #include "Cook.h"
+#include<ctime>
+#include<cstdlib>
 
-int Cook::BreakAfterN = 0;
 
 Cook::Cook()
 {
+	CurrentStatus =  AVAILABLE;
+	NoFinishOrd = 0;
+	MakingOrder = nullptr;
+	srand(time(NULL));
 }
 
+void Cook::SetBreakTime(int min , int max) {
+	BreakTime = min + rand() % (max - min);
+}
+
+int Cook::getBreakAfterN() const {
+	return BreakAfterN;
+}
 
 Cook::~Cook()
 {
 }
-bool Cook::isAssigned()
+
+bool Cook::isAssigned() const
 {
 	if (MakingOrder == nullptr)
 	{
@@ -34,11 +47,9 @@ ORD_TYPE Cook::GetType() const
 	return type;
 }
 
+int Cook::GetBreakTime() const { return BreakTime; }
 
-void Cook::setID(int id)
-{
-	ID = id;
-}
+void Cook::setID(int id){ ID = id; }
 
 void Cook::setType(ORD_TYPE t)
 {
@@ -50,33 +61,38 @@ void Cook::setType(ORD_TYPE t)
 
 void Cook::setBreakAfterN(int n) { BreakAfterN = n; }
 
-void Cook::SetStausOfCook(Cook_Status stat) {
 
-	CurrentStatus = stat; 
+void Cook::SetStausOfCook(Cook_Status stat) { CurrentStatus = stat;  }
 
-}
-
-Cook_Status Cook::GetCookStatus() { return CurrentStatus; }
+Cook_Status Cook::GetCookStatus() const { return CurrentStatus; }
 
 // setters and gettings for the MakingOrder
 void Cook::setMakingOrder(Order* pOrd)
 {
 	MakingOrder = pOrd;
-	CurrentStatus = BSY;
+	CurrentStatus = BUSY;
 
 }
-Order* Cook::getMakingOrder()
+Order* Cook::getMakingOrder() const
 {
 	return MakingOrder;
 }
 
+int Cook::GetSpeed() const {
+	return speed; 
+}
+
+void Cook::SetSpeed(int min, int max) {
+
+	speed = min + rand() % (max - min);
+}
 //updating status as if finished orders == BreakTime
 void Cook::UpdateCookStatus()
 {
 	NoFinishOrd++;
 	if (NoFinishOrd == BreakAfterN && MakingOrder == nullptr)
 	{
-		SetStausOfCook(BSY);
+		SetStausOfCook(BUSY);
 	}
 }
 
