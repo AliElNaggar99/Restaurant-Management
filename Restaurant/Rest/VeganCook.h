@@ -6,21 +6,11 @@ class VeganCook :
 { private:
 	
 
-	static int Breaktime;
-	static int CookSpeed;
-
 public:
 	
-	VeganCook();
+	VeganCook(int, int, int, int, int);
 	
-	int GetID() const;
-	ORD_TYPE GetType() const;
-	void setID(int);
-	void setType(ORD_TYPE);
-	static void SetBreakTime(int x);
-	virtual int GetBreakTime();
-	static  void SetSpeed(int x);
-	int GetSpeed();
+
 
 
 

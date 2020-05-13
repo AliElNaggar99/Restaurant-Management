@@ -25,10 +25,11 @@ private:
 	LinkedList<NormalCook*> NormCookList;
 	LinkedList<VipCook*> VipCookList;
 	LinkedList<Cook*> Busy_Break_Cooks;
-	LinkedList<Cook*> Free_Cook;
 	LinkedList<Cook*> Working_Cook;	//Aren't The working cooks the same as busy cooks ? plus we need to loop over both might as well make them ine list
 
 	
+	LinkedList<Cook*> Free_Cook; //for Ali to remove in order to remeber to modify drawing function
+
 	/// ==> 
 	//	DEMO-related members. Should be removed in phases 1&2
 	Queue<Order*> DEMO_Queue;	//Important: This is just for demo
@@ -51,7 +52,8 @@ private:
 	//OurOrdersDone
 	Queue <Order*> OrdersAllDone;
 	
-	int PromotionVariable;
+	int PromotionVariable , UrgentVariable ,InjuryProb ;
+
 
 public:
 	

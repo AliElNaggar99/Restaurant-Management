@@ -33,10 +33,9 @@ enum PROG_MODE	//mode of the program interface
 };
 enum Cook_Status
 {
-	AVA,
-	BSY,
-	//Break not working
-	BRK
+	AVAILABLE,
+	BUSY,
+	BREAK
 
 
 };
