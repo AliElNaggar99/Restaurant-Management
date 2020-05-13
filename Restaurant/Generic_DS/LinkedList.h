@@ -91,10 +91,6 @@ public:
 	}
 
 
-
-
-
-
 	void insertPos(T data, int Pos)
 	{
 		Node<T>* P1 = new Node <T>;

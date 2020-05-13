@@ -16,12 +16,29 @@ public:
 		First = nullptr;
 		Last = nullptr;
 	}
+	//Destructor
+	~BaseList()
+	{
+	   DeleteAll();
+	}
 
 	bool isEmpty() const {
 		if (First == nullptr) return true;
 		return false;
 	}
-	bool enqueue(const T& newEntry) {
+
+	bool InsertFirst(const T& newEntry)
+	{
+		Node<T> temp = new Node<T>(newEntry);
+		temp->setNext(First);
+		First = temp;
+		count++;
+		return true;
+	}
+
+
+	// insert in last of the List
+	bool InsertLast(const T& newEntry) {
 		Node<T>* newNodePtr = new Node<T>(newEntry);
 		if (isEmpty())
 			First = newNodePtr;
@@ -31,7 +48,8 @@ public:
 		count++;
 		return true;
 	}
-	bool dequeue(T& frntEntry) {
+	// Remove First of the list
+	bool RemoveFirst(T& frntEntry) {
 
 		if (isEmpty())
 			return false;
@@ -48,13 +66,100 @@ public:
 		count--;
 		return true;
 	}
-	bool peekFront(T& frntEntry)  const {
+	bool ReturnFirst(T& frntEntry)  const {
 		if (isEmpty())
 			return false;
 
 		frntEntry = First->getItem();
 		return true;
 	}
+	//to find an element in the List
+
+	bool findPos(T& data, int i)
+	{
+		Node<T>* temp = First;
+		int inital = 0;
+
+		if (i > count)
+			return false;
+
+		while (inital != i)
+		{
+			inital++;
+			temp = temp->getNext();
+
+		}
+		data = temp->getItem();
+
+		return true;
+
+	}
+	//inserting in a specific Pos
+	void insertPos(T data, int Pos)
+	{
+		Node<T>* P1 = new Node <T>;
+		P1->setItem(data); P1->setNext(nullptr);
+		if (Pos == 1) {
+			P1->setNext(First);
+			First = P1;
+			return;
+		}
+		Node<T>* P2 = First;
+		for (int i = 0; i < Pos - 2; i++) {
+			P2 = P2->getNext();
+		}
+		P1->setNext(P2->getNext());
+		P2->setNext(P1);
+	}
+	//Adjusting the DeleteFirst to return Delete Node
+	bool DeleteFirst(T& data)
+	{
+		if (First)
+		{
+			Node<T>* temp = First;
+			data = First->getItem();
+			First = First->getNext();
+			delete temp;
+			return true;
+		}
+		else
+			return false;
+
+	}
+
+	//Delete a node from a list
+	bool DeleteNode(const T& value)
+	{
+		int c = -1;
+		Node<T>* temp = First;
+		while (temp->getNext())
+		{
+			if (temp->getNext()->getItem() == value)
+			{
+				Node<T>* p = temp->getNext();
+				temp->setNext(p->getNext());
+				delete p; c = 1;
+			}
+
+			else
+				temp = temp->getNext();
+
+
+		}
+		if (c == 1)
+			return true;
+	}
+	void DeleteAll()
+	{
+		Node<T>* P1 = First;
+		while (First)
+		{
+			P1 = First->getNext();
+			delete First;
+			First = P1;
+		}
+	}
+
 	//taken from Queue.h
 	T* toArray(int& count)//returns array of T (array if items) So that we can Print the list
 	{
