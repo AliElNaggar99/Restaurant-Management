@@ -108,9 +108,6 @@
       <Filter>Restaurant</Filter>
     </ClInclude>
     <ClInclude Include="Defs.h" />
-    <ClInclude Include="Generic_DS\LinkedList.h">
-      <Filter>Restaurant</Filter>
-    </ClInclude>
     <ClInclude Include="Generic_DS\PriorityQueue.h">
       <Filter>Restaurant</Filter>
     </ClInclude>

@@ -125,7 +125,7 @@ const std::string oneWhiteSpace = " ";
 				//Creating ID for Cooks
 				cID += (rand() % 15 + 1);
 				NormalCook* TEMP = new NormalCook(cID, std::stoi(CookSpdCont[0]), std::stoi(CookSpdCont[1]), std::stoi(BreakTimeCont[1]), std::stoi(BreakTimeCont[2]));
-				NormCookList.InsertEnd(TEMP);    //Inserting at the end O(n) InsertingBeg O(1) ???
+				NormCookList.InsertFirst(TEMP);    //Inserting at the end O(n) InsertingBeg O(1) ???
 
 			}
 			else if (i == TYPE_VEGAN) {
@@ -133,7 +133,7 @@ const std::string oneWhiteSpace = " ";
 				//Creating ID for Cooks
 				cID += (rand() % 15 + 1);
 				TEMP->setID(cID);
-				VegCookList.InsertEnd(TEMP);
+				VegCookList.InsertFirst(TEMP);
 
 			}
 			else {
@@ -141,7 +141,7 @@ const std::string oneWhiteSpace = " ";
 				//Creating ID for Cooks
 				cID += (rand() % 15 + 1);
 				TEMP->setID(cID);
-				VipCookList.InsertEnd(TEMP);
+				VipCookList.InsertFirst(TEMP);
 
 			}
 
@@ -274,9 +274,9 @@ void Restaurant::FillDrawingList()
 
 	//filling cook list
 	int i = 0;
-	//temp storage for cook
-	Cook* Pc;
-	while (Free_Cook.findPos(Pc, i))
+	//temp storage for vip cook
+	VipCook* Pc;
+	while (VipCookList.findPos(Pc, i))
 	{
 		//add Only the Availabe cook to the Drawing list
 		if (Pc->GetCookStatus() == AVAILABLE)
@@ -285,6 +285,39 @@ void Restaurant::FillDrawingList()
 		}
 		i++;
 	}
+	i = 0;
+	VeganCook* Pc1;
+	while (VegCookList.findPos(Pc1, i))
+	{
+		//add Only the Availabe cook to the Drawing list
+		if (Pc1->GetCookStatus() == AVAILABLE)
+		{
+			pGUI->AddToDrawingList(Pc1);
+		}
+		i++;
+	}
+	i = 0;
+	NormalCook* Pc2;
+	while (NormCookList.findPos(Pc2, i))
+	{
+		//add Only the Availabe cook to the Drawing list
+		if (Pc2->GetCookStatus() == AVAILABLE)
+		{
+			pGUI->AddToDrawingList(Pc2);
+		}
+		i++;
+	}
+
+
+
+
+
+
+
+
+
+
+
 	  int size = 0;
 	  Order* pOrd;
 	  Order** Orders_Array = OrdersAll.toArray(size);
@@ -330,7 +363,6 @@ void Restaurant::Test()
 	//all lists are filled by cocks and events
 
 
-	//pGUI->waitForClick(); -> this is not IMPORTANT 
 	//Check Event list 
 	int CurrentTimeStep = 0;
 	string* S = new string[3];
@@ -354,12 +386,12 @@ void Restaurant::Test()
 				pOrd->setStatus(SRV);
 				OrdersServing.enqueue(pOrd);
 		    }
-			if (VeganOrder.dequeue(pOrd))
+			if (VeganOrder.RemoveFirst(pOrd))
 			{
 				pOrd->setStatus(SRV);
 				OrdersServing.enqueue(pOrd);
 			}
-			if (NormalOrder.dequeue(pOrd))
+			if (NormalOrder.RemoveFirst(pOrd))
 			{
 				pOrd->setStatus(SRV);
 				OrdersServing.enqueue(pOrd);
@@ -559,19 +591,19 @@ void Restaurant::AddtoOrderQueue(Order* pOrd)
 	switch (type)
 	{
 	case TYPE_NORMAL:
-		NormalOrder.enqueue(pOrd);
+		NormalOrder.InsertLast(pOrd);
 		break;
 	case TYPE_VIP:
 		Vip_Order.enqueue(pOrd);
 		break;
 	case TYPE_VEGAN:
-		VeganOrder.enqueue(pOrd);
+		VeganOrder.InsertLast(pOrd);
 		break;
 	default:
 		break;
 	}
 
-	OrdersAll.enqueue(pOrd);
+	OrdersAll.InsertLast(pOrd);
 
 
 }

@@ -5,7 +5,6 @@
 #include "..\CMUgraphicsLib\CMUgraphics.h"
 #include "..\GUI\GUI.h"
 #include "..\Generic_DS\Queue.h"
-#include "..\Generic_DS\LinkedList.h"
 #include "..\Events\Event.h"
 #include "..\Generic_DS\PriorityQueue.h"
 #include"../Generic_DS/List.h"
@@ -21,14 +20,13 @@ class Restaurant
 private:
 	GUI *pGUI;
 	Queue<Event*> EventsQueue;	//Queue of all events that will be loaded from file
-	LinkedList<VeganCook*> VegCookList;
-	LinkedList<NormalCook*> NormCookList;
-	LinkedList<VipCook*> VipCookList;
-	LinkedList<Cook*> Busy_Break_Cooks;
-	LinkedList<Cook*> Working_Cook;	//Aren't The working cooks the same as busy cooks ? plus we need to loop over both might as well make them ine list
+	List<VeganCook*> VegCookList;
+	List<NormalCook*> NormCookList;
+	List<VipCook*> VipCookList;
+	List<Cook*> Busy_Break_Cooks;
+	List<Cook*> Working_Cook;	//Aren't The working cooks the same as busy cooks ? plus we need to loop over both might as well make them ine list
 
 	
-	LinkedList<Cook*> Free_Cook; //for Ali to remove in order to remeber to modify drawing function
 
 	/// ==> 
 	//	DEMO-related members. Should be removed in phases 1&2

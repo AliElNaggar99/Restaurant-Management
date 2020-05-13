@@ -29,7 +29,7 @@ public:
 
 	bool InsertFirst(const T& newEntry)
 	{
-		Node<T> temp = new Node<T>(newEntry);
+		Node<T>* temp = new Node<T>(newEntry);
 		temp->setNext(First);
 		First = temp;
 		count++;
@@ -80,7 +80,7 @@ public:
 		Node<T>* temp = First;
 		int inital = 0;
 
-		if (i > count)
+		if (i >= count)
 			return false;
 
 		while (inital != i)
@@ -120,6 +120,7 @@ public:
 			data = First->getItem();
 			First = First->getNext();
 			delete temp;
+			count--;
 			return true;
 		}
 		else
@@ -147,6 +148,7 @@ public:
 
 		}
 		if (c == 1)
+			count--;
 			return true;
 	}
 	void DeleteAll()
@@ -158,6 +160,7 @@ public:
 			delete First;
 			First = P1;
 		}
+		count = 0;
 	}
 
 	//taken from Queue.h
