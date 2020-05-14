@@ -100,3 +100,12 @@ int Order::GetServingTime( )
 	
 
 }
+int Order::GetWaitTime()
+{
+	return WaitTime;
+
+}
+void Order::SetWaitTime(int x)
+{
+	WaitTime = x;
+}

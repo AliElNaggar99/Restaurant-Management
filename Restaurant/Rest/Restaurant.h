@@ -46,7 +46,7 @@ private:
 	//Our Orders waiting
 	List <Order*> OrdersAll;
 	//Our Orders that are in Servicing
-	Queue <Order*> OrdersServing;
+	List <Order*> OrdersServing;
 	//OurOrdersDone
 	Queue <Order*> OrdersAllDone;
 	
@@ -94,6 +94,10 @@ public:
 	//promo the order 
 	void PromOrder(int CID , int ExtraMoney);
 
+
+	//Functions for Simulatiom
+	void assigningorders(int timeStep);
+	void UpdateCooksandOrdersstatus(int timeStep);
 };
 
 #endif

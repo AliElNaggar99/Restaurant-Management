@@ -93,12 +93,11 @@ public:
 		P2->setNext(P1);
 	}
 	//Adjusting the DeleteFirst to return Delete Node
-	bool DeleteFirst(T& data)
+	bool DeleteFirst()
 	{
 		if (First)
 		{
 			Node<T>* temp = First;
-			data = First->getItem();
 			First = First->getNext();
 			delete temp;
 			count--;
@@ -112,25 +111,28 @@ public:
 	//Delete a node from a list
 	bool DeleteNode(const T& value)
 	{
-		int c = -1;
-		Node<T>* temp = First;
-		while (temp->getNext())
+		Node <T>* temp = First;
+		while (temp)
 		{
-			if (temp->getNext()->getItem() == value)
+			if (temp->getItem() == value)
 			{
-				Node<T>* p = temp->getNext();
-				temp->setNext(p->getNext());
-				delete p; c = 1;
+				First = temp->getNext();
+				delete temp;
+				count--;
+				return true;
+
 			}
-
-			else
-				temp = temp->getNext();
-
-
+			if (temp->getNext() && temp->getNext()->getItem() == value)
+			{
+				Node <T>* temp2 = temp->getNext();
+				temp->setNext(temp->getNext()->getNext());
+				delete temp2;
+				count--;
+				return true;
+			}
+			temp = temp->getNext();
 		}
-		if (c == 1)
-			count--;
-			return true;
+		return false;
 	}
 	void DeleteAll()
 	{

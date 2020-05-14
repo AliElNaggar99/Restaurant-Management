@@ -14,6 +14,7 @@ protected:
 	int ID,speed ,  NoFinishOrd , BreakTime; //number of Finished Orders before taking Breaking
 	Order* MakingOrder;
 	static int BreakAfterN , InjuryRest ;
+	int Remainingbreak;
 
 
 
@@ -54,5 +55,11 @@ public:
 	//updating status as if finished orders == BreakTime
 	void UpdateCookStatus();
 
+	int GetRemainingBreak();
+	void SetRemainingBreak(int x);
+
+
+	void SetFinishedOrders(int x);
+	int GetFinishedOrders();
 
 };

@@ -371,17 +371,17 @@ void Restaurant::Test()
 			if (Vip_Order.dequeue(pOrd))
 			{
 				pOrd->setStatus(SRV);
-				OrdersServing.enqueue(pOrd);
+				OrdersServing.RemoveFirst(pOrd);
 		    }
 			if (VeganOrder.RemoveFirst(pOrd))
 			{
 				pOrd->setStatus(SRV);
-				OrdersServing.enqueue(pOrd);
+				OrdersServing.RemoveFirst(pOrd);
 			}
 			if (NormalOrder.RemoveFirst(pOrd))
 			{
 				pOrd->setStatus(SRV);
-				OrdersServing.enqueue(pOrd);
+				OrdersServing.RemoveFirst(pOrd);
 			}
 
 			//moving from in Srv to done
@@ -389,7 +389,7 @@ void Restaurant::Test()
 			{
 				for (int i = 0; i < 3; i++)
 				{
-					if (OrdersServing.dequeue(pOrd))
+					if (OrdersServing.RemoveFirst(pOrd))
 					{
 						pOrd->setStatus(DONE);
 						OrdersAllDone.enqueue(pOrd);
@@ -434,19 +434,11 @@ void Restaurant::TestPHII()
 	pGUI->PrintMessage("Hello, this is demo");
 	pGUI->waitForClick();
 
-	//testing Print function
-	string* S = new string[5];
-	S[0] = "Number is " + to_string(5);
-	S[1] = "hello is " + to_string(5);
-	S[2] = "my mine is " + to_string(55555);
-	S[3] = "baby do you love me " + to_string(5);
-	S[4] = "WHO ARE YOU " + to_string(5);
-	pGUI->PrintMessageML(S,5);
-
 
 	pGUI->waitForClick();
 	//Check Event list 
 	int CurrentTimeStep = 0;
+	string* S = new string[3];
 	//condition of Events and Waiting and Serving
 	while (!EventsQueue.isEmpty() || !Vip_Order.isEmpty() || !NormalOrder.isEmpty() || !VeganOrder.isEmpty() || !OrdersServing.isEmpty())
 	{
@@ -460,25 +452,25 @@ void Restaurant::TestPHII()
 		ExecuteEvents(CurrentTimeStep);	//execute all events at current time step
 
 		//Creating an Order and cook Pointer to use them in stimulation
-		Order* pOrd;
-		VipCook* Co;
-		//checking if there is an order in Vip arrived
-		while(Vip_Order.dequeue(pOrd) && VipCookList.DeleteFirst(Co))
-		{
-			Co->setMakingOrder(pOrd);
-			pOrd->setStatus(SRV);
-			OrdersServing.enqueue(pOrd);
-		}
+		assigningorders(CurrentTimeStep);
+		UpdateCooksandOrdersstatus(CurrentTimeStep);
 		
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 		FillDrawingList();
+		S[0] = "TS: " + to_string(CurrentTimeStep);
+		S[1] = "Number of Waiting Orders: Vip: " + to_string(Vip_Order.GetCount()) + " Vegan : " + to_string(VeganOrder.GetCount()) + " Normal : " + to_string(NormalOrder.GetCount());
+		//this acts like index so first element is Zero
+		S[2] = "Number of available cooks: Vip: " + to_string(VipCookList.GetCount() + 1) + " Vegan: " + to_string(VegCookList.GetCount() + 1) + " Normal: " + to_string(NormCookList.GetCount() + 1);
+		pGUI->PrintMessageML(S, 3);
 
-		//////////////////////////////////////////////////////////////////////////////////////////
-	   // interactive Mode
 		pGUI->UpdateInterface();
 		pGUI->waitForClick();
 		CurrentTimeStep++;	//advance timestep
+		
+
+		//////////////////////////////////////////////////////////////////////////////////////////
+	   // interactive Mode
 		pGUI->ResetDrawingList();
 	}
 	pGUI->PrintMessage("Simulation is Done");
@@ -633,6 +625,204 @@ void Restaurant::PromOrder(int CID , int ExtraMoney)
 
 
 }
+
+void Restaurant::assigningorders(int CurrentTimeStep)////////////////////////afifiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+{
+	//Temp Storage for Orders
+	Order* pOrd;
+	//Serveing all Vip Orders if there is an available Cook
+	while ((Vip_Order.peekFront(pOrd)) && (!VipCookList.isEmpty() || !VegCookList.isEmpty() || !NormCookList.isEmpty()))
+	{
+		//First Dequeue the Order
+		Vip_Order.dequeue(pOrd);
+		//If there is a vip Cook
+		if (!VipCookList.isEmpty())
+		{
+			VipCook* Cook1;
+			VipCookList.RemoveFirst(Cook1);
+			Cook1->setMakingOrder(pOrd);
+			Cook1->SetStausOfCook(BUSY);
+			pOrd->SetWaitTime(CurrentTimeStep - pOrd->GetArrivalTime());
+			pOrd->SetServingTime(ceil(pOrd->GetNumberOfDishes() / Cook1->GetSpeed()));
+			pOrd->SetFinishTime(pOrd->GetArrivalTime() + pOrd->GetWaitTime() + pOrd->GetServingTime());
+			Working_Cook.InsertFirst(Cook1);
+			//Update
+			pOrd->setStatus(SRV);
+			OrdersServing.InsertLast(pOrd);
+		}
+		//If there is an NormalCook
+		else if (!NormCookList.isEmpty())
+		{
+			NormalCook* Cook1;
+			NormCookList.RemoveFirst(Cook1);
+			Cook1->setMakingOrder(pOrd);
+			Cook1->SetStausOfCook(BUSY);
+			pOrd->SetWaitTime(CurrentTimeStep - pOrd->GetArrivalTime());
+			pOrd->SetServingTime(ceil(pOrd->GetNumberOfDishes() / Cook1->GetSpeed()));
+			pOrd->SetFinishTime(pOrd->GetArrivalTime() + pOrd->GetWaitTime() + pOrd->GetServingTime());
+			Working_Cook.InsertFirst(Cook1);
+			//Update
+			pOrd->setStatus(SRV);
+			OrdersServing.InsertLast(pOrd);
+		}
+		//If there is an Vegan Cook
+		else if (!VegCookList.isEmpty())
+		{
+			VeganCook* Cook1;
+			VegCookList.RemoveFirst(Cook1);
+			Cook1->setMakingOrder(pOrd);
+			Cook1->SetStausOfCook(BUSY);
+			pOrd->SetWaitTime(CurrentTimeStep - pOrd->GetArrivalTime());
+			pOrd->SetServingTime(ceil(pOrd->GetNumberOfDishes() / Cook1->GetSpeed()));
+			pOrd->SetFinishTime(pOrd->GetArrivalTime() + pOrd->GetWaitTime() + pOrd->GetServingTime());
+			Working_Cook.InsertFirst(Cook1);
+			//Update
+			pOrd->setStatus(SRV);
+			OrdersServing.InsertLast(pOrd);
+		}
+	}
+
+	//Finishing all Vegan Orders if there is a Free Vegan Cook
+	while (VeganOrder.ReturnFirst(pOrd) && (!VegCookList.isEmpty()))
+	{
+		VeganOrder.RemoveFirst(pOrd);
+		VeganCook* Cook1;
+		VegCookList.RemoveFirst(Cook1);
+		Cook1->setMakingOrder(pOrd);
+		Cook1->SetStausOfCook(BUSY);
+		pOrd->SetWaitTime(CurrentTimeStep - pOrd->GetArrivalTime());
+		pOrd->SetServingTime(ceil(pOrd->GetNumberOfDishes() / Cook1->GetSpeed()));
+		pOrd->SetFinishTime(pOrd->GetArrivalTime() + pOrd->GetWaitTime() + pOrd->GetServingTime());
+		Working_Cook.InsertFirst(Cook1);
+		//Update
+		pOrd->setStatus(SRV);
+		OrdersServing.InsertLast(pOrd);
+	}
+
+	//Finishing all Normal Orders if there is a free Normal or a vip Cook
+	while (NormalOrder.ReturnFirst(pOrd) && (!VipCookList.isEmpty() || !NormCookList.isEmpty()))
+	{
+		NormalOrder.RemoveFirst(pOrd);
+		if (!NormCookList.isEmpty())
+		{
+			NormalCook* Cook1;
+			NormCookList.RemoveFirst(Cook1);
+			Cook1->setMakingOrder(pOrd);
+			Cook1->SetStausOfCook(BUSY);
+			pOrd->SetWaitTime(CurrentTimeStep - pOrd->GetArrivalTime());
+			pOrd->SetServingTime(ceil(pOrd->GetNumberOfDishes() / Cook1->GetSpeed()));
+			pOrd->SetFinishTime(pOrd->GetArrivalTime() + pOrd->GetWaitTime() + pOrd->GetServingTime());
+			Working_Cook.InsertFirst(Cook1);
+			//Update
+			pOrd->setStatus(SRV);
+			OrdersServing.InsertLast(pOrd);
+		}
+		//If there is an NormalCook
+		else if (!VipCookList.isEmpty())
+		{
+			VipCook* Cook1;
+			VipCookList.RemoveFirst(Cook1);
+			Cook1->setMakingOrder(pOrd);
+			Cook1->SetStausOfCook(BUSY);
+			pOrd->SetWaitTime(CurrentTimeStep - pOrd->GetArrivalTime());
+			pOrd->SetServingTime(ceil(pOrd->GetNumberOfDishes() / Cook1->GetSpeed()));
+			pOrd->SetFinishTime(pOrd->GetArrivalTime() + pOrd->GetWaitTime() + pOrd->GetServingTime());
+			Working_Cook.InsertFirst(Cook1);
+			//Update
+			pOrd->setStatus(SRV);
+			OrdersServing.InsertLast(pOrd);
+		}
+	}
+}
+
+
+void Restaurant:: UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiiiiiiiiiiiiiiiiiiiii
+{
+	//Making List of Cooks to array to Check Status of each one
+	int size;
+	Cook** WorkOrBusyCook = Working_Cook.toArray(size);
+	for (int i = 0; i < size; i++)
+	{
+		//Check if the Cook is Busy and Its Order is finished
+		if (WorkOrBusyCook[i]->GetCookStatus() == BUSY  && WorkOrBusyCook[i]->getMakingOrder()->GetFinishTime() == CurrentTimeStep)
+		{
+			//Get a pointer to that Order
+			Order* pOrd = WorkOrBusyCook[i]->getMakingOrder();
+			pOrd->setStatus(DONE);
+			OrdersAllDone.enqueue(pOrd);
+			OrdersServing.DeleteNode(pOrd);
+			WorkOrBusyCook[i]->setMakingOrder(nullptr);
+			WorkOrBusyCook[i]->SetStausOfCook(AVAILABLE);
+			WorkOrBusyCook[i]->SetFinishedOrders(WorkOrBusyCook[i]->GetFinishedOrders() + 1);
+			//Check if the Cook would Take a break or No
+			if (WorkOrBusyCook[i]->GetFinishedOrders() == WorkOrBusyCook[i]->getBreakAfterN())
+			{
+				WorkOrBusyCook[i]->SetFinishedOrders(0);
+				WorkOrBusyCook[i]->SetRemainingBreak(WorkOrBusyCook[i]->GetBreakTime());
+				WorkOrBusyCook[i]->SetStausOfCook(BREAK);
+			}
+			//Return it to the list
+			else
+			{
+				Working_Cook.DeleteNode(WorkOrBusyCook[i]);
+				if (WorkOrBusyCook[i]->GetType() == TYPE_VEGAN)
+				{
+					VeganCook* Cook1 = (VeganCook*)WorkOrBusyCook[i];
+					VegCookList.InsertFirst(Cook1);
+				}
+				else if (WorkOrBusyCook[i]->GetType() == TYPE_NORMAL)
+				{
+					NormalCook* Cook1 = (NormalCook*)WorkOrBusyCook[i];
+					NormCookList.InsertFirst(Cook1);
+				}
+				else if (WorkOrBusyCook[i]->GetType() == TYPE_VIP)
+				{
+					VipCook* Cook1 = (VipCook*)WorkOrBusyCook[i];
+					VipCookList.InsertFirst(Cook1);
+				}
+			}
+		}
+		//Check if cook is in break
+		else if (WorkOrBusyCook[i]->GetCookStatus() == BREAK)
+		{
+			//Either he finishes or decrease remaining time
+			if (WorkOrBusyCook[i]->GetRemainingBreak() == 0)
+			{
+				//Make it avaiable then add it to the List
+				WorkOrBusyCook[i]->SetStausOfCook(AVAILABLE);
+				Working_Cook.DeleteNode(WorkOrBusyCook[i]);
+				if (WorkOrBusyCook[i]->GetType() == TYPE_VEGAN)
+				{
+					VeganCook* Cook1 = (VeganCook*)WorkOrBusyCook[i];
+					VegCookList.InsertFirst(Cook1);
+				}
+				else if (WorkOrBusyCook[i]->GetType() == TYPE_NORMAL)
+				{
+					NormalCook* Cook1 = (NormalCook*)WorkOrBusyCook[i];
+					NormCookList.InsertFirst(Cook1);
+				}
+				else if (WorkOrBusyCook[i]->GetType() == TYPE_VIP)
+				{
+					VipCook* Cook1 = (VipCook*)WorkOrBusyCook[i];
+					VipCookList.InsertFirst(Cook1);
+				}
+
+			}
+			else if (WorkOrBusyCook[i]->GetBreakTime() != 0)
+			{
+				WorkOrBusyCook[i]->setBreakAfterN(WorkOrBusyCook[i]->GetBreakTime() - 1);
+			}
+		}
+
+	}
+	//deallcoate the Memory 
+	delete[]WorkOrBusyCook;
+}
+
+
+
+
+
 
 
 /// ==> end of DEMO-related function

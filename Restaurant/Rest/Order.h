@@ -11,13 +11,12 @@ protected:
 	ORD_TYPE type;		//order type: Normal, vegan, VIP
 	ORD_STATUS status;	//waiting, in-service, done
 	int Distance;	//The distance (in meters) between the order location and the resturant 
-	                
+	
 	double totalMoney;	//Total order money
 
 				//ServTime & Finish time depend on the cook 
-	int ArrTime, ServTime, FinishTime;	//arrival, service start, and finish times
+	int ArrTime, ServTime, FinishTime, WaitTime;	//arrival, service start, and finish times
 	int NumberOfDishes;
-
 	
 public:
 	Order(int ID, ORD_TYPE r_Type,int ArrivalTime,int numDishes,double totMoney);
@@ -47,7 +46,8 @@ public:
 	//
 	// TODO: Add More Member Functions As Needed
 	//
-
+	int GetWaitTime();
+	void SetWaitTime(int x);
 };
 
 #endif

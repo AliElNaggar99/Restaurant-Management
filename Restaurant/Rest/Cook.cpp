@@ -86,3 +86,22 @@ void Cook::UpdateCookStatus()
 	}
 }
 
+void Cook::SetFinishedOrders(int x)
+{
+	NoFinishOrd = x;
+}
+int Cook::GetFinishedOrders()
+{
+	return NoFinishOrd;
+}
+
+int Cook::GetRemainingBreak()
+{
+	return Remainingbreak;
+}
+void Cook::SetRemainingBreak(int x)
+{
+	Remainingbreak = x;
+}
+
+
