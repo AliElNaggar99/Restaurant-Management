@@ -73,27 +73,7 @@ public:
 		frntEntry = First->getItem();
 		return true;
 	}
-	//to find an element in the List
-
-	bool findPos(T& data, int i)
-	{
-		Node<T>* temp = First;
-		int inital = 0;
-
-		if (i >= count)
-			return false;
-
-		while (inital != i)
-		{
-			inital++;
-			temp = temp->getNext();
-
-		}
-		data = temp->getItem();
-
-		return true;
-
-	}
+	
 	//inserting in a specific Pos
 	void insertPos(T data, int Pos)
 	{
@@ -102,6 +82,7 @@ public:
 		if (Pos == 1) {
 			P1->setNext(First);
 			First = P1;
+			count++;
 			return;
 		}
 		Node<T>* P2 = First;
@@ -163,8 +144,13 @@ public:
 		count = 0;
 	}
 
-	//taken from Queue.h
-	T* toArray(int& count)//returns array of T (array if items) So that we can Print the list
+	int GetCount()
+	{
+		return count;
+	}
+
+	//For Printing
+	T* toArray(int& count)
 	{
 		count = 0;
 
@@ -189,10 +175,27 @@ public:
 		return Arr;
 	}
 
-	int GetCount()
+	//to find an element in the List
+
+	/*bool findPos(T& data, int i)
 	{
-		return count;
-	}
+		Node<T>* temp = First;
+		int inital = 0;
+
+		if (i >= count)
+			return false;
+
+		while (inital != i)
+		{
+			inital++;
+			temp = temp->getNext();
+
+		}
+		data = temp->getItem();
+
+		return true;
+
+	}*/
 
 };
 

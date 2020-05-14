@@ -34,7 +34,7 @@ private:
 	/// ==>
 
 
-	//Queues of orders
+	//List of orders
 	List<Order*> NormalOrder;
 	List<Order*> VeganOrder;
 	PriorityQueue<Order*> Vip_Order;

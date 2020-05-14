@@ -272,82 +272,69 @@ void Restaurant::FillDrawingList()
 	//To add orders it should call function  void GUI::AddToDrawingList(Order* pOrd);
 	//To add Cooks it should call function  void GUI::AddToDrawingList(Cook* pCc);
 
-	//filling cook list
-	int i = 0;
-	//temp storage for vip cook
-	VipCook* Pc;
-	while (VipCookList.findPos(Pc, i))
+	//Size will be used as Size to print
+	int size = 0;
+	//Filling the drawing list with Cooks
+	VipCook** VICList = VipCookList.toArray(size);
+	for (int i = 0; i < size; i++)
 	{
-		//add Only the Availabe cook to the Drawing list
-		if (Pc->GetCookStatus() == AVAILABLE)
-		{
-			pGUI->AddToDrawingList(Pc);
-		}
-		i++;
+		pGUI->AddToDrawingList(VICList[i]);
 	}
-	i = 0;
-	VeganCook* Pc1;
-	while (VegCookList.findPos(Pc1, i))
+	delete []VICList;
+
+	VeganCook** VegCock = VegCookList.toArray(size);
+	for (int i = 0; i < size; i++)
 	{
-		//add Only the Availabe cook to the Drawing list
-		if (Pc1->GetCookStatus() == AVAILABLE)
-		{
-			pGUI->AddToDrawingList(Pc1);
-		}
-		i++;
+		pGUI->AddToDrawingList(VegCock[i]);
 	}
-	i = 0;
-	NormalCook* Pc2;
-	while (NormCookList.findPos(Pc2, i))
+	delete[]VegCock;
+
+
+	NormalCook** NormCoList = NormCookList.toArray(size);
+	for (int i = 0; i < size; i++)
 	{
-		//add Only the Availabe cook to the Drawing list
-		if (Pc2->GetCookStatus() == AVAILABLE)
-		{
-			pGUI->AddToDrawingList(Pc2);
-		}
-		i++;
+		pGUI->AddToDrawingList(NormCoList[i]);
 	}
+	delete[]NormCoList;
 
 
+	//Now Printing Waiting Order first we print Vip then Vegan then Normal Just like cooks
+	Order** pOrd = Vip_Order.toArray(size);
+	for (int i = 0; i < size; i++)
+	{
+		pGUI->AddToDrawingList(pOrd[i]);
+	}
+	delete[]pOrd;
+	
+	pOrd = VeganOrder.toArray(size);
+	for (int i = 0; i < size; i++)
+	{
+		pGUI->AddToDrawingList(pOrd[i]);
+	}
+	delete[]pOrd;
 
+	pOrd = NormalOrder.toArray(size);
+	for (int i = 0; i < size; i++)
+	{
+		pGUI->AddToDrawingList(pOrd[i]);
+	}
+	delete[]pOrd;
 
+	//Now Printing The serving according to assement time
+	pOrd = OrdersServing.toArray(size);
+	for (int i = 0; i < size; i++)
+	{
+		pGUI->AddToDrawingList(pOrd[i]);
+	}
+	delete[]pOrd;
 
-
-
-
-
-
-
-	  int size = 0;
-	  Order* pOrd;
-	  Order** Orders_Array = OrdersAll.toArray(size);
-
-	  for (int i = 0; i < size; i++)
-	  {
-		  pOrd = Orders_Array[i];
-		  //if it is not waiting don't print
-		  if(pOrd->getStatus() == WAIT)
-		     pGUI->AddToDrawingList(pOrd);
-	  }
-
-	  //filling the In - Serve Orders
-	   size = 0;
-	  Orders_Array = OrdersServing.toArray(size);
-
-	  for (int i = 0; i < size; i++)
-	  {
-		  pOrd = Orders_Array[i];
-		  pGUI->AddToDrawingList(pOrd);
-	  }
-	  //filling the DoneOrders
-	   size = 0;
-	  Orders_Array = OrdersAllDone.toArray(size);
-
-	  for (int i = 0; i < size; i++)
-	  {
-		  pOrd = Orders_Array[i];
-		  pGUI->AddToDrawingList(pOrd);
-	  }
+	//Now Printing Done Orders
+	pOrd = OrdersAllDone.toArray(size);
+	for (int i = 0; i < size; i++)
+	{
+		pGUI->AddToDrawingList(pOrd[i]);
+	}
+	delete[]pOrd;
 
 }
 
