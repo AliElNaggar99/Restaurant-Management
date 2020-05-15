@@ -6,7 +6,6 @@
 #include "..\GUI\GUI.h"
 #include "..\Generic_DS\Queue.h"
 #include "..\Events\Event.h"
-#include "..\Generic_DS\PriorityQueue.h"
 #include"../Generic_DS/List.h"
 #include "..\Generic_DS\PriorityQueueMax.h"
 #include "..\Generic_DS\PriorityQueueMin.h"
@@ -95,8 +94,6 @@ public:
 	//Functions for Simulatiom
 	void assigningorders(int timeStep);
 	void UpdateCooksandOrdersstatus(int timeStep);
-	void CalculatingNumberofCooks(int* Arrayofnumber);
-	void CalculatingNumberofOrders(int* Arrayofnumber);
 	void CalculatingNumberofOrdersDone(int* Arrayofnumber);
 	void PrintInfoCurrentTime(int CurrentTimeStep);
 };

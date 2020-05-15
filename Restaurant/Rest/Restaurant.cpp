@@ -402,8 +402,6 @@ void Restaurant::Test()
 			
         //////////////////////////////////////////////////////////////////////////////////////////
 			FillDrawingList();
-			CalculatingNumberofCooks(NumberOfCooks);
-			CalculatingNumberofOrders(NumberOfOrders);
   
 		///////////////////////////////////////////////////////////////////////////////////////////
 	   // interactive Mode
@@ -750,15 +748,11 @@ void Restaurant::PrintInfoCurrentTime(int CurrentTimeStep)
 {
 	//Making Arrays To get Information From Restuartant
 	string* S = new string[5];
-	int* NumberOfCooks = new int[4];
-	int* NumberOfOrders = new int[3];
 	int* NumberOfOrdersDone = new int[3];
-	CalculatingNumberofCooks(NumberOfCooks);
-	CalculatingNumberofOrders(NumberOfOrders);
 	CalculatingNumberofOrdersDone(NumberOfOrdersDone);
 	S[0] = "TS: " + to_string(CurrentTimeStep);
-	S[1] = "Number of Waiting Orders: Vip: " + to_string(NumberOfOrders[2]) + " Vegan : " + to_string(NumberOfOrders[1]) + " Normal : " + to_string(NumberOfOrders[0]);
-	S[2] = "Number of available cooks: Vip: " + to_string(NumberOfCooks[3]) + " Vegan: " + to_string(NumberOfCooks[2]) + " Normal: " + to_string(NumberOfCooks[1]);
+	S[1] = "Number of Waiting Orders: Vip: " + to_string(Vip_Order.GetCount()) + " Vegan : " + to_string(VeganOrder.GetCount()) + " Normal : " + to_string(NormalOrder.GetCount());
+	S[2] = "Number of available cooks: Vip: " + to_string(VipCookList.GetCount()) + " Vegan: " + to_string(VegCookList.GetCount()) + " Normal: " + to_string(NormCookList.GetCount());
 	//Temp Storage to Get Cooks and Orders
 	S[3] = "";
 	Cook* Temp;
@@ -799,8 +793,6 @@ void Restaurant::PrintInfoCurrentTime(int CurrentTimeStep)
 	pGUI->PrintMessageML(S, 5);
 
 	delete[]S;
-	delete[]NumberOfCooks;
-	delete[]NumberOfOrders;
 	delete[]NumberOfOrdersDone;
 }
 
@@ -841,115 +833,7 @@ void Restaurant::CalculatingNumberofOrdersDone(int* Arrayofnumber)
 }
 		
 
-//Calculate Number of Avaible Cooks each time step
-void Restaurant::CalculatingNumberofCooks(int* Arrayofnumber)
-{
-	int totalCooks;
-	int numberofvipcooks = 0;
-	int numberofvegancooks = 0;
-	int numberofnormalcooks = 0;
-	//Making a temp Queue for VipCook and Empty it in A queue
-	Queue<VipCook*> temp;
-	VipCook* temp1;
-	while (VipCookList.dequeue((temp1)))
-	{
-		numberofvipcooks++;
-		temp.enqueue(temp1);
-	}
-	//Return it in VipCook
-	while (temp.dequeue(temp1))
-	{
-		VipCookList.enqueue(temp1);
-	}
-
-	//DO the same for Vegan and Normal
-	Queue<NormalCook*> temp2;
-	NormalCook* temp3;
-	while (NormCookList.dequeue((temp3)))
-	{
-		numberofnormalcooks++;
-		temp2.enqueue(temp3);
-	}
-	//Return it in VipCook
-	while (temp2.dequeue(temp3))
-	{
-		NormCookList.enqueue(temp3);
-	}
-
-
-	Queue<VeganCook*> temp4;
-	VeganCook* temp5;
-	while (VegCookList.dequeue((temp5)))
-	{
-		numberofvegancooks++;
-		temp4.enqueue(temp5);
-	}
-	//Return it in VipCook
-	while (temp4.dequeue(temp5))
-	{
-		VegCookList.enqueue(temp5);
-	}
-	totalCooks = numberofnormalcooks + numberofvegancooks + numberofvipcooks;
-	Arrayofnumber[0] = totalCooks;
-	Arrayofnumber[1] = numberofnormalcooks;
-	Arrayofnumber[2] = numberofvegancooks;
-	Arrayofnumber[3] = numberofvipcooks;
-	return;
-}
-
-
-
-// Calulatue Number of each Order
-void Restaurant::CalculatingNumberofOrders(int* Arrayofnumber)
-{
-	int numberofvip = 0;
-	int numberofvegan = 0;
-	int numberofnormal = 0;
-	//Making a temp Queue for Vip Order and Empty it in A queue
-	PriorityQueue<Order*> temp;
-	Order* temp1;
-	while (Vip_Order.dequeue((temp1)))
-	{
-		numberofvip++;
-		temp.enqueue(temp1);
-	}
-	//Return it in VipCook
-	while (temp.dequeue(temp1))
-	{
-		Vip_Order.enqueue(temp1);
-	}
-
-	//DO the same for Vegan and Normal
-	Queue <Order*> temp2;
-	while (VeganOrder.dequeue((temp1)))
-	{
-		numberofvegan++;
-		temp2.enqueue(temp1);
-	}
-	//Return it in VipCook
-	while (temp2.dequeue(temp1))
-	{
-		VeganOrder.enqueue(temp1);
-	}
-
-	List <Order*> temp4;
-	while (NormalOrder.RemoveFirst(temp1))
-	{
-		numberofnormal++;
-		temp4.InsertLast(temp1);
-	}
-	//Return it in VipCook
-	while (temp4.RemoveFirst(temp1))
-	{
-		NormalOrder.InsertLast(temp1);
-	}
-
-	Arrayofnumber[0] = numberofnormal;
-	Arrayofnumber[1] = numberofvegan;
-	Arrayofnumber[2] = numberofvip;
-	return;
-}
-
+//Old One with List
 /*void Restaurant::UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiiiiiiiiiiiiiiiiiiiii
 {
 	//Making List of Cooks to array to Check Status of each one
