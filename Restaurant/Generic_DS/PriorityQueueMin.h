@@ -10,6 +10,7 @@ private:
 
 	Node<T>* backPtr;
 	Node<T>* frontPtr;
+	int count;
 public:
 	PriorityQueueMin();
 	bool isEmpty() const;
@@ -18,6 +19,7 @@ public:
 	bool peekFront(T& frntEntry)  const;
 	T* toArray(int& count);	//returns array of T (array if items)
 	~PriorityQueueMin();
+	int GetCount();
 };
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -33,6 +35,7 @@ PriorityQueueMin<T>::PriorityQueueMin()
 {
 	frontPtr = nullptr;
 	backPtr = nullptr;
+	count = 0;
 
 }
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -84,6 +87,7 @@ bool PriorityQueueMin<T>::enqueue(const T& newEntry, int p) // rakam lee value w
 		P3->setNext(P1);
 		P1->setNext(temp);
 	}
+	count++;
 	return true;
 
 } // end enqueue
@@ -111,6 +115,7 @@ bool PriorityQueueMin<T>::dequeue(T& frntEntry)
 	temp = frontPtr;
 	frontPtr = frontPtr->getNext();
 	delete temp;
+	count--;
 	return true;
 }
 
@@ -174,5 +179,11 @@ T* PriorityQueueMin<T>::toArray(int& count)
 		p = p->getNext();
 	}
 	return Arr;
+}
+
+template <typename T>
+int PriorityQueueMin<T>::GetCount()
+{
+	return count;
 }
 
