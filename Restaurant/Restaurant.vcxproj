@@ -102,6 +102,8 @@
     <ClInclude Include="Events\PromotionEvent.h" />
     <ClInclude Include="Generic_DS\Node.h" />
     <ClInclude Include="Generic_DS\PriorityQueue.h" />
+    <ClInclude Include="Generic_DS\PriorityQueueMax.h" />
+    <ClInclude Include="Generic_DS\PriorityQueueMin.h" />
     <ClInclude Include="Generic_DS\Queue.h" />
     <ClInclude Include="GUI\GUI.h" />
     <ClInclude Include="Generic_DS\List.h" />

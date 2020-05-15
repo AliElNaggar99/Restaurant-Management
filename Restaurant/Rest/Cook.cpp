@@ -95,13 +95,13 @@ int Cook::GetFinishedOrders()
 	return NoFinishOrd;
 }
 
-int Cook::GetRemainingBreak()
+int Cook::GetBreakEndTime()
 {
-	return Remainingbreak;
+	return BreakEndTime;
 }
-void Cook::SetRemainingBreak(int x)
+void Cook::SetBreakEndTime(int x)
 {
-	Remainingbreak = x;
+	BreakEndTime = x;
 }
 
 

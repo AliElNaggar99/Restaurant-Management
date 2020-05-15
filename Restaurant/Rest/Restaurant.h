@@ -8,6 +8,8 @@
 #include "..\Events\Event.h"
 #include "..\Generic_DS\PriorityQueue.h"
 #include"../Generic_DS/List.h"
+#include "..\Generic_DS\PriorityQueueMax.h"
+#include "..\Generic_DS\PriorityQueueMin.h"
 
 #include<fstream>
 #include "Order.h"
@@ -20,13 +22,14 @@ class Restaurant
 private:
 	GUI *pGUI;
 	Queue<Event*> EventsQueue;	//Queue of all events that will be loaded from file
-	List<VeganCook*> VegCookList;
-	List<NormalCook*> NormCookList;
-	List<VipCook*> VipCookList;
-	List<Cook*> Busy_Break_Cooks;
-	List<Cook*> Working_Cook;	//Aren't The working cooks the same as busy cooks ? plus we need to loop over both might as well make them ine list
+	Queue <VeganCook*> VegCookList;
+	Queue <NormalCook*> NormCookList;
+	Queue <VipCook*> VipCookList;
+	PriorityQueueMin<Cook*> Working_Cook;	//Working Cooks Busy
+	PriorityQueueMin <Cook*> Break_Cooks; //Cooks in Break
 
-	
+	//Queue Assigned for drawing information of Current Time Step
+	Queue <Cook*> Assigned;
 
 	/// ==> 
 	//	DEMO-related members. Should be removed in phases 1&2
@@ -36,17 +39,12 @@ private:
 
 	//List of orders
 	List<Order*> NormalOrder;
-	List<Order*> VeganOrder;
-	PriorityQueue<Order*> Vip_Order;
+	Queue <Order*> VeganOrder;
+	PriorityQueueMax <Order*> Vip_Order;
+ 
 
-
-
-
-
-	//Our Orders waiting
-	List <Order*> OrdersAll;
 	//Our Orders that are in Servicing
-	List <Order*> OrdersServing;
+	PriorityQueueMin <Order*> OrdersServing;
 	//OurOrdersDone
 	Queue <Order*> OrdersAllDone;
 	
@@ -55,10 +53,9 @@ private:
 
 public:
 	
-	void SaveFile(Order** Array, int Numberoftotalorders, Cook** Arrayoofcooks,int NumberOfcooks);
 	Restaurant();
 	~Restaurant();
-	int* CalculatingNumberofCooks(Cook** ArrayOfcook, int totalcooks);
+	
 	void ExecuteEvents(int TimeStep);	//executes all events at current timestep
 	void RunSimulation();
 	
@@ -98,6 +95,10 @@ public:
 	//Functions for Simulatiom
 	void assigningorders(int timeStep);
 	void UpdateCooksandOrdersstatus(int timeStep);
+	void CalculatingNumberofCooks(int* Arrayofnumber);
+	void CalculatingNumberofOrders(int* Arrayofnumber);
+	void CalculatingNumberofOrdersDone(int* Arrayofnumber);
+	void PrintInfoCurrentTime(int CurrentTimeStep);
 };
 
 #endif

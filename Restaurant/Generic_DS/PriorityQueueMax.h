@@ -1,21 +1,22 @@
 #pragma once
+#pragma once
 #include "Node.h"
 
 template <typename T>
-class PriorityQueue
+class PriorityQueueMax
 {
 private:
 
 	Node<T>* backPtr;
 	Node<T>* frontPtr;
 public:
-	PriorityQueue();
+	PriorityQueueMax();
 	bool isEmpty() const;
 	bool enqueue(const T& newEntry, int Pri = 0);
 	bool dequeue(T& frntEntry);
 	bool peekFront(T& frntEntry)  const;
 	T* toArray(int& count);	//returns array of T (array if items)
-	~PriorityQueue();
+	~PriorityQueueMax();
 };
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -27,7 +28,7 @@ The constructor of the Queue class.
 */
 
 template <typename T>
-PriorityQueue<T>::PriorityQueue()
+PriorityQueueMax<T>::PriorityQueueMax()
 {
 	frontPtr = nullptr;
 	backPtr = nullptr;
@@ -37,9 +38,9 @@ PriorityQueue<T>::PriorityQueue()
 
 
 template <typename T>
-bool PriorityQueue<T>::isEmpty() const
+bool PriorityQueueMax<T>::isEmpty() const
 {
-	if (frontPtr == nullptr || backPtr == nullptr)
+	if (frontPtr == nullptr )
 		return true;
 	else
 		return false;
@@ -49,17 +50,39 @@ bool PriorityQueue<T>::isEmpty() const
 
 
 template <typename T>
-bool PriorityQueue<T>::enqueue(const T& newEntry, int pri) // rakam lee value w priority bta3o 
+bool PriorityQueueMax<T>::enqueue(const T& newEntry, int p) // rakam lee value w priority bta3o 
 //byhot awel rakam fl list el 3ndo priority a2al
 {
-	Node<T>* newNodePtr = new Node<T>(newEntry);
-	newNodePtr->setPriority(pri);
-	// Insert the new node
-	if (isEmpty())
-		frontPtr = newNodePtr; // The queue is empty
+	Node<T>* P1 = new Node<T>(newEntry);
+	P1->setPriority(p);
+
+	if (frontPtr == nullptr)
+	{
+		frontPtr = P1;
+		P1->setNext(nullptr);
+
+	}
+	else if (p > frontPtr->getPriority())
+	{
+		Node<T>* P2 = new Node<T>;
+		P2 = frontPtr;
+		frontPtr = P1;
+		P1->setNext(P2);
+	}
 	else
-		backPtr->setNext(newNodePtr); // The queue was not empty
-	backPtr = newNodePtr; // New node is at back
+	{
+		Node<T>* P3 = new Node<T>;
+		P3 = frontPtr;
+		while (P3->getNext() && P3->getNext()->getPriority() > p)
+		{
+			P3 = P3->getNext();
+		}
+
+		Node<T>* temp = new Node<T>;
+		temp = P3->getNext();
+		P3->setNext(P1);
+		P1->setNext(temp);
+	}
 	return true;
 
 } // end enqueue
@@ -76,47 +99,18 @@ Output: True if the operation is successful; otherwise false.
 */
 
 template <typename T>
-bool PriorityQueue<T>::dequeue(T& frntEntry)
+bool PriorityQueueMax<T>::dequeue(T& frntEntry)
 {
 	if (isEmpty())
 		return false;
 
 
-	Node<T>* nodeToDeletePtr = frontPtr;
-	Node<T>* temp = frontPtr;
-	//Search for node with highest Priority 
-	while (temp)
-	{
-		if (nodeToDeletePtr->getPriority() < temp->getPriority())
-		{
-			nodeToDeletePtr = temp;
-		}
-		temp = temp->getNext();
-	}
-	//if nodetoDeletePtr is FrontPtr
-	if (nodeToDeletePtr == frontPtr)
-	{
-		frontPtr = frontPtr->getNext();
-		frntEntry = nodeToDeletePtr->getItem();
-		delete nodeToDeletePtr;
-		return true;
-	}
-
-	// Here you have the node to DeletePtr
-	// you reset the pointer
-	//Search for  node before this node 
+	frntEntry = frontPtr->getItem();
+	Node<T>* temp = new Node<T>;
 	temp = frontPtr;
-	while (temp->getNext() != nodeToDeletePtr)
-	{
-		temp = temp->getNext();
-	}
-	temp->setNext(nodeToDeletePtr->getNext());
-
-	frntEntry = nodeToDeletePtr->getItem();
-	delete nodeToDeletePtr;
-
+	frontPtr = frontPtr->getNext();
+	delete temp;
 	return true;
-
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -130,7 +124,7 @@ Output: The front of the queue.
 return: flase if Queue is empty
 */
 template <typename T>
-bool PriorityQueue<T>::peekFront(T& frntEntry) const
+bool PriorityQueueMax<T>::peekFront(T& frntEntry) const
 {
 	if (isEmpty())
 		return false;
@@ -142,7 +136,7 @@ bool PriorityQueue<T>::peekFront(T& frntEntry) const
 ///////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-PriorityQueue<T>::~PriorityQueue()
+PriorityQueueMax<T>::~PriorityQueueMax()
 {
 }
 
@@ -156,7 +150,7 @@ returns: The array of T. (nullptr if Queue is empty)
 */
 
 template <typename T>
-T* PriorityQueue<T>::toArray(int& count)
+T* PriorityQueueMax<T>::toArray(int& count)
 {
 	count = 0;
 
