@@ -92,7 +92,7 @@ public:
 
 
 	//Functions for Simulatiom
-	void assigningorders(int timeStep);
+	void AssigningOrders(int timeStep);
 	void UpdateCooksandOrdersstatus(int timeStep);
 	void CalculatingNumberofOrdersDone(int* Arrayofnumber);
 	void PrintInfoCurrentTime(int CurrentTimeStep);

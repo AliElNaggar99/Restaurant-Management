@@ -458,7 +458,7 @@ void Restaurant::TestPHII()
 		ExecuteEvents(CurrentTimeStep);	//execute all events at current time step
 
 		//Creating an Order and cook Pointer to use them in stimulation
-		assigningorders(CurrentTimeStep);
+		AssigningOrders(CurrentTimeStep);
 		UpdateCooksandOrdersstatus(CurrentTimeStep);
 		PrintInfoCurrentTime(CurrentTimeStep);
 		
@@ -547,7 +547,7 @@ void Restaurant::PromOrder(int CID , int ExtraMoney)
 
 }
 
-void Restaurant::assigningorders(int CurrentTimeStep)////////////////////////afifiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+void Restaurant::AssigningOrders(int CurrentTimeStep)////////////////////////afifiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
 {
 	//Temp Storage for Orders
 	Order* pOrd;
@@ -744,6 +744,7 @@ void Restaurant::UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiii
 	}
 	
 }
+
 void Restaurant::PrintInfoCurrentTime(int CurrentTimeStep)
 {
 	//Making Arrays To get Information From Restuartant
@@ -832,87 +833,3 @@ void Restaurant::CalculatingNumberofOrdersDone(int* Arrayofnumber)
 	return;
 }
 		
-
-//Old One with List
-/*void Restaurant::UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiiiiiiiiiiiiiiiiiiiii
-{
-	//Making List of Cooks to array to Check Status of each one
-	int size;
-	Cook** WorkOrBusyCook = Working_Cook.toArray(size);
-	for (int i = 0; i < size; i++)
-	{
-		//Check if the Cook is Busy and Its Order is finished
-		if (WorkOrBusyCook[i]->GetCookStatus() == BUSY && WorkOrBusyCook[i]->getMakingOrder()->GetFinishTime() == CurrentTimeStep)
-		{
-			//Get a pointer to that Order
-			Order* pOrd = WorkOrBusyCook[i]->getMakingOrder();
-			pOrd->setStatus(DONE);
-			OrdersAllDone.enqueue(pOrd);
-			OrdersServing.DeleteNode(pOrd);
-			WorkOrBusyCook[i]->setMakingOrder(nullptr);
-			WorkOrBusyCook[i]->SetStausOfCook(AVAILABLE);
-			WorkOrBusyCook[i]->SetFinishedOrders(WorkOrBusyCook[i]->GetFinishedOrders() + 1);
-			//Check if the Cook would Take a break or No
-			if (WorkOrBusyCook[i]->GetFinishedOrders() == WorkOrBusyCook[i]->getBreakAfterN())
-			{
-				WorkOrBusyCook[i]->SetFinishedOrders(0);
-				WorkOrBusyCook[i]->SetRemainingBreak(WorkOrBusyCook[i]->GetBreakTime());
-				WorkOrBusyCook[i]->SetStausOfCook(BREAK);
-			}
-			//Return it to the list
-			else
-			{
-				Working_Cook.DeleteNode(WorkOrBusyCook[i]);
-				if (WorkOrBusyCook[i]->GetType() == TYPE_VEGAN)
-				{
-					VeganCook* Cook1 = (VeganCook*)WorkOrBusyCook[i];
-					VegCookList.enqueue(Cook1);
-				}
-				else if (WorkOrBusyCook[i]->GetType() == TYPE_NORMAL)
-				{
-					NormalCook* Cook1 = (NormalCook*)WorkOrBusyCook[i];
-					NormCookList.enqueue(Cook1);
-				}
-				else if (WorkOrBusyCook[i]->GetType() == TYPE_VIP)
-				{
-					VipCook* Cook1 = (VipCook*)WorkOrBusyCook[i];
-					VipCookList.enqueue(Cook1);
-				}
-			}
-		}
-		//Check if cook is in break
-		else if (WorkOrBusyCook[i]->GetCookStatus() == BREAK)
-		{
-			//Either he finishes or decrease remaining time
-			if (WorkOrBusyCook[i]->GetRemainingBreak() == 0)
-			{
-				//Make it avaiable then add it to the List
-				WorkOrBusyCook[i]->SetStausOfCook(AVAILABLE);
-				Working_Cook.DeleteNode(WorkOrBusyCook[i]);
-				if (WorkOrBusyCook[i]->GetType() == TYPE_VEGAN)
-				{
-					VeganCook* Cook1 = (VeganCook*)WorkOrBusyCook[i];
-					VegCookList.enqueue(Cook1);
-				}
-				else if (WorkOrBusyCook[i]->GetType() == TYPE_NORMAL)
-				{
-					NormalCook* Cook1 = (NormalCook*)WorkOrBusyCook[i];
-					NormCookList.enqueue(Cook1);
-				}
-				else if (WorkOrBusyCook[i]->GetType() == TYPE_VIP)
-				{
-					VipCook* Cook1 = (VipCook*)WorkOrBusyCook[i];
-					VipCookList.enqueue(Cook1);
-				}
-
-			}
-			else if (WorkOrBusyCook[i]->GetBreakTime() != 0)
-			{
-				WorkOrBusyCook[i]->setBreakAfterN(WorkOrBusyCook[i]->GetBreakTime() - 1);
-			}
-		}
-
-	}
-	//deallcoate the Memory 
-	delete[]WorkOrBusyCook;
-}*/
