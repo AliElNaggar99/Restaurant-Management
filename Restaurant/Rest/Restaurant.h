@@ -24,8 +24,8 @@ private:
 	Queue <VeganCook*> VegCookList;
 	Queue <NormalCook*> NormCookList;
 	Queue <VipCook*> VipCookList;
-	PriorityQueueMin<Cook*> Working_Cook;	//Working Cooks Busy
-	PriorityQueueMin <Cook*> Break_Cooks; //Cooks in Break
+	PriorityQueueMin<Cook*> Working_Cook;	//Cook with lowest time remaining until he finishes the order is first
+	PriorityQueueMin <Cook*> Break_Cooks;  //Cook with lowest time remaining on break goes out first
 
 	//Queue Assigned for drawing information of Current Time Step
 	Queue <Cook*> Assigned;
@@ -39,11 +39,11 @@ private:
 	//List of orders
 	List<Order*> NormalOrder;
 	Queue <Order*> VeganOrder;
-	PriorityQueueMax <Order*> Vip_Order;
+	PriorityQueueMax <Order*> Vip_Order;	   //According to the highest value of priority equation 
  
 
 	//Our Orders that are in Servicing
-	PriorityQueueMin <Order*> OrdersServing;
+	PriorityQueueMin <Order*> OrdersServing;  //Order that will finish in lowest time step has highest priority
 	//OurOrdersDone
 	Queue <Order*> OrdersAllDone;
 	
@@ -87,7 +87,7 @@ public:
 	// Cancel an order if it is waiting
 	void CancelOrder(int CID);
 
-	//promo the order 
+	//promote the order 
 	void PromOrder(int CID , int ExtraMoney);
 
 
@@ -96,6 +96,7 @@ public:
 	void UpdateCooksandOrdersstatus(int timeStep);
 	void CalculatingNumberofOrdersDone(int* Arrayofnumber);
 	void PrintInfoCurrentTime(int CurrentTimeStep);
+	void CheckUrgent();
 };
 
 #endif

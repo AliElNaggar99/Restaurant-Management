@@ -86,7 +86,6 @@ std::vector<std::string> Lines(7);
 int Counter = 0 ;
 while (getline(toBeReadFile,Lines[Counter]) && Counter++ != 6);
 
-// L1 no of cooks from each type
 
 regex MoreThanTwoSpace("\\s{2,}");
 regex Tabs("\t");
@@ -97,6 +96,7 @@ const std::string oneWhiteSpace = " ";
 
 
 	// makes string only have 1 consecutive whitespace
+	// L1 no of cooks from each type
 	Lines[0] = regex_replace(Lines[0], Tabs, oneWhiteSpace);
 	Lines[0] = regex_replace(Lines[0], MoreThanTwoSpace, oneWhiteSpace);
 	Container = split_line(Lines[0], oneWhiteSpace);
@@ -457,7 +457,7 @@ void Restaurant::TestPHII()
 		//The next line may add new orders to the Queue waiting
 		ExecuteEvents(CurrentTimeStep);	//execute all events at current time step
 
-		//Creating an Order and cook Pointer to use them in stimulation
+		//Creating an Order and cook Pointer to use them in simulation
 		AssigningOrders(CurrentTimeStep);
 		UpdateCooksandOrdersstatus(CurrentTimeStep);
 		PrintInfoCurrentTime(CurrentTimeStep);
@@ -469,7 +469,8 @@ void Restaurant::TestPHII()
 		pGUI->UpdateInterface();
 		pGUI->waitForClick();
 		CurrentTimeStep++;	//advance timestep
-		
+		CheckUrgent();
+
 
 		//////////////////////////////////////////////////////////////////////////////////////////
 	   // interactive Mode
@@ -832,4 +833,10 @@ void Restaurant::CalculatingNumberofOrdersDone(int* Arrayofnumber)
 	Arrayofnumber[2] = numberofvip;
 	return;
 }
-		
+	
+
+void Restaurant::CheckUrgent() {
+
+
+
+}
