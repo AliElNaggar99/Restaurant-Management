@@ -35,6 +35,8 @@ private:
 	Queue<Order*> DEMO_Queue;	//Important: This is just for demo
 	/// ==>
 
+	//Assigning a single order to a cook
+	void AssignOrder(Cook*, Order*,int,Cook_Status = BUSY);
 
 	//List of orders
 	List<Order*> NormalOrder;
@@ -96,6 +98,12 @@ public:
 	void UpdateCooksandOrdersstatus(int timeStep);
 	void CalculatingNumberofOrdersDone(int* Arrayofnumber);
 	void PrintInfoCurrentTime(int CurrentTimeStep);
+
+	//Promotion & Urgency
+
+	void CheckAutoProm(int);
+	void CheckUrgency(int);
+
 };
 
 #endif
