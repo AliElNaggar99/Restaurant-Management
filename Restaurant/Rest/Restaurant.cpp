@@ -904,7 +904,7 @@ void Restaurant::AssignOrder(Cook* pCook, Order* pOrder,int CurrentTimestep,Cook
 
 	pCook->setMakingOrder(pOrder); // Link Cook and order together 
 	pCook->SetStausOfCook(CookStat);// set status to URG_BRK or URG_INJ
-	pOrder->SetFinishTime(ceil(pOrder->GetNumberOfDishes / pCook->GetSpeed()));
+	pOrder->SetFinishTime(ceil(pOrder->GetNumberOfDishes() / pCook->GetSpeed()));
 	pOrder->SetServingTime(CurrentTimestep);
 	pOrder->setStatus(SRV);
 	Working_Cook.enqueue(pCook);// move cook to working and order to serving and check other shit that ali needs for printing
