@@ -460,6 +460,7 @@ void Restaurant::TestPHII()
 		//Creating an Order and cook Pointer to use them in simulation
 		AssigningOrders(CurrentTimeStep);
 		UpdateCooksandOrdersstatus(CurrentTimeStep);
+		CheckAutoProm(CurrentTimeStep);
 		PrintInfoCurrentTime(CurrentTimeStep);
 		
 
@@ -469,7 +470,7 @@ void Restaurant::TestPHII()
 		pGUI->UpdateInterface();
 		pGUI->waitForClick();
 		CurrentTimeStep++;	//advance timestep
-		CheckUrgent();
+		//add check urgent later
 
 
 		//////////////////////////////////////////////////////////////////////////////////////////
@@ -692,6 +693,14 @@ void Restaurant::UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiii
 		Temp->SetStausOfCook(AVAILABLE);
 		Temp->setMakingOrder(nullptr);
 		Temp->SetFinishedOrders(Temp->GetFinishedOrders() + 1);
+		//This modification was made by Hosny 
+
+		if (Temp->GetCookStatus() == URG_BRK) { //Handles the urgency case
+			Temp->SetFinishedOrders(1);			// it returns the cook to break again
+			Break_Cooks.enqueue(Temp);			// after setting the finished orders to 1
+			Temp->SetStausOfCook(BREAK);
+			continue;
+		}
 		//Check if the Cook would Take a break or No
 		if (Temp->GetFinishedOrders() == Temp->getBreakAfterN())
 		{
@@ -831,12 +840,76 @@ void Restaurant::CalculatingNumberofOrdersDone(int* Arrayofnumber)
 	Arrayofnumber[0] = numberofnormal;
 	Arrayofnumber[1] = numberofvegan;
 	Arrayofnumber[2] = numberofvip;
-	return;
-}
 	
+}
+		
 
-void Restaurant::CheckUrgent() {
+void Restaurant::CheckAutoProm(int CurrentTimestep) {
+
+	while (true) {
+		Order* TEMP = nullptr; 
+		if (!NormalOrder.ReturnFirst(TEMP)) break;
+		if ((CurrentTimestep - TEMP->GetArrivalTime()) >= PromotionVariable) {
+
+			NormalOrder.RemoveFirst(TEMP);
+			TEMP->setType(TYPE_VIP);
+			Vip_Order.enqueue(TEMP);
+
+		}
+		else break;
+		
+		
+	}
+}
+
+void Restaurant::CheckUrgency(int CurrentTimestep) {
 
 
+		List<Order*> TempStore;
+		
+		while (Vip_Order.GetCount()) {
+
+			if (Break_Cooks.isEmpty()) break;
+
+			Order* TempOrder = nullptr;
+			Vip_Order.dequeue(TempOrder);
+
+			if ((CurrentTimestep - TempOrder->GetArrivalTime()) >= UrgentVariable) {
+
+				//this will later be modified as to have rest and break in different queues
+				Cook* TempCook = nullptr;
+				Break_Cooks.dequeue(TempCook);
+				AssignOrder(TempCook, TempOrder, CurrentTimestep, URG_BRK);
+				TempCook->SetBreakEndTime(TempCook->GetBreakEndTime() - CurrentTimestep + TempOrder->GetFinishTime());// set end break time = old end break time + time taken to finish order
+				
+
+			}
+			else
+				TempStore.InsertFirst(TempOrder);
+		}
+		while (TempStore.GetCount()){
+			Order* TempOrder = nullptr;
+			TempStore.RemoveFirst(TempOrder);
+			Vip_Order.enqueue(TempOrder);
+			
+
+		}
+		
+
+
+
+}
+
+void Restaurant::AssignOrder(Cook* pCook, Order* pOrder,int CurrentTimestep,Cook_Status CookStat ) {
+
+
+	pCook->setMakingOrder(pOrder); // Link Cook and order together 
+	pCook->SetStausOfCook(CookStat);// set status to URG_BRK or URG_INJ
+	pOrder->SetFinishTime(ceil(pOrder->GetNumberOfDishes() / pCook->GetSpeed()));
+	pOrder->SetServingTime(CurrentTimestep);
+	pOrder->setStatus(SRV);
+	Working_Cook.enqueue(pCook);// move cook to working and order to serving and check other shit that ali needs for printing
+	Assigned.enqueue(pCook);
+	OrdersServing.enqueue(pOrder);
 
 }

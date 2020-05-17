@@ -35,7 +35,10 @@ enum Cook_Status
 {
 	AVAILABLE,
 	BUSY,
-	BREAK
+	BREAK,
+	INJURED,
+	URG_INJ,
+	URG_BRK
 
 
 };
