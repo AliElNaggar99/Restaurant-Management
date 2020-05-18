@@ -449,8 +449,7 @@ void Restaurant::TestPHII()
 	while (!EventsQueue.isEmpty() || !Vip_Order.isEmpty() || !NormalOrder.isEmpty() || !VeganOrder.isEmpty() || !OrdersServing.isEmpty())
 	{
 		//print current timestep
-		//char timestep[10];
-		//itoa(CurrentTimeStep,timestep,10);	
+
 		pGUI->PrintMessage("TS: " + to_string(CurrentTimeStep));
 
 
@@ -459,8 +458,9 @@ void Restaurant::TestPHII()
 
 		//Creating an Order and cook Pointer to use them in simulation
 		AssigningOrders(CurrentTimeStep);
-		UpdateCooksandOrdersstatus(CurrentTimeStep);
+		CheckUrgency(CurrentTimeStep);
 		CheckAutoProm(CurrentTimeStep);
+		UpdateCooksandOrdersstatus(CurrentTimeStep);
 		PrintInfoCurrentTime(CurrentTimeStep);
 		
 
@@ -696,15 +696,15 @@ void Restaurant::UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiii
 
 		//This modification was made by Hosny 
 		if (Temp->GetCookStatus() == URG_BRK) {								//Handles the urgency case
-			Temp->SetFinishedOrders(Temp->GetFinishedOrders()+1);			// it returns the cook to break again
-			Break_Cooks.enqueue(Temp);										// after setting the finished orders to 1
+			Temp->SetFinishedOrders(Temp->GetFinishedOrders() + 1);			// it returns the cook to break again
+			Break_Cooks.enqueue(Temp, Temp->GetBreakTime());										// after setting the finished orders to 1
 			Temp->SetStausOfCook(BREAK);
 			continue;
 		}
 		else if (Temp->GetCookStatus() == URG_INJ) {
 
 			Temp->SetFinishedOrders(Temp->GetFinishedOrders() + 1);
-			Break_Cooks.enqueue(Temp);
+			Rest_Cooks.enqueue(Temp, Temp->GetBreakTime());
 			Temp->SetStausOfCook(INJURED);
 			continue;
 		}
@@ -743,7 +743,9 @@ void Restaurant::UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiii
 	while (Break_Cooks.peekFront(Temp) && Temp->GetBreakEndTime() == CurrentTimeStep)
 	{
 		//His break Ended Return it to the Right List
+		Temp = nullptr;
 		Break_Cooks.dequeue(Temp);
+		if (Temp == nullptr) Rest_Cooks.dequeue(Temp);
 		Temp->SetStausOfCook(AVAILABLE);
 		if (Temp->GetType() == TYPE_VEGAN)
 		{
@@ -760,8 +762,29 @@ void Restaurant::UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiii
 			VipCook* Cook1 = (VipCook*)Temp;
 			VipCookList.enqueue(Cook1);
 		}
+		while (Rest_Cooks.peekFront(Temp) && Temp->GetBreakEndTime() == CurrentTimeStep)
+		{
+			Rest_Cooks.dequeue(Temp);
+			Temp->SetStausOfCook(AVAILABLE);
+			if (Temp->GetType() == TYPE_VEGAN)
+			{
+				VeganCook* Cook1 = (VeganCook*)Temp;
+				VegCookList.enqueue(Cook1);
+			}
+			else if (Temp->GetType() == TYPE_NORMAL)
+			{
+				NormalCook* Cook1 = (NormalCook*)Temp;
+				NormCookList.enqueue(Cook1);
+			}
+			else if (Temp->GetType() == TYPE_VIP)
+			{
+				VipCook* Cook1 = (VipCook*)Temp;
+				VipCookList.enqueue(Cook1);
+			}
+
+		}
+
 	}
-	
 }
 
 void Restaurant::PrintInfoCurrentTime(int CurrentTimeStep)
@@ -878,7 +901,7 @@ void Restaurant::CheckUrgency(int CurrentTimestep) {
 		
 		while (Vip_Order.GetCount()) {
 
-			if (Break_Cooks.isEmpty()) break;
+			if (Break_Cooks.isEmpty() && Rest_Cooks.isEmpty()) break;
 
 			Order* TempOrder = nullptr;
 			Vip_Order.dequeue(TempOrder);
@@ -887,8 +910,13 @@ void Restaurant::CheckUrgency(int CurrentTimestep) {
 
 				//this will later be modified as to have rest and break in different queues
 				Cook* TempCook = nullptr;
+				Cook_Status CookStat = URG_BRK;
 				Break_Cooks.dequeue(TempCook);
-				AssignOrder(TempCook, TempOrder, CurrentTimestep, URG_BRK);
+				if (TempCook == nullptr) {
+					Rest_Cooks.dequeue(TempCook);
+					CookStat = URG_INJ;
+				}
+				AssignOrder(TempCook, TempOrder, CurrentTimestep, CookStat);
 				TempCook->SetBreakEndTime(TempCook->GetBreakEndTime() - CurrentTimestep + TempOrder->GetFinishTime());// set end break time = old end break time + time taken to finish order
 				
 
@@ -914,7 +942,9 @@ void Restaurant::AssignOrder(Cook* pCook, Order* pOrder,int CurrentTimestep,Cook
 
 	pCook->setMakingOrder(pOrder); // Link Cook and order together 
 	pCook->SetStausOfCook(CookStat);// set status to URG_BRK or URG_INJ
-	pOrder->SetFinishTime(ceil(pOrder->GetNumberOfDishes() / pCook->GetSpeed()));
+	int InjuryFactor = 1;
+	if (CookStat == URG_INJ) InjuryFactor = 2;
+	pOrder->SetFinishTime(ceil(pOrder->GetNumberOfDishes() / (pCook->GetSpeed()/InjuryFactor)));
 	pOrder->SetServingTime(CurrentTimestep);
 	pOrder->setStatus(SRV);
 	Working_Cook.enqueue(pCook);// move cook to working and order to serving and check other shit that ali needs for printing

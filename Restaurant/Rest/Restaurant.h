@@ -25,7 +25,7 @@ private:
 	Queue <NormalCook*> NormCookList;
 	Queue <VipCook*> VipCookList;
 	PriorityQueueMin<Cook*> Working_Cook;	//Cook with lowest time remaining until he finishes the order is first
-	PriorityQueueMin <Cook*> Break_Cooks;  //Cook with lowest time remaining on break goes out first
+	PriorityQueueMin <Cook*> Break_Cooks,Rest_Cooks;  //Cook with lowest time remaining on break goes out first
 
 	//Queue Assigned for drawing information of Current Time Step
 	Queue <Cook*> Assigned;
