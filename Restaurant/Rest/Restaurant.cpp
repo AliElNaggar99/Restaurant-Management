@@ -693,14 +693,23 @@ void Restaurant::UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiii
 		Temp->SetStausOfCook(AVAILABLE);
 		Temp->setMakingOrder(nullptr);
 		Temp->SetFinishedOrders(Temp->GetFinishedOrders() + 1);
-		//This modification was made by Hosny 
 
-		if (Temp->GetCookStatus() == URG_BRK) { //Handles the urgency case
-			Temp->SetFinishedOrders(1);			// it returns the cook to break again
-			Break_Cooks.enqueue(Temp);			// after setting the finished orders to 1
+		//This modification was made by Hosny 
+		if (Temp->GetCookStatus() == URG_BRK) {								//Handles the urgency case
+			Temp->SetFinishedOrders(Temp->GetFinishedOrders()+1);			// it returns the cook to break again
+			Break_Cooks.enqueue(Temp);										// after setting the finished orders to 1
 			Temp->SetStausOfCook(BREAK);
 			continue;
 		}
+		else if (Temp->GetCookStatus() == URG_INJ) {
+
+			Temp->SetFinishedOrders(Temp->GetFinishedOrders() + 1);
+			Break_Cooks.enqueue(Temp);
+			Temp->SetStausOfCook(INJURED);
+			continue;
+		}
+		// End of Modification Made by Hosny
+
 		//Check if the Cook would Take a break or No
 		if (Temp->GetFinishedOrders() == Temp->getBreakAfterN())
 		{
