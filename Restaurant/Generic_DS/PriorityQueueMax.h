@@ -13,7 +13,7 @@ private:
 public:
 	PriorityQueueMax();
 	bool isEmpty() const;
-	bool enqueue(const T& newEntry, int Pri = 0);
+	bool enqueue(const T& newEntry, int Pri);
 	bool dequeue(T& frntEntry);
 	bool peekFront(T& frntEntry)  const;
 	T* toArray(int& count);	//returns array of T (array if items)

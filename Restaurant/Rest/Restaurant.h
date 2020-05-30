@@ -49,7 +49,12 @@ private:
 	//OurOrdersDone
 	Queue <Order*> OrdersAllDone;
 	
-	int PromotionVariable , UrgentVariable ,InjuryProb ;
+	int PromotionVariable, UrgentVariable;
+
+	float InjuryProb;
+
+	//Function that returns the Priority of the Orders with request to its Details
+	int PriorityEquation(Order*);
 
 
 public:
