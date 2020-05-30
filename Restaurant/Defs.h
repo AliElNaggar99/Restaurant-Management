@@ -36,6 +36,7 @@ enum Cook_Status
 	AVAILABLE,
 	BUSY,
 	BREAK,
+	REST,
 	INJURED,
 	URG_INJ,
 	URG_BRK

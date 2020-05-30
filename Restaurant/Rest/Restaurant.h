@@ -26,6 +26,7 @@ private:
 	Queue <VipCook*> VipCookList;
 	PriorityQueueMin<Cook*> Working_Cook;	//Cook with lowest time remaining until he finishes the order is first
 	PriorityQueueMin <Cook*> Break_Cooks,Rest_Cooks;  //Cook with lowest time remaining on break goes out first
+	PriorityQueueMin <Cook*> Injured_Cooks; // Injured Cooks
 
 	//Queue Assigned for drawing information of Current Time Step
 	Queue <Cook*> Assigned;
@@ -46,12 +47,21 @@ private:
 
 	//Our Orders that are in Servicing
 	PriorityQueueMin <Order*> OrdersServing;  //Order that will finish in lowest time step has highest priority
-	//OurOrdersDone
+	//Our OrdersDone
 	Queue <Order*> OrdersAllDone;
-	
-	int PromotionVariable, UrgentVariable;
 
+	//Variables for the Number of Cooks
+	int NumberOfNormalCooks=0;
+	int NumberOfVeganCooks=0;
+	int NumberOfVipCooks=0;
+	
+	//specific Details for the Restaurant 
+	int PromotionVariable, UrgentVariable;
 	float InjuryProb;
+
+	int NumberOfAutoProm=0;
+	int NumOfInjCooks=0;
+	int NumberOfUrgentOrders = 0;
 
 	//Function that returns the Priority of the Orders with request to its Details
 	int PriorityEquation(Order*);
@@ -108,6 +118,9 @@ public:
 
 	void CheckAutoProm(int);
 	void CheckUrgency(int);
+	void CheckInjuredCooks(int CurrentTimeStep);
+
+	void SaveFile();
 
 };
 

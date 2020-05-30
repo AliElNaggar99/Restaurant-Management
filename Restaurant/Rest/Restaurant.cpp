@@ -130,6 +130,7 @@ const std::string oneWhiteSpace = " ";
 				cID += (rand() % 15 + 1);
 				NormalCook* TEMP = new NormalCook(cID, std::stoi(CookSpdCont[0]), std::stoi(CookSpdCont[1]), std::stoi(BreakTimeCont[1]), std::stoi(BreakTimeCont[2]));
 				NormCookList.enqueue(TEMP);    //Inserting at the end O(n) InsertingBeg O(1) ???
+				NumberOfNormalCooks++;
 
 			}
 			else if (i == TYPE_VEGAN) {
@@ -138,6 +139,7 @@ const std::string oneWhiteSpace = " ";
 				cID += (rand() % 15 + 1);
 				TEMP->setID(cID);
 				VegCookList.enqueue(TEMP);
+				NumberOfVeganCooks++;
 
 			}
 			else {
@@ -146,6 +148,7 @@ const std::string oneWhiteSpace = " ";
 				cID += (rand() % 15 + 1);
 				TEMP->setID(cID);
 				VipCookList.enqueue(TEMP);
+				NumberOfVipCooks++;
 
 			}
 
@@ -448,6 +451,7 @@ void Restaurant::TestPHII()
 	pGUI->waitForClick();
 	//Check Event list 
 	int CurrentTimeStep = 0;
+	float Injury;
 	
 	//condition of Events and Waiting and Serving
 	while (!EventsQueue.isEmpty() || !Vip_Order.isEmpty() || !NormalOrder.isEmpty() || !VeganOrder.isEmpty() || !OrdersServing.isEmpty())
@@ -462,13 +466,17 @@ void Restaurant::TestPHII()
 
 		//Creating an Order and cook Pointer to use them in simulation
 		AssigningOrders(CurrentTimeStep);
+		//Checking the Injury
+		Injury = rand() % 100 / 100.0;
+		if (Injury <= InjuryProb)
+		    CheckInjuredCooks(CurrentTimeStep);
+
 		CheckUrgency(CurrentTimeStep);
 		CheckAutoProm(CurrentTimeStep);
 		UpdateCooksandOrdersstatus(CurrentTimeStep);
 		PrintInfoCurrentTime(CurrentTimeStep);
 		
 		
-
 		//////////////////////////////////////////////////////////////////////////////////////////
 		FillDrawingList();
 		
@@ -482,6 +490,7 @@ void Restaurant::TestPHII()
 	   // interactive Mode
 		pGUI->ResetDrawingList();
 	}
+	SaveFile();
 	pGUI->PrintMessage("Simulation is Done");
 	pGUI->waitForClick();
 	FillDrawingList();
@@ -546,9 +555,6 @@ void Restaurant::PromOrder(int CID , int ExtraMoney)
 	//Later On Priority for order will be set according to the equation
 	Vip_Order.enqueue(OrderToBePromoted,PriorityEquation(OrderToBePromoted));
 	delete Ord;
-
-
-
 }
 
 void Restaurant::AssigningOrders(int CurrentTimeStep)////////////////////////afifiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
@@ -618,6 +624,7 @@ void Restaurant::UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiii
 {
 	//Checking if A cook Finished his Order
 	Cook* Temp;
+	//Working Cook List
 	while (Working_Cook.peekFront(Temp) && Temp->getMakingOrder()->GetFinishTime() == CurrentTimeStep)
 	{
 		//SO that Cook Finished his Order
@@ -675,13 +682,31 @@ void Restaurant::UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiii
 			}
 		}
 	}
+
+	//Checking the InjuredCooks List
+	while (Injured_Cooks.peekFront(Temp) && Temp->getMakingOrder()->GetFinishTime() == CurrentTimeStep)
+	{
+		Injured_Cooks.dequeue(Temp);
+		Order* pOrd = Temp->getMakingOrder();
+		pOrd->setStatus(DONE);
+		OrdersAllDone.enqueue(pOrd);
+		OrdersServing.dequeue(pOrd);
+		Temp->SetStausOfCook(REST);
+		Temp->setMakingOrder(nullptr);
+		Temp->SetFinishedOrders(Temp->GetFinishedOrders() + 1);
+		Temp->SetBreakEndTime(CurrentTimeStep + Temp->getInjuryRest());
+		Rest_Cooks.enqueue(Temp, Temp->GetBreakEndTime());
+	}
+
+
 	//Check Break List
 	while (Break_Cooks.peekFront(Temp) && Temp->GetBreakEndTime() == CurrentTimeStep)
 	{
 		//His break Ended Return it to the Right List
 		Temp = nullptr;
 		Break_Cooks.dequeue(Temp);
-		if (Temp == nullptr) Rest_Cooks.dequeue(Temp);
+		if (Temp == nullptr)
+			Rest_Cooks.dequeue(Temp);
 		Temp->SetStausOfCook(AVAILABLE);
 		if (Temp->GetType() == TYPE_VEGAN)
 		{
@@ -698,33 +723,32 @@ void Restaurant::UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiii
 			VipCook* Cook1 = (VipCook*)Temp;
 			VipCookList.enqueue(Cook1);
 		}
-		while (Rest_Cooks.peekFront(Temp) && Temp->GetBreakEndTime() == CurrentTimeStep)
+	}
+	//Check Rest List
+	while (Rest_Cooks.peekFront(Temp) && Temp->GetBreakEndTime() == CurrentTimeStep)
+	{
+		Rest_Cooks.dequeue(Temp);
+		Temp->SetStausOfCook(AVAILABLE);
+		if (Temp->GetType() == TYPE_VEGAN)
 		{
-			Rest_Cooks.dequeue(Temp);
-			Temp->SetStausOfCook(AVAILABLE);
-			if (Temp->GetType() == TYPE_VEGAN)
-			{
-				VeganCook* Cook1 = (VeganCook*)Temp;
-				VegCookList.enqueue(Cook1);
-			}
-			else if (Temp->GetType() == TYPE_NORMAL)
-			{
-				NormalCook* Cook1 = (NormalCook*)Temp;
-				NormCookList.enqueue(Cook1);
-			}
-			else if (Temp->GetType() == TYPE_VIP)
-			{
-				VipCook* Cook1 = (VipCook*)Temp;
-				VipCookList.enqueue(Cook1);
-			}
-
+			VeganCook* Cook1 = (VeganCook*)Temp;
+			VegCookList.enqueue(Cook1);
 		}
-
+		else if (Temp->GetType() == TYPE_NORMAL)
+		{
+			NormalCook* Cook1 = (NormalCook*)Temp;
+			NormCookList.enqueue(Cook1);
+		}
+		else if (Temp->GetType() == TYPE_VIP)
+		{
+			VipCook* Cook1 = (VipCook*)Temp;
+			VipCookList.enqueue(Cook1);
+		}
 	}
 }
 
-
-void Restaurant::CheckAutoProm(int CurrentTimestep) {
+void Restaurant::CheckAutoProm(int CurrentTimestep) 
+{
 
 	while (true) {
 		Order* TEMP = nullptr; 
@@ -735,7 +759,7 @@ void Restaurant::CheckAutoProm(int CurrentTimestep) {
 			NormalOrder.RemoveFirst(TEMP);
 			TEMP->setType(TYPE_VIP);
 			Vip_Order.enqueue(TEMP , PriorityEquation(TEMP));
-
+			NumberOfAutoProm++;
 		}
 		else
 			break;
@@ -768,8 +792,7 @@ void Restaurant::CheckUrgency(int CurrentTimestep) {
 				}
 				AssignOrder(TempCook, TempOrder, CurrentTimestep, CookStat);
 				TempCook->SetBreakEndTime(TempCook->GetBreakEndTime() - CurrentTimestep + TempOrder->GetFinishTime());// set end break time = old end break time + time taken to finish order
-				
-
+				NumberOfUrgentOrders++;
 			}
 			else
 				TempStore.InsertFirst(TempOrder);
@@ -797,7 +820,88 @@ void Restaurant::AssignOrder(Cook* pCook, Order* pOrder,int CurrentTimeStep,Cook
 	Working_Cook.enqueue(pCook,pOrder->GetFinishTime());// move cook to working and order to serving and check other shit that ali needs for printing
 	Assigned.enqueue(pCook);
 	OrdersServing.enqueue(pOrder, pOrder->GetFinishTime());
+}
 
+void Restaurant::CheckInjuredCooks(int CurrentTimeStep)
+{
+	Cook* BusyCook;
+	Order* order;
+	int RemainingDishes, NewServingTime, TimeStepOfServing, WorkedhowManyTimesteps, NumberofDoneDishes;
+	float NewSpeed;
+	if (Working_Cook.dequeue(BusyCook))
+	{
+		NumOfInjCooks++;
+		order = BusyCook->getMakingOrder();
+		TimeStepOfServing = order->GetArrivalTime() + order->GetWaitTime();
+		WorkedhowManyTimesteps = CurrentTimeStep - TimeStepOfServing-1;
+		NumberofDoneDishes = WorkedhowManyTimesteps * (BusyCook->GetSpeed());
+		RemainingDishes = order->GetNumberOfDishes() - NumberofDoneDishes;
+		NewSpeed = ((float)BusyCook->GetSpeed()) / 2;
+		NewServingTime = WorkedhowManyTimesteps + ceil((float)RemainingDishes / NewSpeed);
+		order->SetServingTime(NewServingTime);
+		order->SetFinishTime(order->GetArrivalTime() + order->GetServingTime() + order->GetWaitTime());
+		BusyCook->SetStausOfCook(INJURED);
+		Injured_Cooks.enqueue(BusyCook, order->GetFinishTime());
+	}
+}
+
+void Restaurant::SaveFile()
+{
+	pGUI->PrintMessage("Enter the file name please: ");
+	string FileName = pGUI->GetString() + ".txt";
+	pGUI->UpdateInterface();
+	ofstream OutputFile;
+	OutputFile.open("OutPut", ios::out);
+	int count = 0;
+	if (OutputFile.is_open()) {
+		OutputFile << "FT" << "  " << "ID" << "  " << "AT" << "  " << "WT" << "  " << "ST" << endl;
+		Order** Doneorder = OrdersAllDone.toArray(count);
+		int* id = new int[count];
+		int* ft = new int[count];
+		int* at = new int[count];
+		int* wt = new int[count];
+		int* st = new int[count];
+		int NumOfVegOrders = 0;
+		int NumOfNormOrders = 0;
+		int NumOfVipOrders = 0;
+		int TotalWaitTime = 0;
+		int TotalServTime = 0;
+		int cooksCount = NumberOfNormalCooks + NumberOfVeganCooks + NumberOfVipCooks;
+		for (int i = 0; i < count; i++)
+		{
+			at[i] = Doneorder[i]->GetArrivalTime();
+			ft[i] = Doneorder[i]->GetFinishTime();
+			id[i] = Doneorder[i]->GetID();
+			st[i] = Doneorder[i]->GetServingTime();
+			wt[i] = Doneorder[i]->GetWaitTime();
+			TotalServTime = TotalServTime + st[i];
+			TotalWaitTime = TotalWaitTime + wt[i];
+			OutputFile << ft[i] << "  " << id[i] << "  " << at[i] << "  " << wt[i] << "  " << st[i] << endl;
+		}
+
+		for (int i = 0; i < count; i++)
+		{
+			if (Doneorder[i]->GetType() == TYPE_NORMAL) 
+			{
+				NumOfNormOrders++;
+			}
+			else if (Doneorder[i]->GetType() == TYPE_VIP) 
+			{
+				NumOfVipOrders++;
+			}
+			else if (Doneorder[i]->GetType() == TYPE_VEGAN) 
+			{
+				NumOfVegOrders++;
+			}
+		}
+		OutputFile << "................................................" << endl;
+		OutputFile << "Orders: " << count << "[Norm: " << NumOfNormOrders << ", Veg: " << NumOfVegOrders << ", VIP: " << NumOfVipOrders << "]" << endl;
+		OutputFile << "Cooks: " << cooksCount << "[Norm: " << NumberOfNormalCooks << ", Veg: " << NumberOfVeganCooks << ", VIP: " << NumberOfVipCooks << ", injured: " << NumOfInjCooks << "]" << endl;
+		OutputFile << "Avg Wait = " << (float)TotalWaitTime / count << ", Avg Serv = " << (float)TotalServTime / count << endl;
+		OutputFile << "Urgent orders: " << NumberOfUrgentOrders << ", Auto-promoted: " << (float)NumberOfAutoProm/ NumOfNormOrders*100 <<"%"<< endl; 
+		OutputFile.close();
+		delete[]at;  delete[] ft;  delete[] id; delete[] st; delete[]wt;
+	}
 }
 
 
@@ -809,7 +913,7 @@ void Restaurant::PrintInfoCurrentTime(int CurrentTimeStep)
 	CalculatingNumberofOrdersDone(NumberOfOrdersDone);
 	S[0] = "TS: " + to_string(CurrentTimeStep);
 	S[1] = "Number of Waiting Orders: Vip: " + to_string(Vip_Order.GetCount()) + " Vegan : " + to_string(VeganOrder.GetCount()) + " Normal : " + to_string(NormalOrder.GetCount());
-	S[2] = "Number of available cooks: Vip: " + to_string(VipCookList.GetCount()) + " Vegan: " + to_string(VegCookList.GetCount()) + " Normal: " + to_string(NormCookList.GetCount())+", Not Working Cooks: "+to_string(Break_Cooks.GetCount()+Rest_Cooks.GetCount());
+	S[2] = "Number of available cooks: Vip: " + to_string(VipCookList.GetCount()) + " Vegan: " + to_string(VegCookList.GetCount()) + " Normal: " + to_string(NormCookList.GetCount())+",InJured and rest: "+to_string(Injured_Cooks.GetCount()+Rest_Cooks.GetCount());
 	//Temp Storage to Get Cooks and Orders
 	S[3] = "";
 	Cook* Temp;
