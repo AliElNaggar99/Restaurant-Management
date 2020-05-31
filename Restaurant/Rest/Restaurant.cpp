@@ -739,7 +739,7 @@ void Restaurant::CheckAutoProm(int CurrentTimestep)
 		Order* TEMP = nullptr; 
 		if (!NormalOrder.ReturnFirst(TEMP)) 
 			break;
-		if ((CurrentTimestep - TEMP->GetArrivalTime()) >= PromotionVariable) {
+		if ((CurrentTimestep - TEMP->GetArrivalTime()) > PromotionVariable) {
 
 			NormalOrder.RemoveFirst(TEMP);
 			TEMP->setType(TYPE_VIP);
@@ -766,7 +766,7 @@ void Restaurant::CheckUrgency(int CurrentTimestep) {
 			Order* TempOrder = nullptr;
 			Vip_Order.dequeue(TempOrder);
 
-			if ((CurrentTimestep - TempOrder->GetArrivalTime()) >= UrgentVariable) {
+			if ((CurrentTimestep - TempOrder->GetArrivalTime()) > UrgentVariable) {
 
 				//this will later be modified as to have rest and break in different queues
 				Cook* TempCook = nullptr;
