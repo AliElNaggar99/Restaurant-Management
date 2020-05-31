@@ -8,3 +8,4 @@ NormalCook::NormalCook(int ID, int minSpd, int maxSpd, int minBrk, int maxBrk) :
 
 
 
+

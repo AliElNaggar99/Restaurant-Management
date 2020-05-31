@@ -17,6 +17,7 @@ protected:
 				//ServTime & Finish time depend on the cook 
 	int ArrTime, ServTime, FinishTime, WaitTime;	//arrival, service start, and finish times
 	int NumberOfDishes;
+	bool AutoPromoted;
 	
 public:
 	Order(int ID, ORD_TYPE r_Type,int ArrivalTime,int numDishes,double totMoney);
@@ -48,6 +49,10 @@ public:
 	//
 	int GetWaitTime();
 	void SetWaitTime(int x);
+
+	void setAutoPromoted(bool K);
+	bool getAutoPromted();
+
 };
 
 #endif

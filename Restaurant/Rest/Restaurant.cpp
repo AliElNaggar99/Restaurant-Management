@@ -760,6 +760,7 @@ void Restaurant::CheckAutoProm(int CurrentTimestep)
 			TEMP->setType(TYPE_VIP);
 			Vip_Order.enqueue(TEMP , PriorityEquation(TEMP));
 			NumberOfAutoProm++;
+			TEMP->setAutoPromoted(true);
 		}
 		else
 			break;
@@ -840,7 +841,10 @@ void Restaurant::CheckInjuredCooks(int CurrentTimeStep)
 		oldServing = order->GetServingTime();
 		oldFinishing = order->GetFinishTime();
 		TimeStepOfServing = order->GetArrivalTime() + order->GetWaitTime();
-		WorkedhowManyTimesteps = CurrentTimeStep - TimeStepOfServing-1;
+		if (CurrentTimeStep == 1)
+			WorkedhowManyTimesteps = 0;
+		else
+			WorkedhowManyTimesteps = CurrentTimeStep - TimeStepOfServing - 1;
 		NumberofDoneDishes = WorkedhowManyTimesteps * (BusyCook->GetSpeed());
 		RemainingDishes = order->GetNumberOfDishes() - NumberofDoneDishes;
 		NewSpeed = ((float)BusyCook->GetSpeed()) / 2;
@@ -858,10 +862,10 @@ void Restaurant::CheckInjuredCooks(int CurrentTimeStep)
 void Restaurant::SaveFile()
 {
 	pGUI->PrintMessage("Enter the file name please: ");
-	string FileName = pGUI->GetString() + ".txt";
+	string FileName = pGUI->GetString();
 	pGUI->UpdateInterface();
 	ofstream OutputFile;
-	OutputFile.open("OutPut", ios::out);
+	OutputFile.open(FileName, ios::out);
 	int count = 0;
 	if (OutputFile.is_open()) {
 		OutputFile << "FT" << "  " << "ID" << "  " << "AT" << "  " << "WT" << "  " << "ST" << endl;
@@ -886,16 +890,16 @@ void Restaurant::SaveFile()
 			wt[i] = Doneorder[i]->GetWaitTime();
 			TotalServTime = TotalServTime + st[i];
 			TotalWaitTime = TotalWaitTime + wt[i];
-			OutputFile << ft[i] << "  " << id[i] << "  " << at[i] << "  " << wt[i] << "  " << st[i] << endl;
+			OutputFile << ft[i] << "   " << id[i] << "   " << at[i] << "   " << wt[i] << "   " << st[i] << endl;
 		}
 
 		for (int i = 0; i < count; i++)
 		{
-			if (Doneorder[i]->GetType() == TYPE_NORMAL) 
+			if (Doneorder[i]->GetType() == TYPE_NORMAL || (Doneorder[i]->GetType() == TYPE_VIP && Doneorder[i]->getAutoPromted() == true))
 			{
 				NumOfNormOrders++;
 			}
-			else if (Doneorder[i]->GetType() == TYPE_VIP) 
+			else if (Doneorder[i]->GetType() == TYPE_VIP && Doneorder[i]->getAutoPromted() == false)
 			{
 				NumOfVipOrders++;
 			}
@@ -905,8 +909,8 @@ void Restaurant::SaveFile()
 			}
 		}
 		OutputFile << "................................................" << endl;
-		OutputFile << "Orders: " << count << "[Norm: " << NumOfNormOrders << ", Veg: " << NumOfVegOrders << ", VIP: " << NumOfVipOrders << "]" << endl;
-		OutputFile << "Cooks: " << cooksCount << "[Norm: " << NumberOfNormalCooks << ", Veg: " << NumberOfVeganCooks << ", VIP: " << NumberOfVipCooks << ", injured: " << NumOfInjCooks << "]" << endl;
+		OutputFile << "Orders: " << count << " [Norm: " << NumOfNormOrders << ", Veg: " << NumOfVegOrders << ", VIP: " << NumOfVipOrders << "]" << endl;
+		OutputFile << "Cooks: " << cooksCount << " [Norm: " << NumberOfNormalCooks << ", Veg: " << NumberOfVeganCooks << ", VIP: " << NumberOfVipCooks << ", injured: " << NumOfInjCooks << "]" << endl;
 		OutputFile << "Avg Wait = " << (float)TotalWaitTime / count << ", Avg Serv = " << (float)TotalServTime / count << endl;
 		OutputFile << "Urgent orders: " << NumberOfUrgentOrders << ", Auto-promoted: " << (float)NumberOfAutoProm/ NumOfNormOrders*100 <<"%"<< endl; 
 		OutputFile.close();
