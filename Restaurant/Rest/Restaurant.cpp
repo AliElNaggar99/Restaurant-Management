@@ -637,22 +637,6 @@ void Restaurant::UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiii
 		Temp->setMakingOrder(nullptr);
 		Temp->SetFinishedOrders(Temp->GetFinishedOrders() + 1);
 
-		//This modification was made by Hosny 
-		if (Temp->GetCookStatus() == URG_BRK) {								//Handles the urgency case
-			Temp->SetFinishedOrders(Temp->GetFinishedOrders() + 1);			// it returns the cook to break again
-			Break_Cooks.enqueue(Temp, Temp->GetBreakTime());										// after setting the finished orders to 1
-			Temp->SetStausOfCook(BREAK);
-			continue;
-		}
-		else if (Temp->GetCookStatus() == URG_INJ) {
-
-			Temp->SetFinishedOrders(Temp->GetFinishedOrders() + 1);
-			Rest_Cooks.enqueue(Temp, Temp->GetBreakTime());
-			Temp->SetStausOfCook(INJURED);
-			continue;
-		}
-		// End of Modification Made by Hosny
-
 		//Check if the Cook would Take a break or No
 		if (Temp->GetFinishedOrders() == Temp->getBreakAfterN())
 		{
@@ -784,14 +768,11 @@ void Restaurant::CheckUrgency(int CurrentTimestep) {
 
 				//this will later be modified as to have rest and break in different queues
 				Cook* TempCook = nullptr;
-				Cook_Status CookStat = URG_BRK;
 				Break_Cooks.dequeue(TempCook);
-				if (TempCook == nullptr) {
+				if (TempCook == nullptr)
 					Rest_Cooks.dequeue(TempCook);
-					CookStat = URG_INJ;
-				}
-				AssignOrder(TempCook, TempOrder, CurrentTimestep, CookStat);
-				TempCook->SetBreakEndTime(TempCook->GetBreakEndTime() - CurrentTimestep + TempOrder->GetFinishTime());// set end break time = old end break time + time taken to finish order
+					
+				AssignOrder(TempCook, TempOrder, CurrentTimestep);
 				NumberOfUrgentOrders++;
 			}
 			else
@@ -809,14 +790,14 @@ void Restaurant::AssignOrder(Cook* pCook, Order* pOrder,int CurrentTimeStep,Cook
 
 
 	pCook->setMakingOrder(pOrder); // Link Cook and order together 
-	pCook->SetStausOfCook(CookStat);// set status to URG_BRK or URG_INJ Or BUSY
 	int InjuryFactor = 1;
-	if (CookStat == URG_INJ) 
+	if (CookStat == INJURED)
 		InjuryFactor = 2;
 	pOrder->SetWaitTime(CurrentTimeStep - pOrder->GetArrivalTime());
 	pOrder->SetServingTime(ceil((float)pOrder->GetNumberOfDishes() / ((float)pCook->GetSpeed() / InjuryFactor)));
 	pOrder->SetFinishTime(pOrder->GetArrivalTime()+pOrder->GetWaitTime()+pOrder->GetServingTime());
 	pOrder->setStatus(SRV);
+	pCook->SetStausOfCook(BUSY);
 	Working_Cook.enqueue(pCook,pOrder->GetFinishTime());// move cook to working and order to serving and check other shit that ali needs for printing
 	Assigned.enqueue(pCook);
 	OrdersServing.enqueue(pOrder, pOrder->GetFinishTime());
