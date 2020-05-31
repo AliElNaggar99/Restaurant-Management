@@ -77,7 +77,7 @@ bool PriorityQueueMin<T>::enqueue(const T& newEntry, int p) // rakam lee value w
 	{
 		Node<T>* P3 = new Node<T>;
 		P3 = frontPtr;
-		while (P3->getNext() && P3->getNext()->getPriority() < p)
+		while (P3->getNext() && P3->getNext()->getPriority() <= p)
 		{
 			P3 = P3->getNext();
 		}

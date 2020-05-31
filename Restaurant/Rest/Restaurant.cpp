@@ -750,7 +750,8 @@ void Restaurant::UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiii
 void Restaurant::CheckAutoProm(int CurrentTimestep) 
 {
 
-	while (true) {
+	while (true) 
+	{
 		Order* TEMP = nullptr; 
 		if (!NormalOrder.ReturnFirst(TEMP)) 
 			break;
@@ -796,7 +797,8 @@ void Restaurant::CheckUrgency(int CurrentTimestep) {
 				NumberOfUrgentOrders++;
 			}
 			else
-				TempStore.InsertFirst(TempOrder);
+				//to work as the Same Order as a Queue
+				TempStore.InsertLast(TempOrder);
 		}
 		while (TempStore.GetCount())
 		{

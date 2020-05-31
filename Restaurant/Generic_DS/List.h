@@ -273,11 +273,6 @@ inline Node<Order*>* List<Order*>::RemoveOrderFromList(int id) {
 
 
 	}
-	
-	
-
-
-
 }
 
 
