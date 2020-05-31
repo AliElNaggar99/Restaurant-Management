@@ -734,7 +734,8 @@ void Restaurant::UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiii
 void Restaurant::CheckAutoProm(int CurrentTimestep) 
 {
 
-	while (true) {
+	while (true) 
+	{
 		Order* TEMP = nullptr; 
 		if (!NormalOrder.ReturnFirst(TEMP)) 
 			break;
@@ -744,6 +745,7 @@ void Restaurant::CheckAutoProm(int CurrentTimestep)
 			TEMP->setType(TYPE_VIP);
 			Vip_Order.enqueue(TEMP , PriorityEquation(TEMP));
 			NumberOfAutoProm++;
+			TEMP->setAutoPromoted(true);
 		}
 		else
 			break;
@@ -776,7 +778,8 @@ void Restaurant::CheckUrgency(int CurrentTimestep) {
 				NumberOfUrgentOrders++;
 			}
 			else
-				TempStore.InsertFirst(TempOrder);
+				//to work as the Same Order as a Queue
+				TempStore.InsertLast(TempOrder);
 		}
 		while (TempStore.GetCount())
 		{
@@ -809,12 +812,19 @@ void Restaurant::CheckInjuredCooks(int CurrentTimeStep)
 	Order* order;
 	int RemainingDishes, NewServingTime, TimeStepOfServing, WorkedhowManyTimesteps, NumberofDoneDishes;
 	float NewSpeed;
+	int oldServing;
+	int oldFinishing;
 	if (Working_Cook.dequeue(BusyCook))
 	{
 		NumOfInjCooks++;
 		order = BusyCook->getMakingOrder();
+		oldServing = order->GetServingTime();
+		oldFinishing = order->GetFinishTime();
 		TimeStepOfServing = order->GetArrivalTime() + order->GetWaitTime();
-		WorkedhowManyTimesteps = CurrentTimeStep - TimeStepOfServing-1;
+		if (CurrentTimeStep == 1)
+			WorkedhowManyTimesteps = 0;
+		else
+			WorkedhowManyTimesteps = CurrentTimeStep - TimeStepOfServing - 1;
 		NumberofDoneDishes = WorkedhowManyTimesteps * (BusyCook->GetSpeed());
 		RemainingDishes = order->GetNumberOfDishes() - NumberofDoneDishes;
 		NewSpeed = ((float)BusyCook->GetSpeed()) / 2;
@@ -823,16 +833,19 @@ void Restaurant::CheckInjuredCooks(int CurrentTimeStep)
 		order->SetFinishTime(order->GetArrivalTime() + order->GetServingTime() + order->GetWaitTime());
 		BusyCook->SetStausOfCook(INJURED);
 		Injured_Cooks.enqueue(BusyCook, order->GetFinishTime());
+		//Changing Position of the the Order
+		OrdersServing.dequeue(order);
+		OrdersServing.enqueue(order, order->GetFinishTime());
 	}
 }
 
 void Restaurant::SaveFile()
 {
 	pGUI->PrintMessage("Enter the file name please: ");
-	string FileName = pGUI->GetString() + ".txt";
+	string FileName = pGUI->GetString();
 	pGUI->UpdateInterface();
 	ofstream OutputFile;
-	OutputFile.open("OutPut", ios::out);
+	OutputFile.open(FileName, ios::out);
 	int count = 0;
 	if (OutputFile.is_open()) {
 		OutputFile << "FT" << "  " << "ID" << "  " << "AT" << "  " << "WT" << "  " << "ST" << endl;
@@ -857,16 +870,16 @@ void Restaurant::SaveFile()
 			wt[i] = Doneorder[i]->GetWaitTime();
 			TotalServTime = TotalServTime + st[i];
 			TotalWaitTime = TotalWaitTime + wt[i];
-			OutputFile << ft[i] << "  " << id[i] << "  " << at[i] << "  " << wt[i] << "  " << st[i] << endl;
+			OutputFile << ft[i] << "   " << id[i] << "   " << at[i] << "   " << wt[i] << "   " << st[i] << endl;
 		}
 
 		for (int i = 0; i < count; i++)
 		{
-			if (Doneorder[i]->GetType() == TYPE_NORMAL) 
+			if (Doneorder[i]->GetType() == TYPE_NORMAL || (Doneorder[i]->GetType() == TYPE_VIP && Doneorder[i]->getAutoPromted() == true))
 			{
 				NumOfNormOrders++;
 			}
-			else if (Doneorder[i]->GetType() == TYPE_VIP) 
+			else if (Doneorder[i]->GetType() == TYPE_VIP && Doneorder[i]->getAutoPromted() == false)
 			{
 				NumOfVipOrders++;
 			}
@@ -876,8 +889,8 @@ void Restaurant::SaveFile()
 			}
 		}
 		OutputFile << "................................................" << endl;
-		OutputFile << "Orders: " << count << "[Norm: " << NumOfNormOrders << ", Veg: " << NumOfVegOrders << ", VIP: " << NumOfVipOrders << "]" << endl;
-		OutputFile << "Cooks: " << cooksCount << "[Norm: " << NumberOfNormalCooks << ", Veg: " << NumberOfVeganCooks << ", VIP: " << NumberOfVipCooks << ", injured: " << NumOfInjCooks << "]" << endl;
+		OutputFile << "Orders: " << count << " [Norm: " << NumOfNormOrders << ", Veg: " << NumOfVegOrders << ", VIP: " << NumOfVipOrders << "]" << endl;
+		OutputFile << "Cooks: " << cooksCount << " [Norm: " << NumberOfNormalCooks << ", Veg: " << NumberOfVeganCooks << ", VIP: " << NumberOfVipCooks << ", injured: " << NumOfInjCooks << "]" << endl;
 		OutputFile << "Avg Wait = " << (float)TotalWaitTime / count << ", Avg Serv = " << (float)TotalServTime / count << endl;
 		OutputFile << "Urgent orders: " << NumberOfUrgentOrders << ", Auto-promoted: " << (float)NumberOfAutoProm/ NumOfNormOrders*100 <<"%"<< endl; 
 		OutputFile.close();
@@ -894,7 +907,7 @@ void Restaurant::PrintInfoCurrentTime(int CurrentTimeStep)
 	CalculatingNumberofOrdersDone(NumberOfOrdersDone);
 	S[0] = "TS: " + to_string(CurrentTimeStep);
 	S[1] = "Number of Waiting Orders: Vip: " + to_string(Vip_Order.GetCount()) + " Vegan : " + to_string(VeganOrder.GetCount()) + " Normal : " + to_string(NormalOrder.GetCount());
-	S[2] = "Number of available cooks: Vip: " + to_string(VipCookList.GetCount()) + " Vegan: " + to_string(VegCookList.GetCount()) + " Normal: " + to_string(NormCookList.GetCount())+",InJured and rest: "+to_string(Injured_Cooks.GetCount()+Rest_Cooks.GetCount());
+	S[2] = "Number of available cooks: Vip: " + to_string(VipCookList.GetCount()) + " Vegan: " + to_string(VegCookList.GetCount()) + " Normal: " + to_string(NormCookList.GetCount())+",InJured: "+to_string(Injured_Cooks.GetCount());
 	//Temp Storage to Get Cooks and Orders
 	S[3] = "";
 	Cook* Temp;

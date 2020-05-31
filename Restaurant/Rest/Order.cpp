@@ -8,6 +8,7 @@ Order::Order(int id, ORD_TYPE r_Type, int ArrivalTime, int numDishes, double tot
 	this->ArrTime = ArrivalTime;
 	this->NumberOfDishes = numDishes;
 	this->totalMoney = totMoney; 
+	AutoPromoted = false;
 }
 
 Order::~Order()
@@ -109,3 +110,15 @@ void Order::SetWaitTime(int x)
 {
 	WaitTime = x;
 }
+
+void Order::setAutoPromoted(bool k)
+{
+	AutoPromoted = k;
+}
+
+bool Order::getAutoPromted()
+{
+	return AutoPromoted;
+}
+
+
