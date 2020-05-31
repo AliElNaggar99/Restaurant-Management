@@ -817,7 +817,10 @@ void Restaurant::AssignOrder(Cook* pCook, Order* pOrder,int CurrentTimeStep,Cook
 	pOrder->SetServingTime(ceil((float)pOrder->GetNumberOfDishes() / ((float)pCook->GetSpeed() / InjuryFactor)));
 	pOrder->SetFinishTime(pOrder->GetArrivalTime()+pOrder->GetWaitTime()+pOrder->GetServingTime());
 	pOrder->setStatus(SRV);
-	Working_Cook.enqueue(pCook,pOrder->GetFinishTime());// move cook to working and order to serving and check other shit that ali needs for printing
+	if (CookStat == URG_INJ)
+		Injured_Cooks.enqueue(pCook, pOrder->GetFinishTime());
+	else
+		Working_Cook.enqueue(pCook, pOrder->GetFinishTime());// move cook to working and order to serving and check other shit that ali needs for printing
 	Assigned.enqueue(pCook);
 	OrdersServing.enqueue(pOrder, pOrder->GetFinishTime());
 }
@@ -828,10 +831,14 @@ void Restaurant::CheckInjuredCooks(int CurrentTimeStep)
 	Order* order;
 	int RemainingDishes, NewServingTime, TimeStepOfServing, WorkedhowManyTimesteps, NumberofDoneDishes;
 	float NewSpeed;
+	int oldServing;
+	int oldFinishing;
 	if (Working_Cook.dequeue(BusyCook))
 	{
 		NumOfInjCooks++;
 		order = BusyCook->getMakingOrder();
+		oldServing = order->GetServingTime();
+		oldFinishing = order->GetFinishTime();
 		TimeStepOfServing = order->GetArrivalTime() + order->GetWaitTime();
 		WorkedhowManyTimesteps = CurrentTimeStep - TimeStepOfServing-1;
 		NumberofDoneDishes = WorkedhowManyTimesteps * (BusyCook->GetSpeed());
@@ -842,6 +849,9 @@ void Restaurant::CheckInjuredCooks(int CurrentTimeStep)
 		order->SetFinishTime(order->GetArrivalTime() + order->GetServingTime() + order->GetWaitTime());
 		BusyCook->SetStausOfCook(INJURED);
 		Injured_Cooks.enqueue(BusyCook, order->GetFinishTime());
+		//Changing Position of the the Order
+		OrdersServing.dequeue(order);
+		OrdersServing.enqueue(order, order->GetFinishTime());
 	}
 }
 
@@ -913,7 +923,7 @@ void Restaurant::PrintInfoCurrentTime(int CurrentTimeStep)
 	CalculatingNumberofOrdersDone(NumberOfOrdersDone);
 	S[0] = "TS: " + to_string(CurrentTimeStep);
 	S[1] = "Number of Waiting Orders: Vip: " + to_string(Vip_Order.GetCount()) + " Vegan : " + to_string(VeganOrder.GetCount()) + " Normal : " + to_string(NormalOrder.GetCount());
-	S[2] = "Number of available cooks: Vip: " + to_string(VipCookList.GetCount()) + " Vegan: " + to_string(VegCookList.GetCount()) + " Normal: " + to_string(NormCookList.GetCount())+",InJured and rest: "+to_string(Injured_Cooks.GetCount()+Rest_Cooks.GetCount());
+	S[2] = "Number of available cooks: Vip: " + to_string(VipCookList.GetCount()) + " Vegan: " + to_string(VegCookList.GetCount()) + " Normal: " + to_string(NormCookList.GetCount())+",InJured: "+to_string(Injured_Cooks.GetCount());
 	//Temp Storage to Get Cooks and Orders
 	S[3] = "";
 	Cook* Temp;
