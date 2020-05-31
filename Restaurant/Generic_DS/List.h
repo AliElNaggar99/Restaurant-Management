@@ -253,12 +253,13 @@ inline Node<Order*>* List<Order*>::SearchForOrder(int id) {
 
 inline Node<Order*>* List<Order*>::RemoveOrderFromList(int id) {
 	if (isEmpty()) return nullptr;
-	count = count - 1;
+	
 	if (First->getItem()->GetID() == id) {
 
 		Node<Order*>* TEMP = First;
 		First = First->getNext();
 		if (TEMP == Last) Last = nullptr;
+		count = count - 1;
 		return TEMP;
 	}
 
@@ -269,6 +270,7 @@ inline Node<Order*>* List<Order*>::RemoveOrderFromList(int id) {
 		Node<Order*>* TEMP = Prev->getNext();
 		Prev->setNext(TEMP->getNext());
 		if (TEMP == Last && First == TEMP) Last = nullptr;
+		count = count - 1;
 		return TEMP;
 
 
