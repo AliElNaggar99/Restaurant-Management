@@ -229,14 +229,16 @@ inline Node<Order*>* List<Order*>::SearchandReturnPrev(int id)
 	// Doesnt work on 1st node so have to be done manually as 1st doesnt have previous
 	if (First == nullptr) return nullptr;
 	Node<Order*>* TravPtr = First;
-	while (TravPtr->getNext() != nullptr) {
+	while (TravPtr->getNext() != nullptr) 
+	{
 
-		if (TravPtr->getNext()->getItem()->GetID() == id) return TravPtr;
+		if (TravPtr->getNext()->getItem()->GetID() == id) 
+			return TravPtr;
 
 		TravPtr = TravPtr->getNext();
 
 	}
-
+	return nullptr;
 
 }
 
@@ -264,15 +266,18 @@ inline Node<Order*>* List<Order*>::RemoveOrderFromList(int id) {
 
 	Node<Order*>* Prev = SearchandReturnPrev(id);
 
-	if (Prev != nullptr) {
+	if (Prev != nullptr) 
+	{
 
 		Node<Order*>* TEMP = Prev->getNext();
 		Prev->setNext(TEMP->getNext());
-		if (TEMP == Last && First == TEMP) Last = nullptr;
+		if (TEMP == Last && First == TEMP)
+			Last = nullptr;
 		return TEMP;
 
 
 	}
+	return nullptr;
 }
 
 
