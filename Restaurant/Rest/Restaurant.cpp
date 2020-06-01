@@ -237,11 +237,7 @@ for(int i = 6; i < (6+numEvents);i++){
 		EventsQueue.enqueue(P);
 		
 	}
-
-
-
-}
-
+  }
 }
 
 
