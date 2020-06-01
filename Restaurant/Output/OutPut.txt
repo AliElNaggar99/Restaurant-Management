@@ -1,6 +1,0 @@
-FT  ID  AT  WT  ST
-................................................
-Orders: 0 [Norm: 0, Veg: 0, VIP: 0]
-Cooks: 0 [Norm: 0, Veg: 0, VIP: 0, injured: 0]
-Avg Wait = -nan(ind), Avg Serv = -nan(ind)
-Urgent orders: 0, Auto-promoted: -nan(ind)%

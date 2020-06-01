@@ -1,6 +1,0 @@
-FT  ID  AT  WT  ST
-................................................
-Orders: 0 [Norm: 0, Veg: 0, VIP: 0]
-Cooks: 0 [Norm: 0, Veg: 0, VIP: 0, injured: 0]
-Avg Wait = 0, Avg Serv = 0
-Urgent orders: 0, Auto-promoted: 0%
