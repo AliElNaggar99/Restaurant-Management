@@ -91,9 +91,8 @@ public:
 	//void Just_A_Demo();	//just to show a demo and should be removed in phase1 1 & 2
 	void AddtoDemoQueue(Order* po);	//adds an order to the demo queue
 
-	// for testing
-	void Test();
-	void TestPHII();
+	
+	void MainSimulator(PROG_MODE);
 
 /// ================================================================================================== 
 

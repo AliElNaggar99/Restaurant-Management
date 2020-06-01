@@ -7,12 +7,9 @@ int main()
 	
 	Restaurant* pRest = new Restaurant;
 	pRest->RunSimulation();
-	/*whatisthis*/
-		/*whatisthis*/
+
 
 	delete pRest;
-	/*helloitsme*/
-	/*ehyargala*/
 	
 	return 0;
 }
