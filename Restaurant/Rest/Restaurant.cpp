@@ -629,73 +629,14 @@ void Restaurant::UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiii
 	{
 		//SO that Cook Finished his Order
 		Working_Cook.dequeue(Temp);
-		Order* pOrd = Temp->getMakingOrder();
-		pOrd->setStatus(DONE);
-		OrdersAllDone.enqueue(pOrd);
-		OrdersServing.dequeue(pOrd);
-		Temp->SetStausOfCook(AVAILABLE);
-		Temp->setMakingOrder(nullptr);
-		Temp->SetFinishedOrders(Temp->GetFinishedOrders() + 1);
-
-		//This modification was made by Hosny 
-		if (Temp->GetCookStatus() == URG_BRK) {								//Handles the urgency case
-			Temp->SetFinishedOrders(Temp->GetFinishedOrders() + 1);			// it returns the cook to break again
-			Break_Cooks.enqueue(Temp, Temp->GetBreakTime());										// after setting the finished orders to 1
-			Temp->SetStausOfCook(BREAK);
-			continue;
-		}
-		else if (Temp->GetCookStatus() == URG_INJ) {
-
-			Temp->SetFinishedOrders(Temp->GetFinishedOrders() + 1);
-			Rest_Cooks.enqueue(Temp, Temp->GetBreakTime());
-			Temp->SetStausOfCook(INJURED);
-			continue;
-		}
-		// End of Modification Made by Hosny
-
-		//Check if the Cook would Take a break or No
-		if (Temp->GetFinishedOrders() == Temp->getBreakAfterN())
-		{
-			Temp->SetFinishedOrders(0);
-			Temp->SetBreakEndTime(Temp->GetBreakTime() + CurrentTimeStep);
-			Temp->SetStausOfCook(BREAK);
-			//Put it in the Break List
-			Break_Cooks.enqueue(Temp, Temp->GetBreakEndTime());
-		}
-		//Return it to the list
-		else
-		{
-			if (Temp->GetType() == TYPE_VEGAN)
-			{
-				VeganCook* Cook1 = (VeganCook*)Temp;
-				VegCookList.enqueue(Cook1);
-			}
-			else if (Temp->GetType() == TYPE_NORMAL)
-			{
-				NormalCook* Cook1 = (NormalCook*)Temp;
-				NormCookList.enqueue(Cook1);
-			}
-			else if (Temp->GetType() == TYPE_VIP)
-			{
-				VipCook* Cook1 = (VipCook*)Temp;
-				VipCookList.enqueue(Cook1);
-			}
-		}
+		UpdateCook(Temp, CurrentTimeStep);
 	}
 
-	//Checking the InjuredCooks List
+	//Checking the InjuredCooks List // He will go the relative list
 	while (Injured_Cooks.peekFront(Temp) && Temp->getMakingOrder()->GetFinishTime() == CurrentTimeStep)
 	{
 		Injured_Cooks.dequeue(Temp);
-		Order* pOrd = Temp->getMakingOrder();
-		pOrd->setStatus(DONE);
-		OrdersAllDone.enqueue(pOrd);
-		OrdersServing.dequeue(pOrd);
-		Temp->SetStausOfCook(REST);
-		Temp->setMakingOrder(nullptr);
-		Temp->SetFinishedOrders(Temp->GetFinishedOrders() + 1);
-		Temp->SetBreakEndTime(CurrentTimeStep + Temp->getInjuryRest());
-		Rest_Cooks.enqueue(Temp, Temp->GetBreakEndTime());
+		UpdateCook(Temp , CurrentTimeStep);
 	}
 
 
@@ -705,45 +646,13 @@ void Restaurant::UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiii
 		//His break Ended Return it to the Right List
 		Temp = nullptr;
 		Break_Cooks.dequeue(Temp);
-		if (Temp == nullptr)
-			Rest_Cooks.dequeue(Temp);
-		Temp->SetStausOfCook(AVAILABLE);
-		if (Temp->GetType() == TYPE_VEGAN)
-		{
-			VeganCook* Cook1 = (VeganCook*)Temp;
-			VegCookList.enqueue(Cook1);
-		}
-		else if (Temp->GetType() == TYPE_NORMAL)
-		{
-			NormalCook* Cook1 = (NormalCook*)Temp;
-			NormCookList.enqueue(Cook1);
-		}
-		else if (Temp->GetType() == TYPE_VIP)
-		{
-			VipCook* Cook1 = (VipCook*)Temp;
-			VipCookList.enqueue(Cook1);
-		}
+		ReturnCookToRightList(Temp);
 	}
 	//Check Rest List
 	while (Rest_Cooks.peekFront(Temp) && Temp->GetBreakEndTime() == CurrentTimeStep)
 	{
 		Rest_Cooks.dequeue(Temp);
-		Temp->SetStausOfCook(AVAILABLE);
-		if (Temp->GetType() == TYPE_VEGAN)
-		{
-			VeganCook* Cook1 = (VeganCook*)Temp;
-			VegCookList.enqueue(Cook1);
-		}
-		else if (Temp->GetType() == TYPE_NORMAL)
-		{
-			NormalCook* Cook1 = (NormalCook*)Temp;
-			NormCookList.enqueue(Cook1);
-		}
-		else if (Temp->GetType() == TYPE_VIP)
-		{
-			VipCook* Cook1 = (VipCook*)Temp;
-			VipCookList.enqueue(Cook1);
-		}
+		ReturnCookToRightList(Temp);
 	}
 }
 
@@ -808,26 +717,6 @@ void Restaurant::CheckUrgency(int CurrentTimestep) {
 		}
 }
 
-void Restaurant::AssignOrder(Cook* pCook, Order* pOrder,int CurrentTimeStep,Cook_Status CookStat ) {
-
-
-	pCook->setMakingOrder(pOrder); // Link Cook and order together 
-	pCook->SetStausOfCook(CookStat);// set status to URG_BRK or URG_INJ Or BUSY
-	int InjuryFactor = 1;
-	if (CookStat == URG_INJ) 
-		InjuryFactor = 2;
-	pOrder->SetWaitTime(CurrentTimeStep - pOrder->GetArrivalTime());
-	pOrder->SetServingTime(ceil((float)pOrder->GetNumberOfDishes() / ((float)pCook->GetSpeed() / InjuryFactor)));
-	pOrder->SetFinishTime(pOrder->GetArrivalTime()+pOrder->GetWaitTime()+pOrder->GetServingTime());
-	pOrder->setStatus(SRV);
-	if (CookStat == URG_INJ)
-		Injured_Cooks.enqueue(pCook, pOrder->GetFinishTime());
-	else
-		Working_Cook.enqueue(pCook, pOrder->GetFinishTime());// move cook to working and order to serving and check other shit that ali needs for printing
-	Assigned.enqueue(pCook);
-	OrdersServing.enqueue(pOrder, pOrder->GetFinishTime());
-}
-
 void Restaurant::CheckInjuredCooks(int CurrentTimeStep)
 {
 	Cook* BusyCook;
@@ -860,6 +749,74 @@ void Restaurant::CheckInjuredCooks(int CurrentTimeStep)
 		OrdersServing.enqueue(order, order->GetFinishTime());
 	}
 }
+
+
+
+void Restaurant::UpdateCook(Cook* pCook, int CurrentTimeStep)
+{
+	Order* pOrd = pCook->getMakingOrder();
+	pOrd->setStatus(DONE);
+	OrdersAllDone.enqueue(pOrd);
+	OrdersServing.dequeue(pOrd);
+	pCook->setMakingOrder(nullptr);
+	pCook->SetFinishedOrders(pCook->GetFinishedOrders() + 1);
+
+	//Check if the Cook would Take a break or No
+	if (pCook->GetFinishedOrders() == pCook->getBreakAfterN())
+	{
+		pCook->SetFinishedOrders(0);
+		pCook->SetBreakEndTime(pCook->GetBreakTime() + CurrentTimeStep);
+		pCook->SetStausOfCook(BREAK);
+		//Put it in the Break List
+		Break_Cooks.enqueue(pCook, pCook->GetBreakEndTime());
+	}
+	//Return it to the list
+	else
+	{
+		ReturnCookToRightList(pCook);
+	}
+}
+
+void Restaurant::ReturnCookToRightList(Cook* pCook)
+{
+	pCook->SetStausOfCook(AVAILABLE);
+	if (pCook->GetType() == TYPE_VEGAN)
+	{
+		VeganCook* Cook1 = (VeganCook*)pCook;
+		VegCookList.enqueue(Cook1);
+	}
+	else if (pCook->GetType() == TYPE_NORMAL)
+	{
+		NormalCook* Cook1 = (NormalCook*)pCook;
+		NormCookList.enqueue(Cook1);
+	}
+	else if (pCook->GetType() == TYPE_VIP)
+	{
+		VipCook* Cook1 = (VipCook*)pCook;
+		VipCookList.enqueue(Cook1);
+	}
+}
+
+void Restaurant::AssignOrder(Cook* pCook, Order* pOrder,int CurrentTimeStep,Cook_Status CookStat ) {
+
+
+	pCook->setMakingOrder(pOrder); // Link Cook and order together 
+	pCook->SetStausOfCook(CookStat);// set status to URG_BRK or URG_INJ Or BUSY
+	int InjuryFactor = 1;
+	if (CookStat == URG_INJ) 
+		InjuryFactor = 2;
+	pOrder->SetWaitTime(CurrentTimeStep - pOrder->GetArrivalTime());
+	pOrder->SetServingTime(ceil((float)pOrder->GetNumberOfDishes() / ((float)pCook->GetSpeed() / InjuryFactor)));
+	pOrder->SetFinishTime(pOrder->GetArrivalTime()+pOrder->GetWaitTime()+pOrder->GetServingTime());
+	pOrder->setStatus(SRV);
+	if (CookStat == URG_INJ)
+		Injured_Cooks.enqueue(pCook, pOrder->GetFinishTime());
+	else
+		Working_Cook.enqueue(pCook, pOrder->GetFinishTime());// move cook to working and order to serving and check other shit that ali needs for printing
+	Assigned.enqueue(pCook);
+	OrdersServing.enqueue(pOrder, pOrder->GetFinishTime());
+}
+
 
 void Restaurant::SaveFile()
 {
@@ -1007,6 +964,8 @@ void Restaurant::CalculatingNumberofOrdersDone(int* Arrayofnumber)
 	Arrayofnumber[1] = numberofvegan;
 	Arrayofnumber[2] = numberofvip;
 }
+
+
 
 
 

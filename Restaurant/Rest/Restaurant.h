@@ -119,6 +119,8 @@ public:
 	void CheckAutoProm(int);
 	void CheckUrgency(int);
 	void CheckInjuredCooks(int CurrentTimeStep);
+	void UpdateCook(Cook* pCook, int timeStep);
+	void ReturnCookToRightList(Cook* pCook);
 
 	void SaveFile();
 
