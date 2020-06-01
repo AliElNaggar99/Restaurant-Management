@@ -114,9 +114,6 @@
     <ClInclude Include="Rest\VeganCook.h">
       <Filter>Restaurant</Filter>
     </ClInclude>
-    <ClInclude Include="Generic_DS\PriorityQueue.h">
-      <Filter>Generic_DS</Filter>
-    </ClInclude>
     <ClInclude Include="Events\CancellationEvent.h">
       <Filter>Events</Filter>
     </ClInclude>
@@ -143,7 +140,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Demo_Main.cpp" />
     <ClCompile Include="CMUgraphicsLib\jpeg\jcomapi.c">
       <Filter>CMUGraphicsLib\JPEG</Filter>
     </ClCompile>
@@ -282,6 +278,7 @@
     <ClCompile Include="Rest\VipCook.cpp">
       <Filter>Restaurant</Filter>
     </ClCompile>
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMUgraphicsLib\Manual.txt">

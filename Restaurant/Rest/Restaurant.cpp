@@ -170,6 +170,8 @@ const std::string oneWhiteSpace = " ";
 //L6 No of events in file
 int numEvents = std::stoi(Lines[5]);
 
+if (numEvents == 0)
+     return; 
 
 //Resizing vector
 Lines.resize(6+numEvents);
@@ -338,7 +340,7 @@ void Restaurant::MainSimulator(PROG_MODE Mode)
 
 	ReadFromFile();
 
-
+	pGUI->PrintMessage("Click To Start The Simulation.");
 
 	pGUI->waitForClick();
 	//Check Event list 
@@ -366,17 +368,18 @@ void Restaurant::MainSimulator(PROG_MODE Mode)
 		CheckUrgency(CurrentTimeStep);
 		CheckAutoProm(CurrentTimeStep);
 		UpdateCooksandOrdersstatus(CurrentTimeStep);
-		PrintInfoCurrentTime(CurrentTimeStep);
-		
 		
 		//////////////////////////////////////////////////////////////////////////////////////////
 		if (Mode != MODE_SLNT) {
+			PrintInfoCurrentTime(CurrentTimeStep);
 			FillDrawingList();
 			pGUI->UpdateInterface();
 		}
 
-		if(Mode == MODE_INTR )pGUI->waitForClick();
-		if (Mode == MODE_STEP) Sleep(1000);
+		if(Mode == MODE_INTR )
+			pGUI->waitForClick();
+		if (Mode == MODE_STEP)
+			Sleep(1000);
 		CurrentTimeStep++;	//advance timestep
 		//add check urgent later
 
@@ -731,6 +734,7 @@ void Restaurant::SaveFile()
 		int TotalWaitTime = 0;
 		int TotalServTime = 0;
 		int cooksCount = NumberOfNormalCooks + NumberOfVeganCooks + NumberOfVipCooks;
+		int NormalandAutoPromo = 0;
 		for (int i = 0; i < count; i++)
 		{
 			at[i] = Doneorder[i]->GetArrivalTime();
@@ -745,11 +749,11 @@ void Restaurant::SaveFile()
 
 		for (int i = 0; i < count; i++)
 		{
-			if (Doneorder[i]->GetType() == TYPE_NORMAL || (Doneorder[i]->GetType() == TYPE_VIP && Doneorder[i]->getAutoPromted() == true))
+			if (Doneorder[i]->GetType() == TYPE_NORMAL)
 			{
 				NumOfNormOrders++;
 			}
-			else if (Doneorder[i]->GetType() == TYPE_VIP && Doneorder[i]->getAutoPromted() == false)
+			else if (Doneorder[i]->GetType() == TYPE_VIP)
 			{
 				NumOfVipOrders++;
 			}
@@ -757,12 +761,23 @@ void Restaurant::SaveFile()
 			{
 				NumOfVegOrders++;
 			}
+
+			if (Doneorder[i]->GetType() == TYPE_NORMAL || (Doneorder[i]->GetType() == TYPE_VIP && Doneorder[i]->getAutoPromted() == true))
+			{
+				NormalandAutoPromo++;
+			}
 		}
+		float AvgWait = (float)TotalWaitTime / count;
+		float AvgServ =  (float)TotalServTime / count;
+		float AutoPromote = (float)NumberOfAutoProm / NormalandAutoPromo * 100;
+		if (count == 0)
+			AvgWait = AvgServ = AutoPromote = 0;
+
 		OutputFile << "................................................" << endl;
 		OutputFile << "Orders: " << count << " [Norm: " << NumOfNormOrders << ", Veg: " << NumOfVegOrders << ", VIP: " << NumOfVipOrders << "]" << endl;
 		OutputFile << "Cooks: " << cooksCount << " [Norm: " << NumberOfNormalCooks << ", Veg: " << NumberOfVeganCooks << ", VIP: " << NumberOfVipCooks << ", injured: " << NumOfInjCooks << "]" << endl;
-		OutputFile << "Avg Wait = " << (float)TotalWaitTime / count << ", Avg Serv = " << (float)TotalServTime / count << endl;
-		OutputFile << "Urgent orders: " << NumberOfUrgentOrders << ", Auto-promoted: " << (float)NumberOfAutoProm/ NumOfNormOrders*100 <<"%"<< endl; 
+		OutputFile << "Avg Wait = " << AvgWait << ", Avg Serv = " << AvgServ << endl;
+		OutputFile << "Urgent orders: " << NumberOfUrgentOrders << ", Auto-promoted: " << AutoPromote <<"%"<< endl;
 		OutputFile.close();
 		delete[]at;  delete[] ft;  delete[] id; delete[] st; delete[]wt;
 	}
