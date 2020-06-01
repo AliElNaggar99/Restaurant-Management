@@ -37,7 +37,8 @@ enum Cook_Status
 	BUSY,
 	BREAK,
 	REST,
-	INJURED
+	INJURED,
+	URG_INJ
 
 
 };
