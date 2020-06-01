@@ -636,7 +636,40 @@ void Restaurant::UpdateCooksandOrdersstatus(int CurrentTimeStep)/////afifiiiiiii
 	while (Injured_Cooks.peekFront(Temp) && Temp->getMakingOrder()->GetFinishTime() == CurrentTimeStep)
 	{
 		Injured_Cooks.dequeue(Temp);
-		UpdateCook(Temp , CurrentTimeStep);
+		Order* pOrd = Temp->getMakingOrder();
+		pOrd->setStatus(DONE);
+		OrdersAllDone.enqueue(pOrd);
+		OrdersServing.dequeue(pOrd);
+		Temp->SetFinishedOrders(Temp->GetFinishedOrders() + 1);
+		Temp->setMakingOrder(nullptr);
+
+		if (Temp->GetCookStatus() == INJURED) {
+			
+			Temp->SetStausOfCook(REST);
+			Temp->SetBreakEndTime(CurrentTimeStep + Temp->getInjuryRest());
+			Rest_Cooks.enqueue(Temp, Temp->GetBreakEndTime());
+		}
+		else {
+			
+			Temp->SetStausOfCook(AVAILABLE);
+			if (Temp->GetType() == TYPE_VEGAN)
+			{
+				VeganCook* Cook1 = (VeganCook*)Temp;
+				VegCookList.enqueue(Cook1);
+			}
+			else if (Temp->GetType() == TYPE_NORMAL)
+			{
+				NormalCook* Cook1 = (NormalCook*)Temp;
+				NormCookList.enqueue(Cook1);
+			}
+			else if (Temp->GetType() == TYPE_VIP)
+			{
+				VipCook* Cook1 = (VipCook*)Temp;
+				VipCookList.enqueue(Cook1);
+			}
+			
+
+		}
 	}
 
 
@@ -692,17 +725,18 @@ void Restaurant::CheckUrgency(int CurrentTimestep) {
 			Vip_Order.dequeue(TempOrder);
 
 			if ((CurrentTimestep - TempOrder->GetArrivalTime()) > UrgentVariable) {
-
+				Cook_Status CookStat = BUSY;
 				//this will later be modified as to have rest and break in different queues
 				Cook* TempCook = nullptr;
-				Cook_Status CookStat = URG_BRK;
 				Break_Cooks.dequeue(TempCook);
 				if (TempCook == nullptr) {
+
 					Rest_Cooks.dequeue(TempCook);
 					CookStat = URG_INJ;
+
 				}
-				AssignOrder(TempCook, TempOrder, CurrentTimestep, CookStat);
-				TempCook->SetBreakEndTime(TempCook->GetBreakEndTime() - CurrentTimestep + TempOrder->GetFinishTime());// set end break time = old end break time + time taken to finish order
+					
+				AssignOrder(TempCook, TempOrder, CurrentTimestep,CookStat);
 				NumberOfUrgentOrders++;
 			}
 			else
@@ -715,6 +749,28 @@ void Restaurant::CheckUrgency(int CurrentTimestep) {
 			TempStore.RemoveFirst(TempOrder);
 			Vip_Order.enqueue(TempOrder,PriorityEquation(TempOrder));
 		}
+}
+
+void Restaurant::AssignOrder(Cook* pCook, Order* pOrder,int CurrentTimeStep,Cook_Status CookStat ) 
+{
+
+
+	pCook->setMakingOrder(pOrder); // Link Cook and order together 
+	int InjuryFactor = 1;
+	if (CookStat == URG_INJ)
+		InjuryFactor = 2;
+	pOrder->SetWaitTime(CurrentTimeStep - pOrder->GetArrivalTime());
+	pOrder->SetServingTime(ceil((float)pOrder->GetNumberOfDishes() / ((float)pCook->GetSpeed() / InjuryFactor)));
+	pOrder->SetFinishTime(pOrder->GetArrivalTime()+pOrder->GetWaitTime()+pOrder->GetServingTime());
+	pOrder->setStatus(SRV);
+	pCook->SetStausOfCook(CookStat);
+	if (CookStat == URG_INJ) {
+		Injured_Cooks.enqueue(pCook,pOrder->GetFinishTime());
+	}
+	else
+		Working_Cook.enqueue(pCook,pOrder->GetFinishTime());// move cook to working and order to serving and check other stuff that ali needs for printing
+	Assigned.enqueue(pCook);
+	OrdersServing.enqueue(pOrder, pOrder->GetFinishTime());
 }
 
 void Restaurant::CheckInjuredCooks(int CurrentTimeStep)
