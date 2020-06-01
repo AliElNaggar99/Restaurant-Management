@@ -31,21 +31,7 @@ void Restaurant::RunSimulation()
 	pGUI = new GUI;
 	PROG_MODE	mode = pGUI->getGUIMode();
 		
-	switch (mode)	//Add a function for each mode in next phases
-	{
-	case MODE_INTR:
-		break;
-	case MODE_STEP:
-		break;
-	case MODE_SLNT:
-		//Phase II test not actually ALI
-		TestPHII();
-		break;
-	case MODE_DEMO:
-		//Just_A_Demo();
-		Test();
-		break;
-	};
+	MainSimulator(mode);
 
 }
 
@@ -347,105 +333,15 @@ void Restaurant::FillDrawingList()
 
 
 
-// Simple Stimulation for Phase I to test Ali:
-void Restaurant::Test()
-{
-	//reading File from user
-
-	ReadFromFile();
-
-	//all lists are filled by cocks and events
-
-
-	//Check Event list 
-	int CurrentTimeStep = 0;
-	string* S = new string[3];
-	int* NumberOfCooks = new int[4];
-	int* NumberOfOrders = new int[3];
-	//condition of Events and Waiting and Serving
-	while (!EventsQueue.isEmpty() || !Vip_Order.isEmpty() || !NormalOrder.isEmpty() || !VeganOrder.isEmpty() ||!OrdersServing.isEmpty())
-		{
-			//print current timestep
-			//char timestep[10];
-			//itoa(CurrentTimeStep,timestep,10);	
-			//pGUI->PrintMessage("TS: " + to_string(CurrentTimeStep));
-
-	
-	     	//The next line may add new orders to the Queue waiting
-			ExecuteEvents(CurrentTimeStep);	//execute all events at current time step
-
-			//Moving Orders form Waiting to Serves
-			Order* pOrd;
-			//Checking of Free Cocks from each type
-			if (Vip_Order.dequeue(pOrd))
-			{
-				pOrd->setStatus(SRV);
-				OrdersServing.dequeue(pOrd);
-		    }
-			if (VeganOrder.dequeue(pOrd))
-			{
-				pOrd->setStatus(SRV);
-				OrdersServing.dequeue(pOrd);
-			}
-			if (NormalOrder.RemoveFirst(pOrd))
-			{
-				pOrd->setStatus(SRV);
-				OrdersServing.dequeue(pOrd);
-			}
-
-			//moving from in Srv to done
-			if (CurrentTimeStep % 5 == 0)
-			{
-				for (int i = 0; i < 3; i++)
-				{
-					if (OrdersServing.dequeue(pOrd))
-					{
-						pOrd->setStatus(DONE);
-						OrdersAllDone.enqueue(pOrd);
-						pOrd->SetServingTime(CurrentTimeStep);
-				   }
-				}
-			}
-			
-        //////////////////////////////////////////////////////////////////////////////////////////
-			FillDrawingList();
-  
-		///////////////////////////////////////////////////////////////////////////////////////////
-	   // interactive Mode
-			S[0] = "TS: " + to_string(CurrentTimeStep);
-			S[1] = "Number of Waiting Orders: Vip: " + to_string(NumberOfOrders[2]) + " Vegan : " + to_string(NumberOfOrders[1]) + " Normal : " + to_string(NumberOfOrders[0]);
-			//this acts like index so first element is Zero
-			S[2] = "Number of available cooks: Vip: " + to_string(NumberOfCooks[3]) + " Vegan: " + to_string(NumberOfCooks[2]) + " Normal: " + to_string(NumberOfCooks[1]);
-			pGUI->PrintMessageML(S, 3);
-
-			pGUI->UpdateInterface();
-			pGUI->waitForClick();
-			CurrentTimeStep++;	//advance timestep
-			pGUI->ResetDrawingList();
-		}
-	pGUI->PrintMessage("Simulation is Done");
-	pGUI->waitForClick();
-	delete[]S;
-	delete[]NumberOfCooks;
-	delete[]NumberOfOrders;
-
-
-}
-
 
 //Simulation for Phase II
 
-void Restaurant::TestPHII()
+void Restaurant::MainSimulator(PROG_MODE Mode)
 {
 	//reading File from user
 
 	ReadFromFile();
 
-	//all lists are filled by cocks and events
-
-
-	pGUI->PrintMessage("Hello, this is demo");
-	pGUI->waitForClick();
 
 
 	pGUI->waitForClick();
@@ -478,10 +374,13 @@ void Restaurant::TestPHII()
 		
 		
 		//////////////////////////////////////////////////////////////////////////////////////////
-		FillDrawingList();
-		
-		pGUI->UpdateInterface();
-		pGUI->waitForClick();
+		if (Mode != MODE_SLNT) {
+			FillDrawingList();
+			pGUI->UpdateInterface();
+		}
+
+		if(Mode == MODE_INTR )pGUI->waitForClick();
+		if (Mode == MODE_STEP) Sleep(1000);
 		CurrentTimeStep++;	//advance timestep
 		//add check urgent later
 
